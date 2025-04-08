@@ -342,6 +342,7 @@ function resetCalibrationPoints() {
     resetInputBoxes();
     resetCalValues();
     inputBoxCounter = minInputBoxNumber;
+    drawGridCalibration();
 }
 
 /**

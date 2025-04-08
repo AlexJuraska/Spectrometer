@@ -270,8 +270,7 @@ function drawGridCalibration() {
 
     const yMin = 350;
     const yMax = 1000;
-    const numOfYLabels = 30;
-    const yStep = Math.ceil((yMax - yMin) / numOfYLabels / 5) * 5;
+    const yStep = 50;
 
     graphCtxCalibration.beginPath();
     graphCtxCalibration.strokeStyle = '#e0e0e0';
@@ -279,31 +278,50 @@ function drawGridCalibration() {
     graphCtxCalibration.font = '10px Arial';
     graphCtxCalibration.fillStyle = 'black';
 
-    for (let i = 0; i <= numOfYLabels; i++) {
-        const yValue = yMax - i * yStep;
-        if (yValue < yMin) { break; }
-
+    for (let yValue = yMin; yValue <= yMax; yValue += yStep) {
+        const isMultiple200 = yValue % 200 === 0;
+        const isEndpoint = (yValue === yMin || yValue === yMax);
         const y = padding + ((height - 2 * padding) / (yMax - yMin)) * (yMax - yValue);
-        graphCtxCalibration.moveTo(padding, y);
-        graphCtxCalibration.lineTo(width - padding, y);
-        graphCtxCalibration.fillText(yValue.toFixed(0), 5, y + 3);
+
+        if (isMultiple200) {
+            graphCtxCalibration.moveTo(padding, y);
+            graphCtxCalibration.lineTo(width - padding, y);
+            graphCtxCalibration.fillText(yValue.toFixed(0), 5, y + 3);
+        } else if (isEndpoint) {
+            graphCtxCalibration.fillText(yValue.toFixed(0), 5, y + 3);
+        }
     }
 
     const xMin = 0;
     const xMax = 1280;
-    const numOfXLabels = 32;
-    const xStep = Math.ceil((xMax - xMin) / numOfXLabels / 5) * 5;
+    const xStep = 40
 
-    for (let i = 0; i <= numOfXLabels; i++) {
-        const xValue = i * xStep;
-        if (xValue > xMax) { break; }
-
+    for (let xValue = xMin; xValue <= xMax; xValue += xStep) {
+        const isMultiple200 = xValue % 200 === 0;
+        const isEndpoint = (xValue === xMin || xValue === xMax);
         const x = padding + ((xValue - xMin) / xMax) * (width - 2 * padding);
-        graphCtxCalibration.moveTo(x, padding);
-        graphCtxCalibration.lineTo(x, height - padding);
-        graphCtxCalibration.font = xValue >= 1000 ? '9px Arial' : '10px Arial';
-        graphCtxCalibration.fillText(xValue.toFixed(0), x - 7, height - padding + 15);
+
+        if (isMultiple200 || isEndpoint) {
+            const label = xValue.toFixed(0);
+            graphCtxCalibration.font = xValue >= 1000 ? '9px Arial' : '10px Arial';
+
+            const textWidth = graphCtxCalibration.measureText(label).width;
+            const textX = x - textWidth / 2;
+
+            if (isMultiple200) {
+                graphCtxCalibration.moveTo(x, padding);
+                graphCtxCalibration.lineTo(x, height - padding);
+            }
+
+            graphCtxCalibration.fillText(label, textX, height - padding + 15);
+        }
     }
+
+    graphCtxCalibration.font = '11px Arial';
+    graphCtxCalibration.fillStyle = 'black';
+
+    graphCtxCalibration.fillText("nm", 10, padding - 10);
+    graphCtxCalibration.fillText("px", width - padding + 14, height - padding + 15);
 
     graphCtxCalibration.stroke();
 }

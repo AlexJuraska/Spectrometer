@@ -218,23 +218,25 @@ function resetCalValues() {
  * Exports calibration settings into a .txt file
  */
 function exportCalibrationFile() {
-    // Check if there are any calibration points to export
     if (calibrationData.length === 0) {
         alert("No calibration data to export. Please calibrate first.");
         return;
     }
 
-    // Map each point to a line of raw `px` and `nm` values separated by a comma
+    const filenameInput = document.getElementById("exportCalibrationNameInput").value.trim();
+    const filename = filenameInput !== "" ? filenameInput : "calibration_points.txt";
+
+    const finalFilename = filename.endsWith(".txt") ? filename : filename + ".txt";
+
     const lines = calibrationData.map(point => `${point.px};${point.nm}`).join("\n");
 
-    // Create a Blob from the lines with plain text format
     const blob = new Blob([lines], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
 
-    // Create a temporary anchor element to trigger the download
+    // Temporary <a> element to trigger the download
     const a = document.createElement("a");
     a.href = url;
-    a.download = "calibration_points.txt";
+    a.download = finalFilename;
     document.body.appendChild(a);
     a.click();
 

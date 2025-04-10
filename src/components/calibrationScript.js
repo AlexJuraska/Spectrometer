@@ -1,8 +1,12 @@
-/**
- * Number for the next input box
- * @type {number}
- */
-let inputBoxCounter = 3;
+const minInputBoxNumber = 4
+const maxInputBoxNumber = 15
+
+const rangeBeginX = 0;
+const rangeEndX = 1280;
+const rangeBeginY = 350;
+const rangeEndY = 1000;
+
+let inputBoxCounter = minInputBoxNumber;
 let polyFitCoefficientsArray = [];
 let calibrationData = [];
 let pixelCalPoints = [];
@@ -16,10 +20,12 @@ let graphCtxCalibration;
  *Adds a pair of input boxes
  */
 function addInputPair() {
-    inputBoxCounter++;
-    if (inputBoxCounter >= 15) {
+
+    if (inputBoxCounter === maxInputBoxNumber) {
         return;
     }
+
+    inputBoxCounter++;
 
     const container = document.getElementById("input-container");
     const div = document.createElement("div");
@@ -60,7 +66,7 @@ function addInputPair() {
  */
 function removeInputPair() {
     const inputContainer = document.getElementById("input-container");
-    if (inputContainer.children.length > 3) {
+    if (inputContainer.children.length > minInputBoxNumber) {
         const lastInputPair = inputContainer.lastElementChild;
         inputContainer.removeChild(lastInputPair); // Remove the last input pair
         inputBoxCounter --;
@@ -68,10 +74,10 @@ function removeInputPair() {
 }
 
 /**
- * Resets the values in the input boxes
+ * Clears the values from all currently displayed input boxes
  */
-function resetInputBoxes() {
-    for (let i = 1; i <= 3; i++) {
+function clearInputBoxes() {
+    for (let i = 1; i <= inputBoxCounter; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
         pxInput.value = ""; // Set px value
@@ -83,8 +89,8 @@ function resetInputBoxes() {
  * Removes all the additional boxes that were already added by the user
  */
 function deleteAllAdditionalInputPairs() {
-    if (inputBoxCounter !== 3) {
-        for (let i = inputBoxCounter; i !== 3; i--) {
+    if (inputBoxCounter !== minInputBoxNumber) {
+        for (let i = inputBoxCounter; i > minInputBoxNumber; i--) {
             removeInputPair();
         }
     }
@@ -94,23 +100,53 @@ function deleteAllAdditionalInputPairs() {
  * Saves the calibration points from the input boxes
  */
 function setCalibrationPoints() {
-    resetCalValues(); //resets the content of arrays before saving new calibration points
+    resetCalValues(); // resets the content of arrays before saving new calibration points
     for (let i = 1; i < inputBoxCounter + 1; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
 
         // Ensure both inputs exist before trying to get their values
         if (pxInput && nmInput) {
-            const pxValue = parseFloat(pxInput.value);
-            const nmValue = parseFloat(nmInput.value);
+            const rawPx = pxInput.value.trim();
+            const rawNm = nmInput.value.trim();
 
-            if (!isNaN(pxValue) && !isNaN(nmValue)) {
+            //In case we want , and . either way
+
+            // const isPxValid = /^\d+$/.test(rawPx);
+            // const isNmValid = /^\d+([.,]\d+)?$/.test(rawNm);
+
+            // if (!isPxValid) {
+            //     resetCalValues();
+            //     alert(`${rawPx} is not a valid number`)
+            //     return;
+            // }
+            //
+            // if (!isNmValid) {
+            //     resetCalValues();
+            //     alert(`${rawNm} is not a valid number`)
+            //     return;
+            // }
+
+            const pxValue = parseInt(rawPx, 10);
+            const nmValue = parseFloat(rawNm);
+
+            if (!isNaN(pxValue) &&
+                !isNaN(nmValue) &&
+                pxValue >= rangeBeginX &&
+                pxValue <= rangeEndX &&
+                nmValue >= rangeBeginY &&
+                nmValue <= rangeEndY
+            ) {
                 calibrationData.push({ px: pxValue, nm: nmValue });
+            } else {
+                resetCalValues();
+                alert(`Numbers out of allowed range`);
+                return;
             }
         }
     }
 
-    if (calibrationData.length < 3) {
+    if (calibrationData.length < minInputBoxNumber) {
         resetCalValues();
         window.alert("Insufficient number of calibration points");
         return;
@@ -134,12 +170,17 @@ function calibrate() {
     }
     const polyfit = new Polyfit(pixelCalPoints, nmCalPoints);
 
-    if (nmCalPoints.length === 3) {
-        polyFitCoefficientsArray = polyfit.computeCoefficients(2);
-    }
-    else if (nmCalPoints.length > 3) {
-        polyFitCoefficientsArray = polyfit.computeCoefficients(3);
-    }}
+    const degree = Math.min(minInputBoxNumber - 1, nmCalPoints.length - 1)
+
+    polyFitCoefficientsArray = polyfit.computeCoefficients(degree)
+
+    // if (nmCalPoints.length === 3) {
+    //     polyFitCoefficientsArray = polyfit.computeCoefficients(2);
+    // }
+    // else if (nmCalPoints.length > 3) {
+    //     polyFitCoefficientsArray = polyfit.computeCoefficients(3);
+    // }
+}
 
 /**
  * Gets the wave Length from the pixel
@@ -173,23 +214,25 @@ function resetCalValues() {
  * Exports calibration settings into a .txt file
  */
 function exportCalibrationFile() {
-    // Check if there are any calibration points to export
     if (calibrationData.length === 0) {
         alert("No calibration data to export. Please calibrate first.");
         return;
     }
 
-    // Map each point to a line of raw `px` and `nm` values separated by a comma
-    const lines = calibrationData.map(point => `${point.px},${point.nm}`).join("\n");
+    const filenameInput = document.getElementById("exportCalibrationNameInput").value.trim();
+    const filename = filenameInput !== "" ? filenameInput : "calibration_points.txt";
 
-    // Create a Blob from the lines with plain text format
+    const finalFilename = filename.endsWith(".txt") ? filename : filename + ".txt";
+
+    const lines = calibrationData.map(point => `${point.px};${point.nm}`).join("\n");
+
     const blob = new Blob([lines], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
 
-    // Create a temporary anchor element to trigger the download
+    // Temporary <a> element to trigger the download
     const a = document.createElement("a");
     a.href = url;
-    a.download = "calibration_points.txt";
+    a.download = finalFilename;
     document.body.appendChild(a);
     a.click();
 
@@ -202,34 +245,76 @@ function exportCalibrationFile() {
  * Lets the user choose a file and then automatically fill out input boxes with the calibration points from the file
  */
 function importCalibrationFile() {
-    resetCalibrationPoints();
+    resetInputBoxes();
 
     const fileInput = document.getElementById("my-file");
     const file = fileInput.files[0]; // Get the selected file
 
+    fileInput.value = "";
+
+    if (!file) {
+        alert("Please select a file.");
+        return;
+    }
+
     const reader = new FileReader();
+
+    const validFormatRegex = /^(\d+);(\d+(?:[.,]\d+)?)(?:\n|$)/;
 
     //reading the content of the file
     reader.onload = function(event) {
         const fileContent = event.target.result; // Get file content as text
 
-        const lines = fileContent.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+        const lines = fileContent.trim().split("\n").map(line => line.trim()).filter(line => line.length > 0);
 
-        // If there are more than 3 lines, add extra input pairs for the additional lines
-        const extraLines = lines.length - 3;
+        if (lines.length < minInputBoxNumber || lines.length > maxInputBoxNumber) {
+            alert(`There must be between ${minInputBoxNumber} and ${maxInputBoxNumber} calibration points`);
+            resetInputBoxes()
+            return;
+        }
+
+        // If there are more than minInputBoxNumber lines, add extra input pairs for the additional lines
+        const extraLines = lines.length - inputBoxCounter;
         for (let i = 0; i < extraLines; i++) {
             addInputPair(); // Add extra input fields dynamically
         }
 
         // Fills the input fields with the file content
         for (let i = 0; i < lines.length; i++) {
-            const [px, nm] = lines[i].split(",");
+            const line = lines[i]
+
+            if (!validFormatRegex.test(line)) {
+                alert(`Invalid format at line ${i + 1}: "${line}"`);
+                resetInputBoxes()
+                return;
+            }
+
+            const [px, nm] = lines[i].split(";");
+
+            let nmValue = nm.trim().replace(',', '.'); // Replace comma with dot
+
+            const pxValue = parseInt(px.trim(), 10);
+            const nmFloat = parseFloat(nmValue);
+
+            if (pxValue < rangeBeginX || pxValue > rangeEndX) {
+                alert(`Invalid px value at line ${i + 1}: "${pxValue}". It must be between ${rangeBeginX} and ${rangeEndX}.`);
+                resetInputBoxes();
+                return;
+            }
+
+            // Validate nm value
+            if (nmFloat < rangeBeginY || nmFloat > rangeEndY) {
+                alert(`Invalid nm value at line ${i + 1}: "${nmFloat}". It must be between ${rangeBeginY} and ${rangeEndY}.`);
+                resetInputBoxes();
+                return;
+            }
+
             const pxInput = document.querySelector(`#point${i+1}px`);
             const nmInput = document.querySelector(`#point${i+1}nm`);
 
             if (pxInput && nmInput) {
-                pxInput.value = px.trim(); // Set px value
-                nmInput.value = nm.trim(); // Set nm value
+                pxInput.value = pxValue // Set px value
+                nmInput.value = nmValue; // Set nm value
             }
         }
     };
@@ -248,13 +333,21 @@ function convertPxAxisIntoNm(){
     return nMAxis;
 }
 /**
- * Empties the input boxes and removes all the additional ones
+ * Resets the input boxes, deletes all calibrated data
  */
 function resetCalibrationPoints() {
-    deleteAllAdditionalInputPairs();
     resetInputBoxes();
     resetCalValues();
-    inputBoxCounter = 3;
+    inputBoxCounter = minInputBoxNumber;
+    drawGridCalibration();
+}
+
+/**
+ * Resets all input boxes, leaves only minInputBoxNumber of pairs
+ */
+function resetInputBoxes() {
+    deleteAllAdditionalInputPairs();
+    clearInputBoxes();
 }
 
 /**
@@ -268,10 +361,9 @@ function drawGridCalibration() {
     const height = graphCanvasCalibration.height;
     const padding = 30;
 
-    const yMin = 350;
-    const yMax = 1000;
-    const numOfYLabels = 30;
-    const yStep = Math.ceil((yMax - yMin) / numOfYLabels / 5) * 5;
+    const yMin = rangeBeginY;
+    const yMax = rangeEndY;
+    const yStep = 50;
 
     graphCtxCalibration.beginPath();
     graphCtxCalibration.strokeStyle = '#e0e0e0';
@@ -279,31 +371,50 @@ function drawGridCalibration() {
     graphCtxCalibration.font = '10px Arial';
     graphCtxCalibration.fillStyle = 'black';
 
-    for (let i = 0; i <= numOfYLabels; i++) {
-        const yValue = yMax - i * yStep;
-        if (yValue < yMin) { break; }
-
+    for (let yValue = yMin; yValue <= yMax; yValue += yStep) {
+        const isMultiple200 = yValue % 200 === 0;
+        const isEndpoint = (yValue === yMin || yValue === yMax);
         const y = padding + ((height - 2 * padding) / (yMax - yMin)) * (yMax - yValue);
-        graphCtxCalibration.moveTo(padding, y);
-        graphCtxCalibration.lineTo(width - padding, y);
-        graphCtxCalibration.fillText(yValue.toFixed(0), 5, y + 3);
+
+        if (isMultiple200) {
+            graphCtxCalibration.moveTo(padding, y);
+            graphCtxCalibration.lineTo(width - padding, y);
+            graphCtxCalibration.fillText(yValue.toFixed(0), 5, y + 3);
+        } else if (isEndpoint) {
+            graphCtxCalibration.fillText(yValue.toFixed(0), 5, y + 3);
+        }
     }
 
-    const xMin = 0;
-    const xMax = 1280;
-    const numOfXLabels = 32;
-    const xStep = Math.ceil((xMax - xMin) / numOfXLabels / 5) * 5;
+    const xMin = rangeBeginX;
+    const xMax = rangeEndX;
+    const xStep = 40
 
-    for (let i = 0; i <= numOfXLabels; i++) {
-        const xValue = i * xStep;
-        if (xValue > xMax) { break; }
-
+    for (let xValue = xMin; xValue <= xMax; xValue += xStep) {
+        const isMultiple200 = xValue % 200 === 0;
+        const isEndpoint = (xValue === xMin || xValue === xMax);
         const x = padding + ((xValue - xMin) / xMax) * (width - 2 * padding);
-        graphCtxCalibration.moveTo(x, padding);
-        graphCtxCalibration.lineTo(x, height - padding);
-        graphCtxCalibration.font = xValue >= 1000 ? '9px Arial' : '10px Arial';
-        graphCtxCalibration.fillText(xValue.toFixed(0), x - 7, height - padding + 15);
+
+        if (isMultiple200 || isEndpoint) {
+            const label = xValue.toFixed(0);
+            graphCtxCalibration.font = xValue >= 1000 ? '9px Arial' : '10px Arial';
+
+            const textWidth = graphCtxCalibration.measureText(label).width;
+            const textX = x - textWidth / 2;
+
+            if (isMultiple200) {
+                graphCtxCalibration.moveTo(x, padding);
+                graphCtxCalibration.lineTo(x, height - padding);
+            }
+
+            graphCtxCalibration.fillText(label, textX, height - padding + 15);
+        }
     }
+
+    graphCtxCalibration.font = '11px Arial';
+    graphCtxCalibration.fillStyle = 'black';
+
+    graphCtxCalibration.fillText("nm", 10, padding - 10);
+    graphCtxCalibration.fillText("px", width - padding + 14, height - padding + 15);
 
     graphCtxCalibration.stroke();
 }
@@ -317,11 +428,6 @@ function drawCalibrationLine() {
     const padding = 30;
 
     const interpolate = lagrangeInterpolation(pixelCalPoints, nmCalPoints);
-
-    const rangeBeginX = 0;
-    const rangeEndX = 1280;
-    const rangeBeginY = 350;
-    const rangeEndY = 1000;
 
     graphCtxCalibration.beginPath();
 

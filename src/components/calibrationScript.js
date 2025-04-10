@@ -1,7 +1,3 @@
-/**
- * Number for the next input box
- * @type {number}
- */
 const minInputBoxNumber = 4
 const maxInputBoxNumber = 15
 
@@ -78,10 +74,10 @@ function removeInputPair() {
 }
 
 /**
- * Resets the values in the minimal required input boxes
+ * Clears the values from all currently displayed input boxes
  */
-function resetInputBoxes() {
-    for (let i = 1; i <= minInputBoxNumber; i++) {
+function clearInputBoxes() {
+    for (let i = 1; i <= inputBoxCounter; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
         pxInput.value = ""; // Set px value
@@ -144,7 +140,7 @@ function setCalibrationPoints() {
                 calibrationData.push({ px: pxValue, nm: nmValue });
             } else {
                 resetCalValues();
-                alert(`Wrong numbers`);
+                alert(`Numbers out of allowed range`);
                 return;
             }
         }
@@ -249,7 +245,7 @@ function exportCalibrationFile() {
  * Lets the user choose a file and then automatically fill out input boxes with the calibration points from the file
  */
 function importCalibrationFile() {
-    resetCalibrationPoints();
+    resetInputBoxes();
 
     const fileInput = document.getElementById("my-file");
     const file = fileInput.files[0]; // Get the selected file
@@ -263,7 +259,7 @@ function importCalibrationFile() {
 
     const reader = new FileReader();
 
-    const validFormatRegex = /^(\d+);(\d+(\.\d+)?|\d+(\,\d+)?)/;
+    const validFormatRegex = /^(\d+);(\d+(?:[.,]\d+)?)(?:\n|$)/;
 
     //reading the content of the file
     reader.onload = function(event) {
@@ -273,7 +269,7 @@ function importCalibrationFile() {
 
         if (lines.length < minInputBoxNumber || lines.length > maxInputBoxNumber) {
             alert(`There must be between ${minInputBoxNumber} and ${maxInputBoxNumber} calibration points`);
-            resetCalibrationPoints();
+            resetInputBoxes()
             return;
         }
 
@@ -289,7 +285,7 @@ function importCalibrationFile() {
 
             if (!validFormatRegex.test(line)) {
                 alert(`Invalid format at line ${i + 1}: "${line}"`);
-                resetCalibrationPoints();
+                resetInputBoxes()
                 return;
             }
 
@@ -302,14 +298,14 @@ function importCalibrationFile() {
 
             if (pxValue < rangeBeginX || pxValue > rangeEndX) {
                 alert(`Invalid px value at line ${i + 1}: "${pxValue}". It must be between ${rangeBeginX} and ${rangeEndX}.`);
-                resetCalibrationPoints();
+                resetInputBoxes();
                 return;
             }
 
-            // Validate nm value (float should be between 350.0 and 1000.0)
+            // Validate nm value
             if (nmFloat < rangeBeginY || nmFloat > rangeEndY) {
                 alert(`Invalid nm value at line ${i + 1}: "${nmFloat}". It must be between ${rangeBeginY} and ${rangeEndY}.`);
-                resetCalibrationPoints();
+                resetInputBoxes();
                 return;
             }
 
@@ -337,14 +333,21 @@ function convertPxAxisIntoNm(){
     return nMAxis;
 }
 /**
- * Empties the input boxes and removes all the additional ones
+ * Resets the input boxes, deletes all calibrated data
  */
 function resetCalibrationPoints() {
-    deleteAllAdditionalInputPairs();
     resetInputBoxes();
     resetCalValues();
     inputBoxCounter = minInputBoxNumber;
     drawGridCalibration();
+}
+
+/**
+ * Resets all input boxes, leaves only minInputBoxNumber of pairs
+ */
+function resetInputBoxes() {
+    deleteAllAdditionalInputPairs();
+    clearInputBoxes();
 }
 
 /**

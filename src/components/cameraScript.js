@@ -37,6 +37,10 @@ async function startStream(deviceId) {
             });
 
             if ('exposureTime' in capabilities) {
+                const { min, max } = capabilities.exposureTime;
+
+                updateExposureSlider(min, max);
+
                 await videoTrack.applyConstraints({
                     advanced: [{ exposureTime: exposureSlider.value }]
                 });
@@ -122,6 +126,42 @@ if (cameraSelect != null) {
         startStream(cameraSelect.value);
         cameraUsed = cameraSelect.value;
     });
+}
+
+/**
+ * Updates the exposureSlider to the given values
+ * @param max
+ * @param min
+ */
+function updateExposureSlider(min, max) {
+    exposureSlider.min = min;
+    exposureSlider.max = max;
+
+    exposureSlider.step = (max-min) / 1000;
+
+    let sliderValue;
+    if (max > 7000) {
+        sliderValue = 1000;
+    } else if (max > 3000) {
+        sliderValue = 750;
+    } else {
+        sliderValue = (min + max) / 4;
+    }
+
+    exposureSlider.value = sliderValue
+    updateExposureValue(exposureSlider.value);
+}
+
+/**
+ * Sets the text for the exposureSlider to the value
+ * @param value
+ */
+function updateExposureValue(value) {
+    let rounded = Math.round(Math.abs(value) / 10) * 10;
+    if (rounded === 0) {
+        rounded = 1;
+    }
+    document.getElementById('exposureValue').textContent = rounded;
 }
 
 /**

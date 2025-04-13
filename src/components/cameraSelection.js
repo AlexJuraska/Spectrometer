@@ -27,8 +27,13 @@ function showSelectedStripe() {
     const videoWidth = getElementWidth(videoElement);
     const stripePosition = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
 
-    const zoomStart = zoomList[0] || 0;
-    const zoomEnd = zoomList[1] || videoWidth;
+    let zoomStart = 0;
+    let zoomEnd = videoWidth;
+
+    if (zoomList.length !== 0) {
+        zoomStart = zoomList[zoomList.length - 1][0];
+        zoomEnd = zoomList[zoomList.length - 1][1];
+    }
 
     stripeCtx.drawImage(videoElement, zoomStart, stripePosition, zoomEnd - zoomStart, stripeWidth, 0, 0, stripeCanvas.width, stripeCanvas.height);
 }

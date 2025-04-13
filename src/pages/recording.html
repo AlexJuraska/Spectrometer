@@ -181,6 +181,7 @@
     <div id="graphWindow">
       <div>
         <button class="buttonCameraStyle" data-translate="reset-zoom" id="resetZoomButton">Reset Zoom</button>
+        <button id="stepBackButton">Step Back</button>
         <label for="toggleXLabelsPx"> <span data-translate="X-px">X-axis Labels (px)</span></label>
         <input type="radio" id="toggleXLabelsPx" name="toggleXLabels" value="px" checked>
         <label for="toggleXLabelsNm"><span data-translate="X-nm">X-axis Labels (nm)</span></label>
@@ -207,10 +208,6 @@
       <!-- disabled for now-->
       <label for="togglePeaksCheckbox" data-translate="togglePeaks">Toggle Peaks</label>
       <input type="checkbox" id="togglePeaksCheckbox">
-      <br>
-      <label data-translate="smoothing" for="smoothingRange">Smoothing</label>
-      <input type="range" id="smoothingRange" min="0" max="20" step="1" value="0">
-      <span id="smoothingValue">1</span>
       <br>
       <label data-translate="min-val" for="minValueRange">Min Value</label>
       <input type="range" id="minValueRange" min="0" max="255" value="0">

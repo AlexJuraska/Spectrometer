@@ -46,7 +46,6 @@
   "combined": "Combined",
   "X-px": "X-axis Labels (px)",
   "X-nm": "X-axis Labels (nm)",
-  "smoothing": "Smoothing",
   "min-val": "Minimum Value",
   "distance": "Distance",
   "adjust-exposure": "Adjust Exposure",
@@ -95,7 +94,6 @@
   "step4choice6": "<strong>\"G\"</strong> – Displays the green component of light.",
   "step4choice7": "<strong>\"B\"</strong> – Displays the blue component of light.",
   "step4choice8": "<strong>\"Toggle Peaks\"</strong> – Highlights the highest parts of the graph.",
-  "step4choice9": "<strong>\"Smoothing\"</strong> – Allows applying a filter to smooth the graph.",
   "step4choice10": "<strong>\"Minimum value\"</strong> – Sets the minimum signal value on the graph.",
   "step4choice11": "<strong>\"Set exposure\"</strong> – Allows manual adjustment of the camera exposure."
 }

@@ -189,7 +189,6 @@ function getBackToCameraStream(){
     videoElement.style.display = 'none'; // Hide the image element
     videoElement = document.getElementById('videoMain');
     videoElement.style.display = 'inline'; // Show the video element
-    //document.getElementById("screenshotCameraButton").style.display = "inline";
     document.getElementById("cameraExposureButton").style.display = "inline";
     document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "flex";
     document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "none";
@@ -220,7 +219,6 @@ function loadImageIntoCamera() {
                 videoElement.style.display = 'none'; // Hide the video element
                 document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "none";
                 document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "block";
-                //document.getElementById("screenshotCameraButton").style.display = "none";
                 document.getElementById("cameraExposureButton").style.display = "none";
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;

@@ -56,7 +56,7 @@ async function startStream(deviceId) {
             if(videoElement.videoWidth === 1280){
                 document.getElementById("videoMainWindow").style.height = "214px";
             }
-            plotRGBLineFromCamera(videoElement);
+            plotRGBLineFromCamera();
         };
     } catch (error) {
         console.error('Error accessing camera: ', error);
@@ -189,7 +189,7 @@ function getBackToCameraStream(){
     videoElement.style.display = 'none'; // Hide the image element
     videoElement = document.getElementById('videoMain');
     videoElement.style.display = 'inline'; // Show the video element
-    document.getElementById("screenshotCameraButton").style.display = "inline";
+    //document.getElementById("screenshotCameraButton").style.display = "inline";
     document.getElementById("cameraExposureButton").style.display = "inline";
     document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "flex";
     document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "none";
@@ -220,14 +220,14 @@ function loadImageIntoCamera() {
                 videoElement.style.display = 'none'; // Hide the video element
                 document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "none";
                 document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "block";
-                document.getElementById("screenshotCameraButton").style.display = "none";
+                //document.getElementById("screenshotCameraButton").style.display = "none";
                 document.getElementById("cameraExposureButton").style.display = "none";
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;
                 videoElement.style.display = 'block'; // Show the image element
                 videoElement.onload = () => {
                     needToRecalculateMaxima = true;
-                    plotRGBLineFromCamera(videoElement);
+                    plotRGBLineFromCamera();
                 };
             };
             reader.readAsDataURL(file);
@@ -481,7 +481,7 @@ function updateStripeWidth(value) {
     drawSelectionLine();
     if (videoElement) {
         needToRecalculateMaxima = true;
-        plotRGBLineFromCamera(videoElement);
+        plotRGBLineFromCamera();
     }
 }
 
@@ -539,7 +539,7 @@ c.addEventListener("click", function (event) {
     drawSelectionLine(); // Redraw line at the new position
     if (videoElement) {
         needToRecalculateMaxima = true;
-        plotRGBLineFromCamera(videoElement);
+        plotRGBLineFromCamera();
     }
 });
 

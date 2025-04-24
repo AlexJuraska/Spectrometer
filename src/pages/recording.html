@@ -11,11 +11,13 @@
   <link rel="stylesheet" href="../styles/cameraStyle.css">
   <link rel="stylesheet" href="../styles/graphStyle.css">
 
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script> <!-- xlsx -->
   <script src="../components/setupScript.js"></script>
   <script src="../components/calibrationScript.js"></script>
   <script src="../components/polynomialRegressionScript.js"></script>
   <script src="../components/zipScript.js"></script>
   <script src="../components/languageScript.js"></script>
+  <script src="../components/dataSavingScript.js"></script>
 
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>-->
 
@@ -125,8 +127,9 @@
           <button class="buttonCameraStyle" onclick="increaseStripeWidth()">+</button>
           <span id="stripeWidthValue">1</span> px
         </label>
-        <button class="buttonCameraStyle" id="screenshotCameraButton" data-translate="screenshot-camera" onclick="saveCameraImage()">Screenshot camera</button>
-        <button class="buttonCameraStyle" data-translate="screenshot-graph" onclick="saveGraphImage()">Screenshot graph</button>
+<!--        <button class="buttonCameraStyle" id="screenshotCameraButton" data-translate="screenshot-camera" onclick="saveCameraImage()">Screenshot camera</button>-->
+<!--        <button class="buttonCameraStyle" data-translate="screenshot-graph" onclick="saveGraphImage()">Screenshot graph</button>-->
+        <button class="buttonCameraStyle" data-translate="" onclick="saveRecordingData()">Save data</button>
         <button class="buttonCameraStyle" id="cameraExposureButton" data-translate="camExp-button" onclick="openCameraExposure()">Camera Exposure</button>
       </div>
       <div id="referenceGraph">

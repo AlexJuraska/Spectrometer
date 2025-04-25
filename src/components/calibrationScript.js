@@ -127,15 +127,11 @@ function setCalibrationPoints() {
             //     return;
             // }
 
-            const pxValue = parseInt(rawPx, 10);
+            const pxValue = parseFloat(rawPx);
             const nmValue = parseFloat(rawNm);
 
             if (!isNaN(pxValue) &&
-                !isNaN(nmValue) &&
-                pxValue >= rangeBeginX &&
-                pxValue <= rangeEndX &&
-                nmValue >= rangeBeginY &&
-                nmValue <= rangeEndY
+                !isNaN(nmValue)
             ) {
                 calibrationData.push({ px: pxValue, nm: nmValue });
             } else {
@@ -259,7 +255,7 @@ function importCalibrationFile() {
 
     const reader = new FileReader();
 
-    const validFormatRegex = /^(\d+);(\d+(?:[.,]\d+)?)(?:\n|$)/;
+    const validFormatRegex = /^(\d+(?:[.,]\d+)?);(\d+(?:[.,]\d+)?)(?:\n|$)/;
 
     //reading the content of the file
     reader.onload = function(event) {
@@ -291,30 +287,31 @@ function importCalibrationFile() {
 
             const [px, nm] = lines[i].split(";");
 
+            let pxValue = px.trim().replace(',', '.');
             let nmValue = nm.trim().replace(',', '.'); // Replace comma with dot
 
-            const pxValue = parseInt(px.trim(), 10);
+            const pxFloat = parseFloat(pxValue);
             const nmFloat = parseFloat(nmValue);
 
-            if (pxValue < rangeBeginX || pxValue > rangeEndX) {
-                alert(`Invalid px value at line ${i + 1}: "${pxValue}". It must be between ${rangeBeginX} and ${rangeEndX}.`);
-                resetInputBoxes();
-                return;
-            }
+            // if (pxValue < rangeBeginX || pxValue > rangeEndX) {
+            //     alert(`Invalid px value at line ${i + 1}: "${pxValue}". It must be between ${rangeBeginX} and ${rangeEndX}.`);
+            //     resetInputBoxes();
+            //     return;
+            // }
 
             // Validate nm value
-            if (nmFloat < rangeBeginY || nmFloat > rangeEndY) {
-                alert(`Invalid nm value at line ${i + 1}: "${nmFloat}". It must be between ${rangeBeginY} and ${rangeEndY}.`);
-                resetInputBoxes();
-                return;
-            }
+            // if (nmFloat < rangeBeginY || nmFloat > rangeEndY) {
+            //     alert(`Invalid nm value at line ${i + 1}: "${nmFloat}". It must be between ${rangeBeginY} and ${rangeEndY}.`);
+            //     resetInputBoxes();
+            //     return;
+            // }
 
             const pxInput = document.querySelector(`#point${i+1}px`);
             const nmInput = document.querySelector(`#point${i+1}nm`);
 
             if (pxInput && nmInput) {
-                pxInput.value = pxValue // Set px value
-                nmInput.value = nmValue; // Set nm value
+                pxInput.value = pxFloat; // Set px value
+                nmInput.value = nmFloat; // Set nm value
             }
         }
     };

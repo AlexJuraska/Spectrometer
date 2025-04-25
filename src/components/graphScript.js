@@ -25,13 +25,13 @@ const MAX_ZOOM_HISTORY = 4;
 /**
  * Plots the RGB line graph from the camera or image element, deals with resizing, event listeners and drawing
  */
-function plotRGBLineFromCamera(videoElement) {
+function plotRGBLineFromCamera() {
     if (animationId) {
         cancelAnimationFrame(animationId);
         animationId = null;
     }
 
-    let lineCanvas = createLineCanvas(videoElement, getStripeWidth());
+    let lineCanvas = createLineCanvas();
     ctx = lineCanvas.getContext('2d', { willReadFrequently: true });
     graphCanvas = document.getElementById('graphCanvas');
 
@@ -44,19 +44,17 @@ function plotRGBLineFromCamera(videoElement) {
         graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
         graphCanvas.height = document.getElementById("graphWindowContainer").getBoundingClientRect().height;
         graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
-        if (videoElement instanceof HTMLImageElement) {
-            draw();
-        }
+        redrawGraphIfLoadedImage()
     });
 
     initializeZoomList();
     resizeObserver.observe(graphCanvas);
-    setupEventListeners(videoElement, draw, graphCanvas);
+    setupEventListeners();
     draw();
 }
 
 function draw() {
-    drawGraphLine(videoElement, ctx, graphCtx, graphCanvas);
+    drawGraphLine();
     if (!(videoElement instanceof HTMLImageElement)) {
         animationId = requestAnimationFrame(draw);
         needToRecalculateMaxima = true;
@@ -66,7 +64,7 @@ function draw() {
 /**
  * Draws the graph line, graph grid and labels, deals with peaks, zooming and reference graph
  */
-function drawGraphLine(videoElement, ctx, graphCtx, graphCanvas) {
+function drawGraphLine() {
     const stripeWidth = getStripeWidth();
     const { toggleCombined, toggleR, toggleG, toggleB } = getToggleStates();
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
@@ -76,7 +74,7 @@ function drawGraphLine(videoElement, ctx, graphCtx, graphCanvas) {
     let pixelWidth = getElementWidth(videoElement);
 
     if (stripeWidth > 1) {
-        pixels = averagePixels(pixels, pixelWidth, stripeWidth);
+        pixels = averagePixels(pixels, pixelWidth);
     }
 
     if (captureReferenceGraph) {
@@ -126,7 +124,7 @@ function drawGraphLine(videoElement, ctx, graphCtx, graphCanvas) {
     }
 
     if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
-        drawPeaks(graphCtx, maxima, graphCanvas, zoomStart, zoomEnd, maxValue);
+        drawPeaks(maxima, maxValue);
     }
 
     if (isDragging) {
@@ -154,7 +152,7 @@ function calculateMaxValue(pixels) {
 /**
  * Averages the pixels in a stripe
  */
-function averagePixels(pixels, pixelWidth, stripeWidth) {
+function averagePixels(pixels, pixelWidth) {
     let averagedPixels = new Uint8ClampedArray(pixelWidth * 4);
     for (let x = 0; x < pixelWidth; x++) {
         let r = 0, g = 0, b = 0, a = 0;
@@ -190,12 +188,11 @@ function findPeaks(pixels, pixelWidth, minValue) {
             }
         } else {
             if (start !== null) {
-                let end = x;
                 let plateauValue = calculateMaxColor(pixels, start);
                 let nextPlateauValue = calculateMaxColor(pixels, x);
 
                 if (plateauValue > nextPlateauValue) {
-                    maxima.push({ x: ((start + end) / 2), value: plateauValue });
+                    maxima.push({ x: start, value: plateauValue });
                 }
                 start = null;
             }
@@ -218,29 +215,30 @@ function findPeaks(pixels, pixelWidth, minValue) {
 /**
  * Draws dotted lines below the peaks on the graph canvas
  */
-function drawDottedLine(ctx, x, yStart, yEnd, color) {
-    ctx.beginPath();
-    ctx.setLineDash([5, 5]);
-    ctx.moveTo(x, yEnd);
-    ctx.lineTo(x, yStart);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.setLineDash([]);
+function drawDottedLine(x, yStart, yEnd, color) {
+    graphCtx.beginPath();
+    graphCtx.setLineDash([5, 5]);
+    graphCtx.moveTo(x, yEnd);
+    graphCtx.lineTo(x, yStart);
+    graphCtx.strokeStyle = color;
+    graphCtx.lineWidth = 1;
+    graphCtx.stroke();
+    graphCtx.setLineDash([]);
 }
 
 /**
  * Draws the peaks on the graph canvas
  */
-function drawPeaks(ctx, maxima, canvas, zoomStart, zoomEnd, maxValue) {
+function drawPeaks(maxima, maxValue) {
     const padding = 30;
-    const height = canvas.height;
+    const height = graphCanvas.height;
+    const [zoomStart, zoomEnd] = getZoomRange(getElementWidth(videoElement));
     maxima.forEach(max => {
         if (max.x >= zoomStart && max.x <= zoomEnd) {
-            const x = calculateXPosition(max.x - zoomStart, zoomEnd - zoomStart, canvas.width);
+            const x = calculateXPosition(max.x - zoomStart, zoomEnd - zoomStart, graphCanvas.width);
             const y = calculateYPosition(max.value, height, maxValue);
-            drawDottedLine(ctx, x, height - padding, y, 'red');
-            drawPeakLabel(ctx, x, y, max.x);
+            drawDottedLine(x, height - padding, y, 'red');
+            drawPeakLabel(x, y, max.x);
         }
     });
 }
@@ -248,29 +246,29 @@ function drawPeaks(ctx, maxima, canvas, zoomStart, zoomEnd, maxValue) {
 /**
  * Draws the peak label on the graph canvas
  */
-function drawPeakLabel(ctx, x, y, peakX) {
+function drawPeakLabel(x, y, peakX) {
     const toggleXLabelsPx = document.getElementById('toggleXLabelsPx').checked;
     let label;
     if (!toggleXLabelsPx) {
-        label = `${getWaveLengthByPx(peakX).toFixed(2)}`;
+        label = `${getWaveLengthByPx(peakX).toFixed(1)}`;
     } else {
         label = `${peakX.toFixed(1)}`;
     }
-    const textWidth = ctx.measureText(label).width;
+    const textWidth = graphCtx.measureText(label).width;
     const textHeight = 20;
 
-    ctx.fillStyle = 'black';
-    ctx.font = '16px Arial';
-    ctx.fillText(label, x - textWidth / 2, y - textHeight / 2);
+    graphCtx.fillStyle = 'black';
+    graphCtx.font = '16px Arial';
+    graphCtx.fillText(label, x - textWidth / 2, y - textHeight / 2);
 }
 
 /**
  * Creates a canvas element for the line graph
  */
-function createLineCanvas(videoElement, stripeWidth) {
+function createLineCanvas() {
     const lineCanvas = document.createElement('canvas');
     lineCanvas.width = getElementWidth(videoElement);
-    lineCanvas.height = stripeWidth;
+    lineCanvas.height = getStripeWidth();
     return lineCanvas;
 }
 
@@ -287,7 +285,7 @@ function removeEventListeners() {
 /**
  * Sets up event listeners for the graph canvas
  */
-function setupEventListeners(videoElement, draw, graphCanvas) {
+function setupEventListeners() {
     removeEventListeners();
 
     function addEventListener(element, type, listener) {
@@ -296,34 +294,24 @@ function setupEventListeners(videoElement, draw, graphCanvas) {
     }
 
     addEventListener(document.getElementById('togglePeaksCheckbox'), 'change', () => {
-        if (videoElement instanceof HTMLImageElement) {
-            needToRecalculateMaxima = true;
-            draw();
-        }
+        redrawGraphIfLoadedImage(true);
     });
 
     addEventListener(document.getElementById('minValueRange'), 'input', function() {
         minValue = parseInt(this.value, 10);
         document.getElementById('minValueValue').textContent = minValue;
-        if (videoElement instanceof HTMLImageElement) {
-            needToRecalculateMaxima = true;
-            draw();
-        }
+        redrawGraphIfLoadedImage(true);
     });
 
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         addEventListener(checkbox, 'change', () => {
-            if (videoElement instanceof HTMLImageElement) {
-                draw();
-            }
+            redrawGraphIfLoadedImage()
         });
     });
 
     addEventListener(document.getElementById('resetZoomButton'), 'click', () => {
         resetZoom();
-        if (videoElement instanceof HTMLImageElement) {
-            draw();
-        }
+        redrawGraphIfLoadedImage()
     });
 
     document.getElementById('stepBackButton').addEventListener('click', stepBackZoom);
@@ -339,9 +327,7 @@ function setupEventListeners(videoElement, draw, graphCanvas) {
             console.log('hide');
             showReferenceGraph = false;
         }
-        if (videoElement instanceof HTMLImageElement) {
-            draw();
-        }
+        redrawGraphIfLoadedImage()
     });
 
     addEventListener(graphCanvas, 'mousedown', (event) => {
@@ -349,9 +335,7 @@ function setupEventListeners(videoElement, draw, graphCanvas) {
         const rect = graphCanvas.getBoundingClientRect();
         dragStartX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.width - 30));
         dragEndX = dragStartX;
-        if (videoElement instanceof HTMLImageElement) {
-            draw();
-        }
+        redrawGraphIfLoadedImage()
     });
 
     addEventListener(graphCanvas, 'mousemove', (event) => {
@@ -364,28 +348,40 @@ function setupEventListeners(videoElement, draw, graphCanvas) {
                 dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.width - 30));
             }
         }
-        if (videoElement instanceof HTMLImageElement) {
-            needToRecalculateMaxima = true;
-            draw();
-        }
+        redrawGraphIfLoadedImage(true);
     });
 
     addEventListener(graphCanvas, 'mouseup', () => {
         if (isDragging) {
             isDragging = false;
             addZoomRange(dragStartX, dragEndX);
-            if (videoElement instanceof HTMLImageElement) {
-                draw();
-            }
+            redrawGraphIfLoadedImage()
         }
     });
 
     document.querySelectorAll('input[name="toggleXLabels"]').forEach(radio => {
         addEventListener(radio, 'change', () => {
-            if (videoElement instanceof HTMLImageElement) {
-                draw();
-            }
+            redrawGraphIfLoadedImage()
         });
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (zoomList.length === 0) return;
+
+        const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
+        const elementWidth = getElementWidth(videoElement);
+        const zoomRange = zoomEnd - zoomStart;
+        const step = Math.ceil(zoomRange / 10);
+
+        if (event.key === 'ArrowLeft') {
+            const newZoomStart = Math.max(0, zoomStart - step);
+            const newZoomEnd = Math.min(elementWidth, newZoomStart + zoomRange);
+            updateZoomRange(newZoomStart, newZoomEnd);
+        } else if (event.key === 'ArrowRight') {
+            const newZoomEnd = Math.min(elementWidth, zoomEnd + step);
+            const newZoomStart = Math.max(0, newZoomEnd - zoomRange);
+            updateZoomRange(newZoomStart, newZoomEnd);
+        }
     });
 }
 
@@ -411,6 +407,24 @@ function getZoomRange(pixelWidth) {
         [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
     }
     return [zoomStart, zoomEnd];
+}
+
+function redrawGraphIfLoadedImage(invalidatePeaks = false) {
+    if (invalidatePeaks) {
+        needToRecalculateMaxima = true;
+    }
+    if (videoElement instanceof HTMLImageElement) {
+        draw();
+    }
+}
+
+/**
+ * Updates the zoom range in the zoom list
+ */
+function updateZoomRange(newZoomStart, newZoomEnd) {
+    zoomList[zoomList.length - 1] = [newZoomStart, newZoomEnd];
+    redrawGraphIfLoadedImage();
+    console.log(zoomList);
 }
 
 /**
@@ -518,15 +532,7 @@ function calculateXPosition(x, pixelWidth, canvasWidth) {
 }
 
 function initializeZoomList() {
-    let elementWidth;
-
-    if (videoElement instanceof HTMLImageElement) {
-        elementWidth = videoElement.naturalWidth;
-    } else {
-        elementWidth = videoElement.videoWidth;
-    }
-
-    zoomList = [[0, elementWidth]];
+    zoomList = [[0, getElementWidth(videoElement)]];
 }
 
 /**
@@ -535,8 +541,6 @@ function initializeZoomList() {
 function addZoomRange(startX, endX) {
     const rect = graphCanvas.getBoundingClientRect();
     const canvasWidth = rect.width - 60;
-
-    let elementWidth = getElementWidth(videoElement);
 
     let zoomStart;
     let zoomEnd;
@@ -552,7 +556,7 @@ function addZoomRange(startX, endX) {
 
     const newZoom = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
     newZoom[0] = Math.max(0, newZoom[0]);
-    newZoom[1] = Math.min(elementWidth, newZoom[1]);
+    newZoom[1] = Math.min(getElementWidth(videoElement), newZoom[1]);
 
     shiftZoomListIfFull();
     zoomList.push(newZoom);
@@ -560,10 +564,8 @@ function addZoomRange(startX, endX) {
 }
 
 function resetZoom() {
-    let elementWidth = getElementWidth(videoElement);
-
     shiftZoomListIfFull();
-    zoomList.push([0, elementWidth]);
+    zoomList.push([0, getElementWidth(videoElement)]);
 }
 
 function shiftZoomListIfFull() {
@@ -578,9 +580,7 @@ function shiftZoomListIfFull() {
 function stepBackZoom() {
     if (zoomList.length > 1) {
         zoomList.pop();
-        if (videoElement instanceof HTMLImageElement) {
-            draw();
-        }
+        redrawGraphIfLoadedImage()
     } else {
         console.log('No previous zoom level to step back to.');
     }
@@ -591,7 +591,7 @@ function stepBackZoom() {
  */
 function addReferenceLine() {
     captureReferenceGraph = true;
-    plotRGBLineFromCamera(videoElement);
+    plotRGBLineFromCamera();
 }
 
 /**
@@ -605,7 +605,7 @@ function removeReferenceLinesAndAddNewReferenceLine() {
 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', () => {
         if (videoElement) {
-            plotRGBLineFromCamera(videoElement);
+            plotRGBLineFromCamera();
         }
     });
 });

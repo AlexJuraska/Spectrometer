@@ -23,7 +23,7 @@ function saveGraphValues() {
     let pixelWidth = getElementWidth(videoElement);
 
     if (stripeWidth > 1) {
-        pixels = averagePixels(pixels, pixelWidth, stripeWidth);
+        pixels = averagePixels(pixels, pixelWidth);
     }
 
     let [zoomStart, zoomEnd] = getZoomRange(pixelWidth);

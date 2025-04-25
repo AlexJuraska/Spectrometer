@@ -236,6 +236,41 @@ function loadImageIntoCamera() {
     input.click();
 }
 
+function loadGraphData(){
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx';
+
+    input.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+
+                const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+                console.log(jsonData)
+
+                videoElement.style.display = 'none'; // Hide the video element
+                document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "none";
+                document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "block";
+                document.getElementById("cameraExposureButton").style.display = "none";
+                videoElement = document.getElementById('cameraImage');
+                videoElement.src = "../assets/generalUseImages/noCamera.png";
+                videoElement.style.display = 'block';
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    });
+
+    input.click();
+}
+
 /**
  * Returns the width of the element (video or image)
  * @param element

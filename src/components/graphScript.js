@@ -22,6 +22,8 @@ let graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
 
 const MAX_ZOOM_HISTORY = 4;
 
+let lineCtx;
+
 /**
  * Plots the RGB line graph from the camera or image element, deals with resizing, event listeners and drawing
  */
@@ -32,7 +34,7 @@ function plotRGBLineFromCamera() {
     }
 
     let lineCanvas = createLineCanvas();
-    ctx = lineCanvas.getContext('2d', { willReadFrequently: true });
+    lineCtx = lineCanvas.getContext('2d', { willReadFrequently: true });
     graphCanvas = document.getElementById('graphCanvas');
 
     graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
@@ -68,9 +70,9 @@ function drawGraphLine() {
     const stripeWidth = getStripeWidth();
     const { toggleCombined, toggleR, toggleG, toggleB } = getToggleStates();
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
-    ctx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
+    lineCtx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
 
-    let pixels = ctx.getImageData(0, 0, getElementWidth(videoElement), stripeWidth).data;
+    let pixels = lineCtx.getImageData(0, 0, getElementWidth(videoElement), stripeWidth).data;
     let pixelWidth = getElementWidth(videoElement);
 
     if (stripeWidth > 1) {
@@ -252,7 +254,7 @@ function drawPeakLabel(x, y, peakX) {
     if (!toggleXLabelsPx) {
         label = `${getWaveLengthByPx(peakX).toFixed(1)}`;
     } else {
-        label = `${peakX.toFixed(1)}`;
+        label = `${peakX.toFixed(0)}`;
     }
     const textWidth = graphCtx.measureText(label).width;
     const textHeight = 20;
@@ -489,7 +491,12 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
     graphCtx.beginPath();
 
     for (let x = 0; x < pixelWidth; x++) {
-        let value = calculateMaxColor(pixels, x);
+        let value
+        if (colorOffset === -1) {
+            value = calculateMaxColor(pixels, x);
+        } else {
+            value = pixels[x * 4 + colorOffset];
+        }
         const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
         const scaledX = calculateXPosition(x, pixelWidth, graphCtx.canvas.width);
 

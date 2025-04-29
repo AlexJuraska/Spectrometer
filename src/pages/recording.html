@@ -120,13 +120,13 @@
           <button class="buttonCameraStyle" data-translate="resume-camera" onclick="getBackToCameraStream()">Resume Camera</button>
           <button class="buttonCameraStyle" data-translate="load_image" onclick="loadImageIntoCamera()">Load Image</button>
         </div>
-        <label for="stripeWidthRange">
-          <span data-translate="stripe-width">Stripe Width:</span>
+        <div id="cameraWindowControlsOnMeasureStripeWidth">
+          <label for="stripeWidthRange"><span data-translate="stripe-width">Stripe Width:</span></label>
           <button class="buttonCameraStyle" onclick="changeStripeWidth(-1)">-</button>
           <input type="range" id="stripeWidthRange" min="1" value="1" onchange="changeStripeWidth(0)">
           <button class="buttonCameraStyle" onclick="changeStripeWidth(1)">+</button>
           <span id="stripeWidthValue">1</span> px
-        </label>
+        </div>
 <!--        <button class="buttonCameraStyle" id="screenshotCameraButton" data-translate="screenshot-camera" onclick="saveCameraImage()">Screenshot camera</button>-->
 <!--        <button class="buttonCameraStyle" data-translate="screenshot-graph" onclick="saveGraphImage()">Screenshot graph</button>-->
         <button class="buttonCameraStyle" data-translate="" onclick="saveRecordingData()">Save data</button>
@@ -221,7 +221,7 @@
     <div id="cameraExposure">
       <label data-translate="adjust-exposure" for="exposure">Adjust Exposure:</label>
       <input id="exposure" type="range" oninput="updateExposureValue(this.value)">
-      <span id="exposureValue"></span><span>ms</span>
+      <span id="exposureValue"></span><span>μs</span>
     </div>
   </div>
 

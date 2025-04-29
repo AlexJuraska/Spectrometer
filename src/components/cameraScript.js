@@ -59,7 +59,6 @@ async function startStream(deviceId) {
             cameraOutputWidth = videoElement.videoWidth;
             cameraOutputHeight = videoElement.videoHeight;
             document.getElementById("stripeWidthRange").max = cameraOutputHeight;
-            console.log("a" + cameraOutputHeight);
 
             if(videoElement.videoWidth === 1280){
                 document.getElementById("videoMainWindow").style.height = "214px";
@@ -485,7 +484,7 @@ function checkStripeWidthWithinRange(newValue) {
  * The returned number is rounded to a whole number.
  */
 function calculateActualStripeWidth(value) {
-    return ((value - 1) / (cameraOutputHeight - 1)) * (stripeGraphCanvas.height - 1) + 1;
+    return parseInt(((value - 1) / (cameraOutputHeight - 1)) * (stripeGraphCanvas.height - 1) + 1);
 }
 
 /**

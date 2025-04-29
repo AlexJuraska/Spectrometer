@@ -122,10 +122,9 @@
         </div>
         <label for="stripeWidthRange">
           <span data-translate="stripe-width">Stripe Width:</span>
-          <button class="buttonCameraStyle" onclick="decreaseStripeWidth()">-</button>
-<!--          <input type="range" id="stripeWidthRange" min="1" max="110" value="1" onchange="setStripeWidth(this.value)">-->
-          <input type="range" id="stripeWidthRange" min="1" value="1" onchange="">
-          <button class="buttonCameraStyle" onclick="increaseStripeWidth()">+</button>
+          <button class="buttonCameraStyle" onclick="changeStripeWidth(-1)">-</button>
+          <input type="range" id="stripeWidthRange" min="1" value="1" onchange="changeStripeWidth(0)">
+          <button class="buttonCameraStyle" onclick="changeStripeWidth(1)">+</button>
           <span id="stripeWidthValue">1</span> px
         </label>
 <!--        <button class="buttonCameraStyle" id="screenshotCameraButton" data-translate="screenshot-camera" onclick="saveCameraImage()">Screenshot camera</button>-->

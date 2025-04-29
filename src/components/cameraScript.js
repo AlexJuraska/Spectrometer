@@ -58,6 +58,8 @@ async function startStream(deviceId) {
         videoElement.onloadedmetadata = () => {
             cameraOutputWidth = videoElement.videoWidth;
             cameraOutputHeight = videoElement.videoHeight;
+            document.getElementById("stripeWidthRange").max = cameraOutputHeight;
+            console.log("a" + cameraOutputHeight);
 
             if(videoElement.videoWidth === 1280){
                 document.getElementById("videoMainWindow").style.height = "214px";
@@ -445,70 +447,45 @@ function getStripeWidth(){
 }
 
 /**
- * Decreases the width of the stripe
- */
-function decreaseStripeWidth() {
-    const change = -1;
-    if (actualStripeWidth + change > parseInt(1, 10)) {
-        checkStripeWidth(change);
-    }
-}
-
-/**
- * Increases the width of the stripe
- */
-function increaseStripeWidth() {
-    const change = 1
-    if (actualStripeWidth + change < parseInt(cameraOutputHeight, 10)) {
-        checkStripeWidth(change);
-    }
-}
-
-/**
- * For the slider, sets the stripe width according to newValue
- * @param newValue value from the slider, scaled to the canvas size
- */
-function setStripeWidth(newValue) {
-    actualStripeWidth = calculateActualStripeWidth(newValue);
-    stripeWidth = newValue;
-    console.log(actualStripeWidth);
-    console.log(stripeWidth);
-    checkStripeWidth(0);
-}
-
-/**
  * Checks whether the threshold for stripe increase has been reached
- * @param change 1, 0 or -1
+ * @param change 1 to increment, -1 to decrement or 0 to set to current slider value
  */
-function checkStripeWidth(change) {
+function changeStripeWidth(change) {
+    if (![-1,0,1].includes(change)) { return; }
+
     const rangeInput = document.getElementById("stripeWidthRange");
-    const step = calculateStripeGrowthStep();
+    const rangeText = document.getElementById("stripeWidthValue");
 
-    actualStripeWidth = parseInt(actualStripeWidth) + change;
-    document.getElementById("stripeWidthValue").textContent = actualStripeWidth;
+    let cameraStripeWidth = parseInt(rangeInput.value) + change;
 
-    if (change === 0 || Math.round(actualStripeWidth % step) === 0) {
-        stripeWidth += change;
-        rangeInput.value = stripeWidth;
-        updateStripeWidth();
+    if (!checkStripeWidthWithinRange(cameraStripeWidth)) {
+        return;
     }
-}
-/**
- * Calculates the step needed for the stripe width thickening/thining
- */
-function calculateStripeGrowthStep() {
-    const step = Math.round(cameraOutputHeight / stripeGraphCanvas.height);
-    return step > 0 ? step : 1;
+
+    rangeInput.value = cameraStripeWidth;
+    rangeText.textContent = cameraStripeWidth;
+
+    stripeWidth = calculateActualStripeWidth(cameraStripeWidth);
+    updateStripeWidth();
 }
 
 /**
- * Calculates the actual width of the stripe based on the element sized width.
+ * Function checks whether the newValue stripe width is within the camera range
+ * @param newValue stripe width scaled to camera capabilities
+ */
+function checkStripeWidthWithinRange(newValue) {
+    const checkUpperLimit = parseInt(newValue, 10) <= parseInt(cameraOutputHeight, 10);
+    const checkBottomLimit = parseInt(newValue, 10) >= parseInt(1, 10);
+
+    return checkUpperLimit && checkBottomLimit
+}
+
+/**
+ * Calculates the width of the stripe to be displayed on the canvas element itself.
  * The returned number is rounded to a whole number.
  */
-function calculateActualStripeWidth(stripeWidth) {
-    const scale = cameraOutputHeight / stripeGraphCanvas.height;
-    const width = Math.round(stripeWidth * scale);
-    return width> 0 ? width : 1;
+function calculateActualStripeWidth(value) {
+    return ((value - 1) / (cameraOutputHeight - 1)) * (stripeGraphCanvas.height - 1) + 1;
 }
 
 /**
@@ -560,7 +537,6 @@ var stripeGraphCanvas = document.getElementById("cameraWindowCanvasRecording");
 var stripeGraphCtx = stripeGraphCanvas.getContext("2d", { willReadFrequently: true });
 var yPercentage = 0.5; // Global variable representing Y position as a percentage (default to 50%)
 var stripeWidth = 1;
-var actualStripeWidth = 1;
 var videoWindow = document.getElementById("videoMainWindow");
 var computedStyle = getComputedStyle(videoWindow);
 
@@ -569,7 +545,8 @@ stripeGraphCanvas.width = parseInt(computedStyle.width, 10);
 stripeGraphCanvas.height = parseInt(computedStyle.height, 10);
 
 //set max width of stripe
-document.getElementById("stripeWidthRange").max = stripeGraphCanvas.height;
+// document.getElementById("stripeWidthRange").max = stripeGraphCanvas.height;
+
 
 // Event listener for mouse clicks on the canvas
 stripeGraphCanvas.addEventListener("click", function (event) {

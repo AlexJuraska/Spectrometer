@@ -15,11 +15,9 @@ function saveRecordingData() {
  * Saves the numbers from the graph to a .xlsx file
  */
 function saveGraphValues() {
-    //TODO make getting the values into a separate func
-
     const stripeWidth = getStripeWidth();
 
-    let pixels = ctx.getImageData(0, 0, getElementWidth(videoElement), stripeWidth).data;
+    let pixels = lineCtx.getImageData(0, 0, getElementWidth(videoElement), stripeWidth).data;
     let pixelWidth = getElementWidth(videoElement);
 
     if (stripeWidth > 1) {

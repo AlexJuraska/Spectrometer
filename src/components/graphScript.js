@@ -113,16 +113,16 @@ function drawGraphLine() {
     }
 
     if (toggleCombined) {
-        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue);
+        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, true);
     }
     if (toggleR) {
-        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue);
+        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, true);
     }
     if (toggleG) {
-        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue);
+        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, true);
     }
     if (toggleB) {
-        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue);
+        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, true);
     }
 
     if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
@@ -316,6 +316,10 @@ function setupEventListeners() {
         redrawGraphIfLoadedImage()
     });
 
+    document.getElementById('colorGraph').addEventListener('change', () => {
+        redrawGraphIfLoadedImage();
+    });
+
     document.getElementById('stepBackButton').addEventListener('click', stepBackZoom);
 
     document.getElementById('referenceGraphCheckbox').addEventListener( 'change', () => {
@@ -487,11 +491,11 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
 /**
  * Draws a line on the graph canvas
  */
-function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
+function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, fillArea = false) {
     graphCtx.beginPath();
 
     for (let x = 0; x < pixelWidth; x++) {
-        let value
+        let value;
         if (colorOffset === -1) {
             value = calculateMaxColor(pixels, x);
         } else {
@@ -499,6 +503,25 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
         }
         const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
         const scaledX = calculateXPosition(x, pixelWidth, graphCtx.canvas.width);
+
+        if (fillArea && document.getElementById('colorGraph').checked) {
+            const nextX = calculateXPosition(x + 1, pixelWidth, graphCtx.canvas.width);
+            const baseY = graphCtx.canvas.height - 30;
+
+            graphCtx.beginPath();
+            graphCtx.moveTo(scaledX, y);
+            graphCtx.lineTo(nextX, calculateYPosition(value, graphCtx.canvas.height, maxValue));
+            graphCtx.lineTo(nextX, baseY);
+            graphCtx.lineTo(scaledX, baseY);
+            graphCtx.closePath();
+
+            // Set the fill color based on the pixel's RGB values
+            const r = pixels[x * 4];
+            const g = pixels[x * 4 + 1];
+            const b = pixels[x * 4 + 2];
+            graphCtx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.2)`;
+            graphCtx.fill();
+        }
 
         if (x === 0) {
             graphCtx.moveTo(scaledX, y);
@@ -508,11 +531,9 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
         }
         graphCtx.currentY = y;
     }
-
     graphCtx.strokeStyle = color;
     graphCtx.lineWidth = 1;
     graphCtx.stroke();
-    delete graphCtx.currentY;
 }
 
 /**

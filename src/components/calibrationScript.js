@@ -500,3 +500,5 @@ function drawCalibrationPoints() {
         graphCtxCalibration.stroke();
     }
 }
+
+drawGridCalibration(); // Temporary

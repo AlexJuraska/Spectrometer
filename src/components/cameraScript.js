@@ -3,7 +3,7 @@
 // ###########
 
 // Video element
-let videoElement = document.getElementById('videoSelect');
+let videoElement = document.getElementById('videoMain');
 // Camera selection dropdown
 const cameraSelect = document.getElementById('cameraSelect');
 //current camera used

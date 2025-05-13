@@ -13,7 +13,6 @@
 
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script> <!-- xlsx -->
   <script src="../components/setupScript.js"></script>
-  <script src="../components/calibrationScript.js"></script>
   <script src="../components/polynomialRegressionScript.js"></script>
   <script src="../components/zipScript.js"></script>
   <script src="../components/languageScript.js"></script>
@@ -24,23 +23,8 @@
 </head>
 <body>
 
-<!-- Step 1 Camera selection & Pasik selection -->
-<div id="step1" class="step-container active">
-  <p class="SectionHeader" data-translate="step1-title">Step 1: Camera Selection</p>
-
-  <div id="cameraSelectWindow">
-    <div id="videoSelectWindow">
-      <video id="videoSelect" autoplay playsinline></video>
-    </div>
-    <div id="cameraWindowControlsOnSetUp">
-      <select class="cameraWindowControlsOnSetUpButtons cameraButton" id="cameraSelect"></select>
-      <button class="cameraWindowControlsOnSetUpButtons cameraButton" id="cameraRefresh" data-translate="refresh-button" onclick="getCameras()">Refresh</button>
-    </div>
-  </div>
-</div>
-
 <!-- Step 2 Camera calibration -->
-<div id="step2" class="step-container">
+<div id="step2" class="step-container active">
   <p class="SectionHeader" data-translate="step2-title">Step 2: Camera calibration</p>
   <div style="display:flex" class="margin-left-15px">
     <div style="width: 150px; text-align: right">px</div>
@@ -92,7 +76,6 @@
 
   <div id="graphWindowCalibration" class="margin-left-15px">
     <canvas id="graphCalibration" width="896" height="455"></canvas>
-<!--    <script src="../components/calibrationScript.js"></script>-->
   </div>
 
 </div>
@@ -109,9 +92,13 @@
 
         <canvas data-translate="canvas-warning" id="cameraWindowCanvasRecording" >Your browser does not support the HTML canvas tag.</canvas>
       </div>
+      <div id="cameraWindowControlsOnSetUp">
+        <select class="cameraWindowControlsOnSetUpButtons cameraButton" id="cameraSelect"></select>
+<!--        <button class="cameraWindowControlsOnSetUpButtons cameraButton" id="cameraRefresh" data-translate="refresh-button" onclick="getCameras()">Refresh</button>-->
+      </div>
       <div id="cameraWindowControlsOnMeasure">
         <div id="cameraWindowControlsOnMeasureCameraStreaming">
-          <button class="buttonCameraStyle" data-translate="refresh-button" onclick="resetCamera()">Refresh</button>
+          <button class="buttonCameraStyle" data-translate="refresh-button" onclick="getCameras()">Refresh</button> <!-- Originally onclick="resetCamera()" -->
           <button class="buttonCameraStyle" data-translate="pause-button" onclick="pauseVideo()" id="pauseVideoButton">Pause</button>
           <button class="buttonCameraStyle" data-translate="play-button" onclick="playVideo()" id="playVideoButton" style="display: none">Play</button>
           <button class="buttonCameraStyle" data-translate="load_image" onclick="loadImageIntoCamera()">Load Image</button>
@@ -234,7 +221,6 @@
   </nav>
 </div>
 
-
 <!--  Buttons to navigate in the stepper  -->
 <div class="navigation-buttons" id="stepper-buttons">
   <button data-translate="previous-button" id="prevButton" onclick="changeStep(-1)" disabled>Previous</button>
@@ -243,5 +229,7 @@
 <script src="../components/cameraScript.js"></script>
 <script src="../components/stripeScript.js"></script>
 <script src="../components/cameraSelection.js"></script>
+<script src="../components/calibrationScript.js"></script>
+<script>resetCamera();</script>
 </body>
 </html>

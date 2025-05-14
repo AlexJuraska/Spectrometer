@@ -130,7 +130,7 @@ function drawGraphLine() {
         drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, false); // No fill for individual lines
     }
 
-    if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
+    if (document.getElementById('togglePeaksCheckbox').checked && toggleCombined && maxima.length > 0) {
         drawPeaks(maxima, maxValue);
     }
 

@@ -97,6 +97,7 @@ async function getCameras() {
     } catch (error) {
         console.error('Error fetching devices: ', error);
     }
+    resetCamera();
 }
 
 /**

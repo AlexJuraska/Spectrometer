@@ -192,7 +192,17 @@
       <label><input type="checkbox" id="toggleR"> R</label>
       <label><input type="checkbox" id="toggleG"> G</label>
       <label><input type="checkbox" id="toggleB"> B</label>
-      <label><input type="checkbox" id="colorGraph"> Color the graph</label>
+    </div>
+
+    <div id="fillGraphWindow">
+      <label>
+        <input type="checkbox" id="colorGraph"> <span data-translate="fill-graph">Color the graph</span>
+      </label>
+      <div id="gradientOpacitySliderContainer" style="display: none;">
+        <label for="gradientOpacitySlider">Color Opacity:</label>
+        <input type="range" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
+        <span id="gradientOpacityValue">0.7</span>
+      </div>
     </div>
 
     <div id="peaksSection">

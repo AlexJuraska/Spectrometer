@@ -4,6 +4,7 @@ let dragStartX = 0;
 let dragEndX = 0;
 let animationId;
 let minValue = 0;
+let spectrumList = [];
 let referenceColors = ['#ff7602' ,'#ffdd00' ,'#00ffd3' ,'#8f5bf8',
     '#d64d4d', '#a6794b', '#77ba7b', '#f800ff',
     '#f89a8e', '#cabb6e', '#237c24', '#3109a5',
@@ -23,6 +24,8 @@ let graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
 const MAX_ZOOM_HISTORY = 4;
 
 let lineCtx;
+
+let gradientOpacity = 0.7;
 
 /**
  * Plots the RGB line graph from the camera or image element, deals with resizing, event listeners and drawing
@@ -51,6 +54,7 @@ function plotRGBLineFromCamera() {
 
     initializeZoomList();
     resizeObserver.observe(graphCanvas);
+    generateSpectrumList(getElementWidth(videoElement));
     setupEventListeners();
     draw();
 }
@@ -69,6 +73,7 @@ function draw() {
 function drawGraphLine() {
     const stripeWidth = getStripeWidth();
     const { toggleCombined, toggleR, toggleG, toggleB } = getToggleStates();
+    const fillArea = document.getElementById('colorGraph').checked; // Check the fillArea checkbox state
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
     lineCtx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
 
@@ -113,16 +118,16 @@ function drawGraphLine() {
     }
 
     if (toggleCombined) {
-        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, true);
+        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, fillArea); // Fill only for combined line
     }
     if (toggleR) {
-        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, true);
+        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, false); // No fill for individual lines
     }
     if (toggleG) {
-        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, true);
+        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, false); // No fill for individual lines
     }
     if (toggleB) {
-        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, true);
+        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, false); // No fill for individual lines
     }
 
     if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
@@ -389,6 +394,18 @@ function setupEventListeners() {
             updateZoomRange(newZoomStart, newZoomEnd);
         }
     });
+
+    document.getElementById('colorGraph').addEventListener('change', function () {
+        const sliderContainer = document.getElementById('gradientOpacitySliderContainer');
+        sliderContainer.style.display = this.checked ? 'block' : 'none';
+        redrawGraphIfLoadedImage();
+    });
+
+    document.getElementById('gradientOpacitySlider').addEventListener('input', function () {
+        gradientOpacity = parseFloat(this.value);
+        document.getElementById('gradientOpacityValue').textContent = gradientOpacity.toFixed(1);
+        redrawGraphIfLoadedImage();
+    });
 }
 
 /**
@@ -420,6 +437,7 @@ function redrawGraphIfLoadedImage(invalidatePeaks = false) {
         needToRecalculateMaxima = true;
     }
     if (videoElement instanceof HTMLImageElement) {
+        generateSpectrumList(getElementWidth(videoElement));
         draw();
     }
 }
@@ -489,39 +507,67 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
 }
 
 /**
- * Draws a line on the graph canvas
+ * Generates the spectrum list based on the number of pixels
+ */
+function generateSpectrumList(pixelWidth) {
+    spectrumList = [];
+    for (let i = 0; i < pixelWidth; i++) {
+        const ratio = i / (pixelWidth - 1);
+        const r = Math.round(255 * Math.max(1 - 2 * ratio, 0));
+        const g = Math.round(255 * Math.max(1 - Math.abs(2 * ratio - 1), 0));
+        const b = Math.round(255 * Math.max(2 * ratio - 1, 0));
+        spectrumList.push(`rgb(${r}, ${g}, ${b})`);
+    }
+}
+
+/**
+ * Draws a line with a gradient based on the spectrum list
  */
 function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, fillArea = false) {
-    graphCtx.beginPath();
+    const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
+    const zoomRange = zoomEnd - zoomStart;
+    const zoomedSpectrum = spectrumList.slice(zoomStart, zoomEnd);
 
-    for (let x = 0; x < pixelWidth; x++) {
-        let value;
-        if (colorOffset === -1) {
-            value = calculateMaxColor(pixels, x);
-        } else {
-            value = pixels[x * 4 + colorOffset];
-        }
-        const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
-        const scaledX = calculateXPosition(x, pixelWidth, graphCtx.canvas.width);
+    if (fillArea) {
+        for (let x = 0; x < zoomRange - 1; x++) {
+            let value = colorOffset === -1 ? calculateMaxColor(pixels, x) : pixels[x * 4 + colorOffset];
+            let nextValue = colorOffset === -1 ? calculateMaxColor(pixels, x + 1) : pixels[(x + 1) * 4 + colorOffset];
 
-        if (fillArea && document.getElementById('colorGraph').checked) {
-            const nextX = calculateXPosition(x + 1, pixelWidth, graphCtx.canvas.width);
-            const baseY = graphCtx.canvas.height - 30;
+            const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
+            const nextY = calculateYPosition(nextValue, graphCtx.canvas.height, maxValue);
+            const scaledX = calculateXPosition(x, zoomRange, graphCtx.canvas.width);
+            const nextX = calculateXPosition(x + 1, zoomRange, graphCtx.canvas.width);
+
+            const gradient = graphCtx.createLinearGradient(scaledX, 0, nextX, 0);
+            const startColor = zoomedSpectrum[x].replace('rgb', 'rgba').replace(')', `, ${gradientOpacity})`);
+            const endColor = (zoomedSpectrum[x + 1] || zoomedSpectrum[x]).replace('rgb', 'rgba').replace(')', `, ${gradientOpacity})`);
+
+            gradient.addColorStop(0, startColor);
+            gradient.addColorStop(1, endColor);
 
             graphCtx.beginPath();
-            graphCtx.moveTo(scaledX, y);
-            graphCtx.lineTo(nextX, calculateYPosition(value, graphCtx.canvas.height, maxValue));
-            graphCtx.lineTo(nextX, baseY);
-            graphCtx.lineTo(scaledX, baseY);
+            graphCtx.moveTo(scaledX, graphCtx.canvas.height - 30);
+            if (x === 0) {
+                graphCtx.lineTo(scaledX, y);
+                graphCtx.lineTo(nextX, y);
+            } else {
+                graphCtx.lineTo(scaledX, graphCtx.currentY || y);
+                graphCtx.lineTo(nextX, graphCtx.currentY || y);
+            }
+            graphCtx.lineTo(nextX, graphCtx.canvas.height - 30);
             graphCtx.closePath();
 
-            // Set the fill color based on the pixel's RGB values
-            const r = pixels[x * 4];
-            const g = pixels[x * 4 + 1];
-            const b = pixels[x * 4 + 2];
-            graphCtx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.2)`;
+            graphCtx.fillStyle = gradient;
             graphCtx.fill();
+            graphCtx.currentY = nextY;
         }
+    }
+
+    graphCtx.beginPath();
+    for (let x = 0; x < zoomRange; x++) {
+        let value = colorOffset === -1 ? calculateMaxColor(pixels, x) : pixels[x * 4 + colorOffset];
+        const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
+        const scaledX = calculateXPosition(x, zoomRange, graphCtx.canvas.width);
 
         if (x === 0) {
             graphCtx.moveTo(scaledX, y);

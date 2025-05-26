@@ -30,14 +30,15 @@ function changeStripeWidth(change) {
 
     let cameraStripeWidth = parseInt(rangeInput.value) + change;
 
-    if (!checkStripeWidthWithinRange(cameraStripeWidth)) {
+    if (!checkValueWithinCameraHeight(cameraStripeWidth)) {
         return;
     }
 
     rangeInput.value = cameraStripeWidth;
     rangeText.textContent = cameraStripeWidth;
 
-    stripeWidth = calculateActualStripeWidth(cameraStripeWidth);
+    stripeWidth = convertActualToCanvasValue(cameraStripeWidth);
+    changeStripePlacement(0);
     updateStripeWidth();
 }
 
@@ -45,7 +46,7 @@ function changeStripeWidth(change) {
  * Function checks whether the newValue stripe width is within the camera range
  * @param newValue stripe width scaled to camera capabilities
  */
-function checkStripeWidthWithinRange(newValue) {
+function checkValueWithinCameraHeight(newValue) {
     const checkUpperLimit = parseInt(newValue, 10) <= parseInt(cameraOutputHeight, 10);
     const checkBottomLimit = parseInt(newValue, 10) >= parseInt(1, 10);
 
@@ -53,11 +54,19 @@ function checkStripeWidthWithinRange(newValue) {
 }
 
 /**
- * Calculates the width of the stripe to be displayed on the canvas element itself.
+ * Converts the input value from camera resolution scale to stripeCanvas scale.
  * The returned number is rounded to a whole number.
  */
-function calculateActualStripeWidth(value) {
-    return parseInt(((value - 1) / (cameraOutputHeight - 1)) * (stripeGraphCanvas.height - 1) + 1);
+function convertActualToCanvasValue(value) {
+    return Math.round(((value - 1) / (cameraOutputHeight - 1)) * (stripeGraphCanvas.height - 1) + 1);
+}
+
+/**
+ * Converts the input value from stripeCanvas scale to camera resolution scale.
+ * The returned number is rounded to a whole number.
+ */
+function convertCanvasToActualValue(value) {
+    return Math.round(((value - 1) / (stripeGraphCanvas.height - 1)) * (cameraOutputHeight - 1) + 1);
 }
 
 /**
@@ -78,6 +87,55 @@ function updateStripeWidth() {
         needToRecalculateMaxima = true;
         plotRGBLineFromCamera();
     }
+}
+
+/**
+ * Moves the placement of the stripe up or down
+ * @param change 1 to increment, -1 to decrement or 0 to set to current slider value
+ */
+function changeStripePlacement(change) {
+    if (![-1,0,1].includes(change)) { return; }
+
+    const rangeInput = document.getElementById("stripePlacementRange");
+    const rangeText = document.getElementById("stripePlacementValue");
+
+    let newHeight = parseInt(rangeInput.value) + change;
+
+    if (!checkValueWithinCameraHeight(newHeight)) {
+        return;
+    }
+
+    rangeInput.value = newHeight;
+    rangeText.textContent = getStripePositionRangeText();
+
+    yPercentage = newHeight / cameraOutputHeight;
+    updateStripeWidth();
+}
+
+/**
+ * Returns the vertical range of the stripe in string form
+ */
+function getStripePositionRangeText() {
+    const rangeInput = document.getElementById("stripePlacementRange");
+    const rangeInputWidth = document.getElementById("stripeWidthRange");
+    let middleHeight = parseInt(rangeInput.value);
+    let actualStripeWidth = rangeInputWidth.value;
+
+    if (parseInt(actualStripeWidth) === 1) {
+        return `<${middleHeight},${middleHeight}>`;
+    }
+
+    let half = parseInt(actualStripeWidth / 2);
+
+    let final;
+    if (middleHeight-half < 1) {
+        final = `<1,${actualStripeWidth}>`;
+    } else if (middleHeight+half > cameraOutputHeight) {
+        final = `<${cameraOutputHeight-actualStripeWidth+1},${cameraOutputHeight}>`;
+    } else {
+        final = `<${middleHeight-half+1},${middleHeight+half}>`;
+    }
+    return final;
 }
 
 /**
@@ -113,13 +171,23 @@ stripeGraphCanvas.addEventListener("click", function (event) {
     stripeGraphCanvas.height = parseInt(getComputedStyle(videoWindow).height,10);
     var rect = stripeGraphCanvas.getBoundingClientRect(); // Get canvas position
     var y = event.clientY - rect.top; // Calculate Y within canvas
+
     if (y < getStripeWidth()/2){
         y = getStripeWidth()/2;
     }
     else if (y + getStripeWidth()/2 > stripeGraphCanvas.height){
         y = stripeGraphCanvas.height - getStripeWidth()/2;
     }
+
     yPercentage = y / stripeGraphCanvas.height; // Update global variable as percentage
+
+    const stripePlacementSlider = document.getElementById("stripePlacementRange");
+    const stripePlacementValue = document.getElementById("stripePlacementValue");
+    let sliderPosition = convertCanvasToActualValue(y)
+
+    stripePlacementSlider.value = sliderPosition;
+    stripePlacementValue.textContent = sliderPosition;
+
     drawSelectionLine(); // Redraw line at the new position
     if (videoElement) {
         needToRecalculateMaxima = true;

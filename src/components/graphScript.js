@@ -16,6 +16,9 @@ let captureReferenceGraph = false;
 let showReferenceGraph = false;
 let needToRecalculateMaxima = true;
 let maxima = [];
+let maximaR = [];
+let maximaG = [];
+let maximaB = [];
 let eventListeners = [];
 
 let graphCanvas = document.getElementById('graphCanvas');
@@ -89,8 +92,18 @@ function drawGraphLine() {
         captureReferenceGraph = false;
     }
 
+
     if (needToRecalculateMaxima && document.getElementById('togglePeaksCheckbox').checked) {
         maxima = findPeaks(pixels, pixelWidth, minValue);
+        if (toggleR) {
+            maximaR = findPeaks(pixels, pixelWidth, minValue, 0);
+        }
+        if (toggleG) {
+            maximaG = findPeaks(pixels, pixelWidth, minValue, 1);
+        }
+        if (toggleB) {
+            maximaB = findPeaks(pixels, pixelWidth, minValue, 2);
+        }
         needToRecalculateMaxima = false;
     }
 
@@ -119,19 +132,27 @@ function drawGraphLine() {
 
     if (toggleCombined) {
         drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, fillArea); // Fill only for combined line
+        if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
+            drawPeaks(maxima, maxValue, 'black');
+        }
     }
     if (toggleR) {
         drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, false); // No fill for individual lines
+        if (document.getElementById('togglePeaksCheckbox').checked && maximaR.length > 0) {
+            drawPeaks(maximaR, maxValue, 'red');
+        }
     }
     if (toggleG) {
         drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, false); // No fill for individual lines
+        if (document.getElementById('togglePeaksCheckbox').checked && maximaG.length > 0) {
+            drawPeaks(maximaG, maxValue, 'green');
+        }
     }
     if (toggleB) {
         drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, false); // No fill for individual lines
-    }
-
-    if (document.getElementById('togglePeaksCheckbox').checked && toggleCombined && maxima.length > 0) {
-        drawPeaks(maxima, maxValue);
+        if (document.getElementById('togglePeaksCheckbox').checked && maximaB.length > 0) {
+            drawPeaks(maximaB, maxValue, 'blue');
+        }
     }
 
     if (isDragging) {
@@ -180,14 +201,20 @@ function averagePixels(pixels, pixelWidth) {
 /**
  * Finds the peaks of the graph
  */
-function findPeaks(pixels, pixelWidth, minValue) {
+function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1) {
     let maxima = [];
     let start = null;
 
     for (let x = 1; x < pixelWidth - 1; x++) {
-        let value = calculateMaxColor(pixels, x);
-        let prevValue = calculateMaxColor(pixels, x - 1);
-        let nextValue = calculateMaxColor(pixels, x + 1);
+        let value = colorOffset === -1
+            ? calculateMaxColor(pixels, x)
+            : pixels[x * 4 + colorOffset];
+        let prevValue = colorOffset === -1
+            ? calculateMaxColor(pixels, x - 1)
+            : pixels[(x - 1) * 4 + colorOffset];
+        let nextValue = colorOffset === -1
+            ? calculateMaxColor(pixels, x + 1)
+            : pixels[(x + 1) * 4 + colorOffset];
 
         if (value > minValue && value >= prevValue && value >= nextValue) {
             if (start === null && prevValue < value) {
@@ -195,8 +222,12 @@ function findPeaks(pixels, pixelWidth, minValue) {
             }
         } else {
             if (start !== null) {
-                let plateauValue = calculateMaxColor(pixels, start);
-                let nextPlateauValue = calculateMaxColor(pixels, x);
+                let plateauValue = colorOffset === -1
+                    ? calculateMaxColor(pixels, start)
+                    : pixels[start * 4 + colorOffset];
+                let nextPlateauValue = colorOffset === -1
+                    ? calculateMaxColor(pixels, x)
+                    : pixels[x * 4 + colorOffset];
 
                 if (plateauValue > nextPlateauValue) {
                     maxima.push({ x: start, value: plateauValue });
@@ -206,13 +237,21 @@ function findPeaks(pixels, pixelWidth, minValue) {
         }
     }
 
-    const firstPixelValue = calculateMaxColor(pixels, 0);
-    if (firstPixelValue > calculateMaxColor(pixels, 1) && firstPixelValue > minValue) {
+    const firstPixelValue = colorOffset === -1
+        ? calculateMaxColor(pixels, 0)
+        : pixels[4 + colorOffset];
+    if (firstPixelValue > (colorOffset === -1
+        ? calculateMaxColor(pixels, 1)
+        : pixels[4 + colorOffset]) && firstPixelValue > minValue) {
         maxima.push({ x: 0, value: Math.floor(firstPixelValue) });
     }
 
-    const lastPixelValue = calculateMaxColor(pixels, pixelWidth - 1);
-    if (lastPixelValue > calculateMaxColor(pixels, pixelWidth - 2) && lastPixelValue > minValue) {
+    const lastPixelValue = colorOffset === -1
+        ? calculateMaxColor(pixels, pixelWidth - 1)
+        : pixels[(pixelWidth - 1) * 4 + colorOffset];
+    if (lastPixelValue > (colorOffset === -1
+        ? calculateMaxColor(pixels, pixelWidth - 2)
+        : pixels[(pixelWidth - 2) * 4 + colorOffset]) && lastPixelValue > minValue) {
         maxima.push({ x: pixelWidth - 1, value: Math.floor(lastPixelValue) });
     }
 
@@ -236,7 +275,7 @@ function drawDottedLine(x, yStart, yEnd, color) {
 /**
  * Draws the peaks on the graph canvas
  */
-function drawPeaks(maxima, maxValue) {
+function drawPeaks(maxima, maxValue, color) {
     const padding = 30;
     const height = graphCanvas.height;
     const [zoomStart, zoomEnd] = getZoomRange(getElementWidth(videoElement));
@@ -244,7 +283,7 @@ function drawPeaks(maxima, maxValue) {
         if (max.x >= zoomStart && max.x <= zoomEnd) {
             const x = calculateXPosition(max.x - zoomStart, zoomEnd - zoomStart, graphCanvas.width);
             const y = calculateYPosition(max.value, height, maxValue);
-            drawDottedLine(x, height - padding, y, 'red');
+            drawDottedLine(x, height - padding, y, color);
             drawPeakLabel(x, y, max.x);
         }
     });
@@ -312,7 +351,8 @@ function setupEventListeners() {
 
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         addEventListener(checkbox, 'change', () => {
-            redrawGraphIfLoadedImage()
+            needToRecalculateMaxima = true;
+            redrawGraphIfLoadedImage();
         });
     });
 

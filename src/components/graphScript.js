@@ -76,7 +76,7 @@ function draw() {
 function drawGraphLine() {
     const stripeWidth = getStripeWidth();
     const { toggleCombined, toggleR, toggleG, toggleB } = getToggleStates();
-    const fillArea = document.getElementById('colorGraph').checked; // Check the fillArea checkbox state
+    const fillArea = document.getElementById('colorGraph').checked;
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
     lineCtx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
 
@@ -131,25 +131,25 @@ function drawGraphLine() {
     }
 
     if (toggleCombined) {
-        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, fillArea); // Fill only for combined line
+        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, fillArea);
         if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
             drawPeaks(maxima, maxValue, 'black');
         }
     }
     if (toggleR) {
-        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, false); // No fill for individual lines
+        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, false);
         if (document.getElementById('togglePeaksCheckbox').checked && maximaR.length > 0) {
             drawPeaks(maximaR, maxValue, 'red');
         }
     }
     if (toggleG) {
-        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, false); // No fill for individual lines
+        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, false);
         if (document.getElementById('togglePeaksCheckbox').checked && maximaG.length > 0) {
             drawPeaks(maximaG, maxValue, 'green');
         }
     }
     if (toggleB) {
-        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, false); // No fill for individual lines
+        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, false);
         if (document.getElementById('togglePeaksCheckbox').checked && maximaB.length > 0) {
             drawPeaks(maximaB, maxValue, 'blue');
         }

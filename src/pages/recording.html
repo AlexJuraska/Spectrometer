@@ -108,14 +108,19 @@
           <button class="buttonCameraStyle" data-translate="load_image" onclick="loadImageIntoCamera()">Load Image</button>
         </div>
         <div id="cameraWindowControlsOnMeasureStripeWidth">
-          <label for="stripeWidthRange"><span data-translate="stripe-width">Stripe Width:</span></label>
+          <label for="stripeWidthRange"><span data-translate="stripe-width">Stripe Width</span></label>
           <button class="buttonCameraStyle" onclick="changeStripeWidth(-1)">-</button>
           <input type="range" id="stripeWidthRange" min="1" value="1" onchange="changeStripeWidth(0)">
           <button class="buttonCameraStyle" onclick="changeStripeWidth(1)">+</button>
           <span id="stripeWidthValue">1</span> px
         </div>
-<!--        <button class="buttonCameraStyle" id="screenshotCameraButton" data-translate="screenshot-camera" onclick="saveCameraImage()">Screenshot camera</button>-->
-<!--        <button class="buttonCameraStyle" data-translate="screenshot-graph" onclick="saveGraphImage()">Screenshot graph</button>-->
+        <div id="cameraWindowControlsOnMeasureStripePlacement">
+          <label for="stripePlacementRange"><span data-translate="stripe-place">Stripe place</span></label>
+          <button class="buttonCameraStyle" onclick="changeStripePlacement(-1)">-</button>
+          <input type="range" id="stripePlacementRange" min="1" onchange="changeStripePlacement(0)">
+          <button class="buttonCameraStyle" onclick="changeStripePlacement(1)">+</button>
+          <span id="stripePlacementValue">1</span> px
+        </div>
         <button class="buttonCameraStyle" data-translate="" onclick="saveRecordingData()">Save data</button>
         <button class="buttonCameraStyle" id="cameraExposureButton" data-translate="camExp-button" onclick="openCameraExposure()">Camera Exposure</button>
       </div>

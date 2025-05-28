@@ -59,6 +59,9 @@ async function startStream(deviceId) {
             cameraOutputWidth = videoElement.videoWidth;
             cameraOutputHeight = videoElement.videoHeight;
             document.getElementById("stripeWidthRange").max = cameraOutputHeight;
+            document.getElementById("stripePlacementRange").max = cameraOutputHeight;
+            document.getElementById("stripePlacementRange").value = cameraOutputHeight * yPercentage;
+            document.getElementById("stripePlacementValue").textContent = getStripePositionRangeText();
 
             if(videoElement.videoWidth === 1280){
                 document.getElementById("videoMainWindow").style.height = "214px";

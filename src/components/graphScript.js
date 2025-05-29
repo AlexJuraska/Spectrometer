@@ -371,11 +371,9 @@ function setupEventListeners() {
         const referenceGraphCheckbox = document.getElementById('referenceGraphCheckbox');
         if (referenceGraphCheckbox.checked) {
             document.getElementById("referenceGraphControl").style.display = "block";
-            console.log('show');
             showReferenceGraph = true;
         } else {
             document.getElementById("referenceGraphControl").style.display = "none";
-            console.log('hide');
             showReferenceGraph = false;
         }
         redrawGraphIfLoadedImage()
@@ -698,22 +696,6 @@ function stepBackZoom() {
     } else {
         console.log('No previous zoom level to step back to.');
     }
-}
-
-/**
- * Adds a reference line to the graph
- */
-function addReferenceLine() {
-    captureReferenceGraph = true;
-    plotRGBLineFromCamera();
-}
-
-/**
- * Removes all reference lines and adds a new reference line
- */
-function removeReferenceLinesAndAddNewReferenceLine() {
-    referenceGraph = [];
-    addReferenceLine();
 }
 
 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {

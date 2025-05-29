@@ -17,6 +17,7 @@
   <script src="../components/zipScript.js"></script>
   <script src="../components/languageScript.js"></script>
   <script src="../components/dataSavingScript.js"></script>
+  <script src="../components/referenceGraphScript.js"></script>
 
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>-->
 
@@ -131,6 +132,7 @@
         </label>
         <div id="referenceGraphControl" style="display: none">
           <button class="buttonCameraStyle" data-translate="add-reference" onclick="addReferenceLine()">Add reference</button>
+          <button class="buttonCameraStyle" data-translate="" onclick="addReferenceLineFromExcel()">Add reference from file</button>
           <button class="buttonCameraStyle" data-translate="reset-references" onclick="removeReferenceLinesAndAddNewReferenceLine()">Reset references</button>
         </div>
       </div>

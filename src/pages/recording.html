@@ -24,65 +24,8 @@
 </head>
 <body>
 
-<!-- Step 2 Camera calibration -->
-<div id="step2" class="step-container active">
-  <p class="SectionHeader" data-translate="step2-title">Step 2: Camera calibration</p>
-  <div style="display:flex" class="margin-left-15px">
-    <div style="width: 150px; text-align: right">px</div>
-    <div style="width: 180px; text-align: right">nm</div>
-  </div>
-
-  <div id="input-container" class="margin-left-15px">
-    <div>
-      <label data-translate="point"></label>
-      <label> 1:</label>
-      <input id="point1px" type="number"/>
-      <input id="point1nm" type="number"/>
-    </div>
-
-    <div>
-      <label data-translate="point"></label>
-      <label> 2:</label>
-      <input id="point2px" type="number"/>
-      <input id="point2nm" type="number"/>
-    </div>
-
-    <div>
-      <label data-translate="point"></label>
-      <label> 3:</label>
-      <input id="point3px" type="number"/>
-      <input id="point3nm" type="number"/>
-    </div>
-
-    <div>
-      <label data-translate="point"></label>
-      <label> 4:</label>
-      <input id="point4px" type="number"/>
-      <input id="point4nm" type="number"/>
-    </div>
-  </div>
-
-  <div class="margin-left-15px">
-    <button class="buttonCameraStyle" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add calibration points</button>
-    <button class="buttonCameraStyle" data-translate="removeCalPoints-button" id="removePoints" onclick="removeInputPair(this)">Remove calibration points</button>
-    <button class="buttonCameraStyle" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>
-    <button class="buttonCameraStyle" data-translate="reset-button" id="resetCalibrationPoints" onclick="resetCalibrationPoints()">Reset calibration points</button>
-  </div>
-
-  <div class="margin-left-15px">
-    <input type="text" id="exportCalibrationNameInput" placeholder="Enter filename">
-    <button class="buttonCameraStyle" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
-    <input type="file" name="my_file" id="my-file" onchange="importCalibrationFile()">
-  </div>
-
-  <div id="graphWindowCalibration" class="margin-left-15px">
-    <canvas id="graphCalibration" width="896" height="455"></canvas>
-  </div>
-
-</div>
-
 <!-- Step 3 Recording limitation -->
-<div id="step3" class="step-container">
+<div id="step3" class="step-container.active">
     <p class="SectionHeader" data-translate="recording-title">Recording</p>
 
     <!-- Camera -->
@@ -135,6 +78,61 @@
           <button class="buttonCameraStyle" data-translate="" onclick="addReferenceLineFromExcel()">Add reference from file</button>
           <button class="buttonCameraStyle" data-translate="reset-references" onclick="removeReferenceLinesAndAddNewReferenceLine()">Reset references</button>
         </div>
+      </div>
+
+      <button class="buttonCameraStyle" id="calibrationChangeButton" onclick="changeCalibrationScreen()">Calibrate</button>
+
+      <!--      Calibration settings-->
+      <div id="calibrationSettings" style="display: none">
+
+        <div style="display:flex" class="margin-left-15px">
+          <div style="width: 150px; text-align: right">px</div>
+          <div style="width: 180px; text-align: right">nm</div>
+        </div>
+
+        <div id="input-container" class="margin-left-15px">
+          <div>
+            <label data-translate="point"></label>
+            <label> 1:</label>
+            <input id="point1px" type="number"/>
+            <input id="point1nm" type="number"/>
+          </div>
+
+          <div>
+            <label data-translate="point"></label>
+            <label> 2:</label>
+            <input id="point2px" type="number"/>
+            <input id="point2nm" type="number"/>
+          </div>
+
+          <div>
+            <label data-translate="point"></label>
+            <label> 3:</label>
+            <input id="point3px" type="number"/>
+            <input id="point3nm" type="number"/>
+          </div>
+
+          <div>
+            <label data-translate="point"></label>
+            <label> 4:</label>
+            <input id="point4px" type="number"/>
+            <input id="point4nm" type="number"/>
+          </div>
+        </div>
+
+        <div class="margin-left-15px">
+          <button class="buttonCameraStyle" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add calibration points</button>
+          <button class="buttonCameraStyle" data-translate="removeCalPoints-button" id="removePoints" onclick="removeInputPair(this)">Remove calibration points</button>
+          <button class="buttonCameraStyle" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>
+          <button class="buttonCameraStyle" data-translate="reset-button" id="resetCalibrationPoints" onclick="resetCalibrationPoints()">Reset calibration points</button>
+        </div>
+
+        <div class="margin-left-15px">
+          <input type="text" id="exportCalibrationNameInput" placeholder="Enter filename">
+          <button class="buttonCameraStyle" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
+          <input type="file" name="my_file" id="my-file" onchange="importCalibrationFile()">
+        </div>
+
       </div>
     </div>
 
@@ -230,6 +228,12 @@
     </div>
   </div>
 
+  <div id="calibrationWindowContainer" style="display: none; background-color: #d74343">
+    <div id="graphWindowCalibration" class="margin-left-15px">
+      <canvas id="graphCalibration" width="896" height="455"></canvas>
+    </div>
+  </div>
+
   <nav class="nav-menu">
     <ul>
       <li><a data-translate="home-button" href="index.html" class="btn">Home</a></li>
@@ -238,11 +242,6 @@
   </nav>
 </div>
 
-<!--  Buttons to navigate in the stepper  -->
-<div class="navigation-buttons" id="stepper-buttons">
-  <button data-translate="previous-button" id="prevButton" onclick="changeStep(-1)" disabled>Previous</button>
-  <button data-translate="next-button" id="nextButton" onclick="changeStep(1)">Next</button>
-</div>
 <script src="../components/cameraScript.js"></script>
 <script src="../components/stripeScript.js"></script>
 <script src="../components/cameraSelection.js"></script>

@@ -2,7 +2,7 @@
  * Display the camera selection above the graph
  * NOTE: This is the original version of the func, possibly may be needed for revert
  */
-function showSelectedStripeOrigin() {
+function showSelectedStripe() {
     const stripeCanvas = document.getElementById('stripeCanvas');
     const graphCanvas = document.getElementById('graphCanvas');
     if (!stripeCanvas || !graphCanvas) {
@@ -39,7 +39,7 @@ function showSelectedStripeOrigin() {
     stripeCtx.drawImage(videoElement, zoomStart, stripePosition, zoomEnd - zoomStart, stripeWidth, 0, 0, stripeCanvas.width, stripeCanvas.height);
 }
 
-function showSelectedStripe() {
+function showSelectedStripeNewAndRejected() {
     const stripeCanvas = document.getElementById('stripeCanvas');
     if (!stripeCanvas) {
         console.error('stripeCanvas or graphCanvas element not found');

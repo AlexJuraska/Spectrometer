@@ -124,8 +124,10 @@ async function requestCameraAccess() {
  * Resets the camera stream with the current camera
  */
 async function resetCamera() {
-    document.getElementById("playVideoButton").style.display = "none";
-    document.getElementById("pauseVideoButton").style.display = "block";
+    // document.getElementById("playVideoButton").style.display = "none";
+    // document.getElementById("pauseVideoButton").style.display = "block";
+    document.getElementById("pauseVideoButton").style.visibility = "visible";
+    document.getElementById("playVideoButton").style.visibility = "hidden";
     await startStream(cameraUsed);
 }
 
@@ -194,8 +196,11 @@ function updateExposureValue(value) {
  */
 async function pauseVideo(){
     videoElement.pause();
-    document.getElementById("playVideoButton").style.display = "inline";
-    document.getElementById("pauseVideoButton").style.display = "none";
+    // document.getElementById("playVideoButton").style.display = "inline";
+    // document.getElementById("pauseVideoButton").style.display = "none";
+    document.getElementById("pauseVideoButton").style.visibility = "hidden";
+    document.getElementById("playVideoButton").style.visibility = "visible";
+
 }
 
 /**
@@ -203,8 +208,10 @@ async function pauseVideo(){
  */
 async function playVideo(){
     videoElement.play();
-    document.getElementById("playVideoButton").style.display = "none";
-    document.getElementById("pauseVideoButton").style.display = "inline";
+    // document.getElementById("playVideoButton").style.display = "none";
+    // document.getElementById("pauseVideoButton").style.display = "inline";
+    document.getElementById("pauseVideoButton").style.visibility = "visible";
+    document.getElementById("playVideoButton").style.visibility = "hidden";
 }
 
 /**

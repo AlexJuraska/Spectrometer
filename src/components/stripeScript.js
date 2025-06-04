@@ -152,6 +152,22 @@ function drawSelectionLine() {
     stripeGraphCtx.stroke();
 }
 
+/**
+ * Makes the canvas the same size as video element
+ */
+function syncCanvasToVideo() {
+    const width = videoWindow.clientWidth;
+    const height = videoWindow.clientHeight;
+
+    stripeGraphCanvas.width = width;
+    stripeGraphCanvas.height = height;
+    stripeGraphCanvas.style.width = width + "px";
+    stripeGraphCanvas.style.height = height + "px";
+
+    drawSelectionLine();
+}
+
+
 // Canvas for the camera window
 var stripeGraphCanvas = document.getElementById("cameraWindowCanvasRecording");
 
@@ -160,15 +176,10 @@ var stripeGraphCtx = stripeGraphCanvas.getContext("2d", { willReadFrequently: tr
 var yPercentage = 0.5; // Global variable representing Y position as a percentage (default to 50%)
 var stripeWidth = 1;
 var videoWindow = document.getElementById("videoMainWindow");
-var computedStyle = getComputedStyle(videoWindow);
-
-// Set the canvas width and height to match the video window
-stripeGraphCanvas.width = parseInt(computedStyle.width, 10);
-stripeGraphCanvas.height = parseInt(computedStyle.height, 10);
 
 // Event listener for mouse clicks on the canvas
 stripeGraphCanvas.addEventListener("click", function (event) {
-    stripeGraphCanvas.height = parseInt(getComputedStyle(videoWindow).height,10);
+    // stripeGraphCanvas.height = parseInt(getComputedStyle(videoWindow).height,10);
     var rect = stripeGraphCanvas.getBoundingClientRect(); // Get canvas position
     var y = event.clientY - rect.top; // Calculate Y within canvas
 
@@ -186,7 +197,7 @@ stripeGraphCanvas.addEventListener("click", function (event) {
     let sliderPosition = convertCanvasToActualValue(y)
 
     stripePlacementSlider.value = sliderPosition;
-    stripePlacementValue.textContent = sliderPosition;
+    stripePlacementValue.textContent = getStripePositionRangeText();;
 
     drawSelectionLine(); // Redraw line at the new position
     if (videoElement) {
@@ -194,6 +205,10 @@ stripeGraphCanvas.addEventListener("click", function (event) {
         plotRGBLineFromCamera();
     }
 });
+
+window.addEventListener("load", syncCanvasToVideo);
+window.addEventListener("resize", syncCanvasToVideo);
+videoElement.addEventListener("loadedmetadata", syncCanvasToVideo);
 
 // Initial draw of the line at the default percentage
 drawSelectionLine();

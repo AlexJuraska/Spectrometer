@@ -29,28 +29,31 @@ function addInputPair() {
 
     const container = document.getElementById("input-container");
     const div = document.createElement("div");
+    div.classList.add("input-pair")
 
-    // Label for the translation of "Point"
+    // Label for the translation of "Point" and for the numbering
     const pointLabel = document.createElement("label");
-    pointLabel.setAttribute("data-translate", "point")
-
-    // Label for the numbering
-    const numberLabel = document.createElement("label");
-    numberLabel.textContent = ` ${inputBoxCounter}: `;
+    const spanLabel = document.createElement("span");
+    spanLabel.setAttribute("data-translate", "point");
+    pointLabel.appendChild(spanLabel);
+    pointLabel.append(` ${inputBoxCounter}:`);
 
     // Create the first input for px with label
     const inputPx = document.createElement("input");
     inputPx.id = `point${inputBoxCounter}px`;
     inputPx.type = "number";
+    inputPx.classList.add("form-control");
+    inputPx.classList.add("form-control-sm");
 
     // Create the second input for nm with label
     const inputNm = document.createElement("input");
     inputNm.id = `point${inputBoxCounter}nm`;
     inputNm.type = "number";
+    inputNm.classList.add("form-control");
+    inputNm.classList.add("form-control-sm");
 
     // Append everything to the div
     div.appendChild(pointLabel);
-    div.appendChild(numberLabel);
     div.appendChild(inputPx);
     div.appendChild(inputNm);
 

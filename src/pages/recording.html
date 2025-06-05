@@ -9,6 +9,7 @@
 <!--  <link rel="stylesheet" href="../styles/recordingStyle.css">-->
   <link rel="stylesheet" href="../styles/cameraStyle.css">
   <link rel="stylesheet" href="../styles/graphStyle.css">
+  <link rel="stylesheet" href="../styles/mainRecordingStyle.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script> <!-- xlsx -->
@@ -28,7 +29,7 @@
 <div class="container-fluid">
   <div class="row min-vh-100">
 
-    <div class="col-3 p-0 d-flex flex-column bg-danger vh-100">
+    <div class="col-3 p-0 d-flex flex-column bg-danger">
     <!-- Camera -->
       <div id="cameraMainWindow" class="text-center">
 
@@ -161,70 +162,73 @@
       </div>
 
       <!-- Calibration settings TODO visuals -->
-      <div id="calibrationSettings" style="display: none">
+      <div id="calibrationSettings" class="p-1" style="display: none; flex-direction: column; flex-grow: 1;">
 
-        <div style="display:flex" class="margin-left-15px">
-          <div style="width: 150px; text-align: right">px</div>
-          <div style="width: 180px; text-align: right">nm</div>
+        <div class="d-flex flex-column gap-2 margin-left-15px" style="max-width: 100%;">
+          <div class="d-flex flex-wrap gap-2 justify-content-between">
+            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add</button>
+            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="removeCalPoints-button" id="removePoints" onclick="removeInputPair(this)">Remove</button>
+          </div>
+          <div class="d-flex flex-wrap gap-2 justify-content-between">
+            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>
+            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="reset-button" id="resetCalibrationPoints" onclick="resetCalibrationPoints()">Reset</button>
+          </div>
+          <input type="text" class="form-control form-control-sm" id="exportCalibrationNameInput" placeholder="Enter filename">
+          <button class="btn btn-sm text-light bg-secondary flex-fill" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
+          <input type="file" name="my_file" id="my-file" class="form-control form-control-sm" onchange="importCalibrationFile()">
         </div>
 
-        <div id="input-container" class="margin-left-15px">
-          <div>
-            <label data-translate="point"></label>
-            <label> 1:</label>
-            <input id="point1px" type="number"/>
-            <input id="point1nm" type="number"/>
-          </div>
+<!--        <div style="display: none" class="input-header d-flex gap-2 mb-1">-->
+<!--          <div style="width: 65px;"></div>-->
+<!--          <div class="flex-fill text-center fw-bold">px</div>-->
+<!--          <div class="flex-fill text-center fw-bold">nm</div>-->
+<!--        </div>-->
 
-          <div>
-            <label data-translate="point"></label>
-            <label> 2:</label>
-            <input id="point2px" type="number"/>
-            <input id="point2nm" type="number"/>
-          </div>
-
-          <div>
-            <label data-translate="point"></label>
-            <label> 3:</label>
-            <input id="point3px" type="number"/>
-            <input id="point3nm" type="number"/>
-          </div>
-
-          <div>
-            <label data-translate="point"></label>
-            <label> 4:</label>
-            <input id="point4px" type="number"/>
-            <input id="point4nm" type="number"/>
-          </div>
+        <div class="input-header">
+          <div></div>
+          <div>px</div>
+          <div>nm</div>
         </div>
 
-        <div class="margin-left-15px">
-          <button class="buttonCameraStyle" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add calibration points</button>
-          <button class="buttonCameraStyle" data-translate="removeCalPoints-button" id="removePoints" onclick="removeInputPair(this)">Remove calibration points</button>
-          <button class="buttonCameraStyle" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>
-          <button class="buttonCameraStyle" data-translate="reset-button" id="resetCalibrationPoints" onclick="resetCalibrationPoints()">Reset calibration points</button>
-        </div>
+        <!-- Input list -->
+        <div id="input-container">
+          <div class="input-pair">
+            <label><span data-translate="point"></span> 1:</label>
+            <input id="point1px" type="number" class="form-control form-control-sm"/>
+            <input id="point1nm" type="number" class="form-control form-control-sm"/>
+          </div>
 
-        <div class="margin-left-15px">
-          <input type="text" id="exportCalibrationNameInput" placeholder="Enter filename">
-          <button class="buttonCameraStyle" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
-          <input type="file" name="my_file" id="my-file" onchange="importCalibrationFile()">
-        </div>
+          <div class="input-pair">
+            <label><span data-translate="point"></span> 2:</label>
+            <input id="point2px" type="number" class="form-control form-control-sm"/>
+            <input id="point2nm" type="number" class="form-control form-control-sm"/>
+          </div>
 
+          <div class="input-pair">
+            <label><span data-translate="point"></span> 3:</label>
+            <input id="point3px" type="number" class="form-control form-control-sm"/>
+            <input id="point3nm" type="number" class="form-control form-control-sm"/>
+          </div>
+
+          <div class="input-pair">
+            <label><span data-translate="point"></span> 4:</label>
+            <input id="point4px" type="number" class="form-control form-control-sm"/>
+            <input id="point4nm" type="number" class="form-control form-control-sm"/>
+          </div>
+
+        </div>
       </div>
 
       <!--  TODO center  -->
-      <div class="p-0 m-2 d-flex flex-row justify-content-center gap-3 w-100 mt-auto">
+      <div class="p-0 m-1 d-flex flex-row justify-content-center gap-3 w-100 mt-auto">
         <button class="btn btn-sm btn-secondary p-1" data-translate="save-data" onclick="saveRecordingData()">Save data</button>
-        <button class="btn btn-sm btn-secondary p-1"
-                id="calibrationChangeButton"
-                data-translate="calibrate-button"
-                onclick="changeCalibrationScreen()">Calibrate</button>
+        <button class="btn btn-sm btn-secondary p-1" data-translate="calibrate-button" id="recordingToCalibrationButton" onclick="changeCalibrationScreen()">Calibrate</button>
+        <button class="btn btn-sm btn-secondary p-1" data-translate="calibrateOff-button" id="calibrationToRecordingButton" onclick="changeCalibrationScreen()" style="display: none">Calibrate</button>
       </div>
 
     </div>  <!-- End of col-3 -->
 
-    <div class="col-9 d-flex flex-column bg-warning p-0 vh-100">
+    <div class="col-9 d-flex flex-column bg-warning p-0">
 
       <!-- While camera/graph is being recorder-->
       <div id="cameraRecordingIsOn" style="display: none">

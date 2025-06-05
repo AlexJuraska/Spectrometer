@@ -13,6 +13,7 @@
   "addCalPoints-button": "Adicionar pontos de calibração",
   "removeCalPoints-button": "Remover pontos de calibração",
   "calibrate-button": "Calibrar",
+  "calibrateOff-button": "Gravar",
   "reset-button": "Redefinir",
   "export-button": "Exportar configurações de calibração",
   "point": "Ponto",

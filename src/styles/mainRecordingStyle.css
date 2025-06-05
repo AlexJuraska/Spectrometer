@@ -1,0 +1,91 @@
+#videoMainWindow{
+    height: auto !important;
+    display: block;
+}
+
+#cameraSelect {
+    text-align: center;
+}
+
+#input-container {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 0.2rem;
+    align-items: center;
+}
+
+.input-pair {
+    display: contents;
+}
+
+.input-pair label {
+    text-align: right;
+    white-space: nowrap;
+    font-size: 0.7rem;
+    padding-right: 0.25rem;
+}
+
+.input-pair input {
+    width: 100%;
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    height: 1.5rem;
+    box-sizing: border-box;
+}
+
+
+.input-header {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.input-header div {
+    font-weight: bold;
+    text-align: center;
+}
+
+
+/*.input-pair {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 6px;*/
+/*    margin-bottom: 2px;*/
+/*    width: 100%;*/
+/*}*/
+
+/*.input-header {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 8px;*/
+/*    margin-bottom: 5px;*/
+/*    width: 100%;*/
+/*}*/
+
+/*.input-header-spacer {*/
+/*    width: 70px; !* matches label width *!*/
+/*}*/
+
+/*.input-pair label {*/
+/*    flex: 0 0 65px;*/
+/*    text-align: right;*/
+/*    font-size: 0.75rem;*/
+/*    white-space: nowrap;*/
+/*}*/
+
+/*.input-pair label {*/
+/*    flex: 0 0 auto;*/
+/*    width: 70px;*/
+/*    white-space: nowrap;*/
+/*    text-align: right;*/
+/*}*/
+
+/*.input-pair input[type="number"] {*/
+/*    flex: 1;*/
+/*    min-width: 0;*/
+/*    font-size: 0.75rem;*/
+/*    padding: 2px 4px !important;*/
+/*    height: 26px !important;*/
+/*    line-height: 1 !important;*/
+/*}*/

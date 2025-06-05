@@ -13,6 +13,7 @@
   "addCalPoints-button": "Pridať kalibračné body",
   "removeCalPoints-button": "Odstrániť kalibračné body",
   "calibrate-button": "Kalibrovať",
+  "calibrateOff-button": "Nahrávať",
   "reset-button": "Resetovať",
   "export-button": "Exportovať nastavenia kalibrácie",
   "point": "Bod",

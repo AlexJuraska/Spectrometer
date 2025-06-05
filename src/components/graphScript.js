@@ -20,6 +20,11 @@ let maximaR = [];
 let maximaG = [];
 let maximaB = [];
 let eventListeners = [];
+let toggleCombined = false;
+let toggleR = false;
+let toggleG = false;
+let toggleB = false;
+let fillArea = false;
 
 let graphCanvas = document.getElementById('graphCanvas');
 let graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
@@ -63,7 +68,7 @@ function plotRGBLineFromCamera() {
 }
 
 function draw() {
-    drawGraphLine();
+    drawGraph();
     if (!(videoElement instanceof HTMLImageElement)) {
         animationId = requestAnimationFrame(draw);
         needToRecalculateMaxima = true;
@@ -73,10 +78,14 @@ function draw() {
 /**
  * Draws the graph line, graph grid and labels, deals with peaks, zooming and reference graph
  */
-function drawGraphLine() {
+function drawGraph() {
     const stripeWidth = getStripeWidth();
-    const { toggleCombined, toggleR, toggleG, toggleB } = getToggleStates();
-    const fillArea = document.getElementById('colorGraph').checked;
+    const toggleStates = getToggleStates();
+    toggleCombined = toggleStates.toggleCombined;
+    toggleR = toggleStates.toggleR;
+    toggleG = toggleStates.toggleG;
+    toggleB = toggleStates.toggleB;
+    fillArea = document.getElementById("colorGraph").checked;
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
     lineCtx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
 
@@ -130,27 +139,37 @@ function drawGraphLine() {
         }
     }
 
+    if (fillArea && (toggleCombined || toggleR || toggleG || toggleB)) {
+        drawGradient(graphCtx, pixels, pixelWidth, maxValue);
+    }
+    console.log(fillArea);
+    console.log(toggleCombined);
+    console.log(toggleR);
+    console.log(toggleG);
+    console.log(toggleB);
+    let peaksToggled = document.getElementById('togglePeaksCheckbox').checked;
+
     if (toggleCombined) {
-        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, fillArea);
-        if (document.getElementById('togglePeaksCheckbox').checked && maxima.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue);
+        if (peaksToggled && maxima.length > 0) {
             drawPeaks(maxima, maxValue, 'black');
         }
     }
     if (toggleR) {
-        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, false);
-        if (document.getElementById('togglePeaksCheckbox').checked && maximaR.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue);
+        if (peaksToggled && maximaR.length > 0) {
             drawPeaks(maximaR, maxValue, 'red');
         }
     }
     if (toggleG) {
-        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, false);
-        if (document.getElementById('togglePeaksCheckbox').checked && maximaG.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue);
+        if (peaksToggled && maximaG.length > 0) {
             drawPeaks(maximaG, maxValue, 'green');
         }
     }
     if (toggleB) {
-        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, false);
-        if (document.getElementById('togglePeaksCheckbox').checked && maximaB.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue);
+        if (peaksToggled && maximaB.length > 0) {
             drawPeaks(maximaB, maxValue, 'blue');
         }
     }
@@ -507,7 +526,7 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
     const padding = 30;
 
     let maxValue = calculateMaxValue(pixels);
-    const numOfYLabels = 25;
+    const numOfYLabels = Math.min(25, Math.floor(maxValue));
 
     graphCtx.beginPath();
     graphCtx.strokeStyle = '#e0e0e0';
@@ -517,9 +536,9 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
 
     for (let i = 0; i <= numOfYLabels; i++) {
         const y = padding + ((height - 2 * padding) / numOfYLabels) * i;
+        const label = (Math.abs(maxValue - (i * (maxValue / numOfYLabels)))).toFixed(0);
         graphCtx.moveTo(padding, y);
         graphCtx.lineTo(width - padding, y);
-        const label = (maxValue - (i * (maxValue / numOfYLabels))).toFixed(0);
         graphCtx.fillText(label, 5, y + 3);
     }
 
@@ -559,54 +578,19 @@ function generateSpectrumList(pixelWidth) {
 }
 
 /**
- * Draws a line with a gradient based on the spectrum list
+ * Draws a line based on the spectrum list
  */
-function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, fillArea = false) {
+function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
     const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
     const zoomRange = zoomEnd - zoomStart;
-    const zoomedSpectrum = spectrumList.slice(zoomStart, zoomEnd);
-
-    if (fillArea) {
-        for (let x = 0; x < zoomRange - 1; x++) {
-            let value = colorOffset === -1 ? calculateMaxColor(pixels, x) : pixels[x * 4 + colorOffset];
-            let nextValue = colorOffset === -1 ? calculateMaxColor(pixels, x + 1) : pixels[(x + 1) * 4 + colorOffset];
-
-            const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
-            const nextY = calculateYPosition(nextValue, graphCtx.canvas.height, maxValue);
-            const scaledX = calculateXPosition(x, zoomRange, graphCtx.canvas.width);
-            const nextX = calculateXPosition(x + 1, zoomRange, graphCtx.canvas.width);
-
-            const gradient = graphCtx.createLinearGradient(scaledX, 0, nextX, 0);
-            const startColor = zoomedSpectrum[x].replace('rgb', 'rgba').replace(')', `, ${gradientOpacity})`);
-            const endColor = (zoomedSpectrum[x + 1] || zoomedSpectrum[x]).replace('rgb', 'rgba').replace(')', `, ${gradientOpacity})`);
-
-            gradient.addColorStop(0, startColor);
-            gradient.addColorStop(1, endColor);
-
-            graphCtx.beginPath();
-            graphCtx.moveTo(scaledX, graphCtx.canvas.height - 30);
-            if (x === 0) {
-                graphCtx.lineTo(scaledX, y);
-                graphCtx.lineTo(nextX, y);
-            } else {
-                graphCtx.lineTo(scaledX, graphCtx.currentY || y);
-                graphCtx.lineTo(nextX, graphCtx.currentY || y);
-            }
-            graphCtx.lineTo(nextX, graphCtx.canvas.height - 30);
-            graphCtx.closePath();
-
-            graphCtx.fillStyle = gradient;
-            graphCtx.fill();
-            graphCtx.currentY = nextY;
-        }
-    }
+    const width = graphCtx.canvas.width;
+    const height = graphCtx.canvas.height;
 
     graphCtx.beginPath();
     for (let x = 0; x < zoomRange; x++) {
         let value = colorOffset === -1 ? calculateMaxColor(pixels, x) : pixels[x * 4 + colorOffset];
-        const y = calculateYPosition(value, graphCtx.canvas.height, maxValue);
-        const scaledX = calculateXPosition(x, zoomRange, graphCtx.canvas.width);
-
+        const y = calculateYPosition(value, height, maxValue);
+        const scaledX = calculateXPosition(x, zoomRange, width);
         if (x === 0) {
             graphCtx.moveTo(scaledX, y);
         } else {
@@ -621,10 +605,75 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, fi
 }
 
 /**
+ * Fills the area under the line with a gradient based on the spectrum list
+ */
+function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
+    const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
+    const zoomRange = zoomEnd - zoomStart;
+    const zoomedSpectrum = spectrumList.slice(zoomStart, zoomEnd);
+    const padding = 30;
+    const width = graphCtx.canvas.width;
+    const height = graphCtx.canvas.height;
+
+    const gradient = graphCtx.createLinearGradient(padding, 0, width - padding, 0);
+    for (let x = 0; x < zoomedSpectrum.length; x += Math.ceil(zoomedSpectrum.length / 10)) {
+        const stop = x / (zoomedSpectrum.length - 1);
+        const color = zoomedSpectrum[x].replace('rgb', 'rgba').replace(')', `, ${gradientOpacity})`);
+        gradient.addColorStop(stop, color);
+    }
+
+    graphCtx.beginPath();
+    for (let x = 0; x < zoomRange; x++) {
+        let value = calculateGradient(pixels, x);
+        const y = calculateYPosition(value, height, maxValue);
+        const scaledX = calculateXPosition(x, zoomRange, width);
+        if (x === 0) {
+            graphCtx.moveTo(scaledX, y);
+        } else {
+            graphCtx.lineTo(scaledX, graphCtx.currentY || y);
+            graphCtx.lineTo(scaledX, y);
+        }
+        graphCtx.currentY = y;
+    }
+
+    graphCtx.lineTo(calculateXPosition(zoomRange - 1, zoomRange, width), height - padding);
+    graphCtx.lineTo(calculateXPosition(0, zoomRange, width), height - padding);
+    graphCtx.closePath();
+
+    graphCtx.fillStyle = gradient;
+    graphCtx.fill();
+}
+
+/**
  * Returns the maximum color value of a pixel
  */
 function calculateMaxColor(pixels, x) {
     return Math.max(pixels[x * 4], pixels[x * 4 + 1], pixels[x * 4 + 2]);
+}
+
+/**
+ * Calculates and returns the maximum value of a pixel based on the toggled colors
+ */
+function calculateGradient(pixels, x) {
+    if (toggleCombined || (toggleR && toggleG && toggleB)) {
+        return Math.max(pixels[x * 4], pixels[x * 4 + 1], pixels[x * 4 + 2]);
+    }
+    if (toggleR) {
+        if (toggleG) {
+            return Math.max(pixels[x * 4], pixels[x * 4 + 1]);
+        }
+        if (toggleB) {
+            return Math.max(pixels[x * 4], pixels[x * 4 + 2]);
+        }
+        return pixels[x * 4];
+    }
+    if (toggleG) {
+        if (toggleB) {
+            return Math.max(pixels[x * 4 + 1], pixels[x * 4 + 2]);
+        }
+        return pixels[x * 4 + 1];
+    }
+    return pixels[x * 4 + 2];
 }
 
 /**

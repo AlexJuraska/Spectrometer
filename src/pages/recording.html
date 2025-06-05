@@ -51,21 +51,25 @@
           <div id="cameraWindowControlsOnMeasureCameraStreaming"
                class="d-flex flex-row flex-wrap justify-content-center gap-1">
 
-            <button class="btn btn-sm btn-secondary p-1" onclick="getCameras()">Refresh</button>
+            <button class="btn btn-sm btn-secondary p-1" onclick="getCameras()" data-translate="refresh-button">Refresh</button>
 
             <!-- Pause/Play toggle in a fixed-width wrapper -->
             <div style="position: relative; width: 80px; height: 30px;">
               <button id="pauseVideoButton"
                       class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
-                      onclick="pauseVideo()">Pause</button>
+                      onclick="pauseVideo()"
+                      data-translate="pause-button">Pause</button>
 
               <button id="playVideoButton"
                       class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
                       style="visibility: hidden;"
-                      onclick="playVideo()">Play</button>
+                      onclick="playVideo()"
+                      data-translate="play-button">Play</button>
             </div>
 
-            <button class="btn btn-sm btn-secondary p-1" onclick="loadImageIntoCamera()">Load Image</button>
+            <button class="btn btn-sm btn-secondary p-1"
+                    onclick="loadImageIntoCamera()"
+                    data-translate="load-image">Load Image</button>
           </div>
 
           <!-- Stripe Width -->
@@ -121,7 +125,7 @@
             <!--Reference Graph Window TODO visuals with exposure -->
             <div id="referenceGraphControl" style="display: none">
               <button class="buttonCameraStyle" data-translate="add-reference" onclick="addReferenceLine()">Add reference</button>
-              <button class="buttonCameraStyle" data-translate="" onclick="addReferenceLineFromExcel()">Add reference from file</button>
+              <button class="buttonCameraStyle" data-translate="reference-from-file" onclick="addReferenceLineFromExcel()">Add reference from file</button>
               <button class="buttonCameraStyle" data-translate="reset-references" onclick="removeReferenceLinesAndAddNewReferenceLine()">Reset references</button>
             </div>
           </div>
@@ -142,7 +146,7 @@
             <label  for="timeOfPause">
               <span data-translate="pauseBetCap">Pause in between captures </span>
               <input class="InputCamera" type="number" id="timeOfPause" name="timeOfPause" min="200" value="300">
-              <span>(in ms.)</span>
+              <span data-translate="in-ms">(in ms.)</span>
             </label>
           </div>
           <div class="margin-top-5px">
@@ -211,8 +215,11 @@
 
       <!--  TODO center  -->
       <div class="p-0 m-2 d-flex flex-row justify-content-center gap-3 w-100 mt-auto">
-        <button class="btn btn-sm btn-secondary p-1" data-translate="" onclick="saveRecordingData()">Save data</button>
-        <button class="btn btn-sm btn-secondary p-1" id="calibrationChangeButton" onclick="changeCalibrationScreen()">Calibrate</button>
+        <button class="btn btn-sm btn-secondary p-1" data-translate="save-data" onclick="saveRecordingData()">Save data</button>
+        <button class="btn btn-sm btn-secondary p-1"
+                id="calibrationChangeButton"
+                data-translate="calibrate-button"
+                onclick="changeCalibrationScreen()">Calibrate</button>
       </div>
 
     </div>  <!-- End of col-3 -->
@@ -232,7 +239,7 @@
       <div id="graphWindow">
         <div>
           <button class="buttonCameraStyle" data-translate="reset-zoom" id="resetZoomButton">Reset Zoom</button>
-          <button id="stepBackButton">Step Back</button>
+          <button id="stepBackButton" data-translate="zoom-step-back">Step Back</button>
           <label for="toggleXLabelsPx"> <span data-translate="X-px">X-axis Labels (px)</span></label>
           <input type="radio" id="toggleXLabelsPx" name="toggleXLabels" value="px" checked>
           <label for="toggleXLabelsNm"><span data-translate="X-nm">X-axis Labels (nm)</span></label>
@@ -260,7 +267,7 @@
           <input type="checkbox" id="colorGraph"> <span data-translate="fill-graph">Color the graph</span>
         </label>
         <div id="gradientOpacitySliderContainer" style="display: none;">
-          <label for="gradientOpacitySlider">Color Opacity:</label>
+          <label for="gradientOpacitySlider" data-translate="fill-opacity">Color Opacity:</label>
           <input type="range" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
           <span id="gradientOpacityValue">0.7</span>
         </div>

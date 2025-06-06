@@ -142,11 +142,11 @@ function drawGraph() {
     if (fillArea && (toggleCombined || toggleR || toggleG || toggleB)) {
         drawGradient(graphCtx, pixels, pixelWidth, maxValue);
     }
-    console.log(fillArea);
-    console.log(toggleCombined);
-    console.log(toggleR);
-    console.log(toggleG);
-    console.log(toggleB);
+    // console.log(fillArea);
+    // console.log(toggleCombined);
+    // console.log(toggleR);
+    // console.log(toggleG);
+    // console.log(toggleB);
     let peaksToggled = document.getElementById('togglePeaksCheckbox').checked;
 
     if (toggleCombined) {
@@ -463,6 +463,10 @@ function setupEventListeners() {
         document.getElementById('gradientOpacityValue').textContent = gradientOpacity.toFixed(1);
         redrawGraphIfLoadedImage();
     });
+
+    window.addEventListener("resize", () => {
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+    });
 }
 
 /**
@@ -754,3 +758,27 @@ document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         }
     });
 });
+
+/**
+ * Resizes the canvas to fit the current window size
+ */
+function resizeCanvasToDisplaySize(ctx, canvas, type) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    clearGraph(ctx, canvas);
+
+    if (type === "Calibration") {
+        drawGridCalibration();
+        drawCalibrationLine();
+        drawCalibrationPoints();
+    } else if (type === "Normal") {
+        plotRGBLineFromCamera();
+    }
+}

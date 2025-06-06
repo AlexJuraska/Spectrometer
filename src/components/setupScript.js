@@ -12,6 +12,8 @@ function changeCalibrationScreen() {
 
         document.getElementById('recordingToCalibrationButton').style.display = 'block';
         document.getElementById('calibrationToRecordingButton').style.display = 'none';
+
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
     } else {
         document.getElementById('graphWindowContainer').style.display = 'none';
         document.getElementById('calibrationWindowContainer').style.display = 'block';
@@ -21,6 +23,8 @@ function changeCalibrationScreen() {
 
         document.getElementById('recordingToCalibrationButton').style.display = 'none';
         document.getElementById('calibrationToRecordingButton').style.display = 'block';
+
+        resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
     }
 
     calibrationScreen = !calibrationScreen;

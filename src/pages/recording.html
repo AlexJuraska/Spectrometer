@@ -161,7 +161,6 @@
 
       </div>
 
-      <!-- Calibration settings TODO visuals -->
       <div id="calibrationSettings" class="p-1" style="display: none; flex-direction: column; flex-grow: 1;">
 
         <div class="d-flex flex-column gap-2 margin-left-15px" style="max-width: 100%;">
@@ -177,12 +176,6 @@
           <button class="btn btn-sm text-light bg-secondary flex-fill" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
           <input type="file" name="my_file" id="my-file" class="form-control form-control-sm" onchange="importCalibrationFile()">
         </div>
-
-<!--        <div style="display: none" class="input-header d-flex gap-2 mb-1">-->
-<!--          <div style="width: 65px;"></div>-->
-<!--          <div class="flex-fill text-center fw-bold">px</div>-->
-<!--          <div class="flex-fill text-center fw-bold">nm</div>-->
-<!--        </div>-->
 
         <div class="input-header">
           <div></div>
@@ -220,7 +213,7 @@
       </div>
 
       <!--  TODO center  -->
-      <div class="p-0 m-1 d-flex flex-row justify-content-center gap-3 w-100 mt-auto">
+      <div class="p-0 m-1 d-flex flex-row flex-wrap justify-content-center gap-3 mt-auto">
         <button class="btn btn-sm btn-secondary p-1" data-translate="save-data" onclick="saveRecordingData()">Save data</button>
         <button class="btn btn-sm btn-secondary p-1" data-translate="calibrate-button" id="recordingToCalibrationButton" onclick="changeCalibrationScreen()">Calibrate</button>
         <button class="btn btn-sm btn-secondary p-1" data-translate="calibrateOff-button" id="calibrationToRecordingButton" onclick="changeCalibrationScreen()" style="display: none">Calibrate</button>
@@ -230,7 +223,7 @@
 
     <div class="col-9 d-flex flex-column bg-warning p-0">
 
-      <!-- While camera/graph is being recorder-->
+      <!-- While camera/graph is being recorder TODO nejaký popup hore že to nahráva-->
       <div id="cameraRecordingIsOn" style="display: none">
         <div id="cameraRecordingIsOnWindows">
           <span data-translate="recording-screenshots">Recording screenshots...</span>
@@ -278,7 +271,6 @@
       </div>
 
       <div id="peaksSection">
-        <!-- disabled for now-->
         <label for="togglePeaksCheckbox" data-translate="togglePeaks">Toggle Peaks</label>
         <input type="checkbox" id="togglePeaksCheckbox">
         <br>
@@ -287,15 +279,24 @@
         <span id="minValueValue">0</span>
         <br>
       </div>
-      <!-- Adjust Exposure Section -->
     </div>
 
-      <div id="calibrationWindowContainer" style="display: none; background-color: #d74343">
-        <div id="graphWindowCalibration" class="margin-left-15px">
-          <canvas id="graphCalibration" width="896" height="455"></canvas>
-        </div>
-      </div>
+<!--    <div id="calibrationWindowContainer" style="display: none; background-color: #d74343">-->
+<!--      <div id="graphWindowCalibration" class="margin-left-15px">-->
+<!--        <canvas id="graphCalibration" width="896" height="455"></canvas>-->
+<!--      </div>-->
+<!--    </div>-->
 
+
+    <div id="calibrationWindowContainer" class="w-100" style="display: none; background-color: #d74343;">
+      <div id="graphWindowCalibration" class="w-100">
+        <canvas id="graphCalibration"></canvas>
+      </div>
+    </div>
+
+
+
+      <!-- TODO make it work -->
 <!--    <nav class="nav-menu">-->
 <!--      <ul>-->
 <!--        <li><a data-translate="home-button" href="index.html" class="btn">Home</a></li>-->

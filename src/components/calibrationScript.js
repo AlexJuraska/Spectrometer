@@ -504,4 +504,25 @@ function drawCalibrationPoints() {
     }
 }
 
+// function resizeCanvasToDisplaySize(canvas) {
+//     // const dpr = window.devicePixelRatio || 1;
+//     const dpr = 896 / 455;
+//     const rect = canvas.getBoundingClientRect();
+//
+//     canvas.width = rect.width * dpr;
+//     canvas.height = rect.height * dpr;
+//
+//     const ctx = canvas.getContext("2d");
+//     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // scale everything
+// }
+//
+// window.addEventListener("resize", () => {
+//     resizeCanvasToDisplaySize(graphCanvasCalibration);
+//     clearGraph(graphCtxCalibration, graphCanvasCalibration);
+//     drawGridCalibration();
+//     drawCalibrationLine();
+//     drawCalibrationPoints();
+// });
+
+
 drawGridCalibration(); // Temporary

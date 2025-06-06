@@ -16,7 +16,7 @@
     height: calc(100% - 128px);
 }
 
-#graphWindowContainer, #calibrationWindowContainer{
+#graphWindowContainer{
     position: absolute;
     top: 60px;
     left: calc(396px + 5%);
@@ -56,17 +56,4 @@
     height: 50px;
     background-color: black;
     z-index: 1;
-}
-
-input[type="range"].vertical-only {
-    writing-mode: bt-lr;
-    -webkit-appearance: slider-vertical;
-    height: 100%;
-    width: 1rem;
-    padding: 0;
-    background: transparent;
-}
-
-input[type="range"].vertical-only.flipped {
-    transform: rotate(180deg);
 }

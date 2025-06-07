@@ -357,8 +357,8 @@ function drawGridCalibration() {
     graphCanvasCalibration = document.getElementById('graphCalibration');
     graphCtxCalibration = graphCanvasCalibration.getContext('2d');
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
-    const width = graphCanvasCalibration.width;
-    const height = graphCanvasCalibration.height;
+    const width = graphCanvasCalibration.getBoundingClientRect().width;
+    const height = graphCanvasCalibration.getBoundingClientRect().height;
     const padding = 30;
 
     const yMin = rangeBeginY;
@@ -423,8 +423,8 @@ function drawGridCalibration() {
  * Draws the function created from the pixelCalPoints and nmCalPoints arrays
  */
 function drawCalibrationLine() {
-    const width = graphCanvasCalibration.width;
-    const height = graphCanvasCalibration.height;
+    const width = graphCanvasCalibration.getBoundingClientRect().width;
+    const height = graphCanvasCalibration.getBoundingClientRect().height;
     const padding = 30;
 
     const interpolate = lagrangeInterpolation(pixelCalPoints, nmCalPoints);
@@ -481,8 +481,8 @@ function lagrangeInterpolation(arrX, arrY) {
  * Draws the points represented by nmCalPoints and pixelCalPoints
  */
 function drawCalibrationPoints() {
-    const width = graphCanvasCalibration.width;
-    const height = graphCanvasCalibration.height;
+    const width = graphCanvasCalibration.getBoundingClientRect().width;
+    const height = graphCanvasCalibration.getBoundingClientRect().height;
     const padding = 30;
 
     const rangeBeginX = 0;

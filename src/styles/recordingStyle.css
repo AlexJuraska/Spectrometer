@@ -8,6 +8,14 @@ input[type="range"]::-webkit-slider-thumb { background: var(--spectra-mint-green
 input[type="range"]::-moz-range-thumb { background: var(--spectra-mint-green); }
 input[type="range"]::-ms-thumb { background: var(--spectra-mint-green); }
 
+input.darker-slider::-webkit-slider-runnable-track { background: var(--sidebar-grey); }
+input.darker-slider::-moz-range-track { background: var(--sidebar-grey); }
+input.darker-slider::-ms-track { background: var(--sidebar-grey); }
+
+.form-check-input:checked {
+    background: var(--spectra-mint-green);
+    border-color: var(--spectra-mint-green);
+}
 
 .bg-sidebar {
     background-color: var(--sidebar-grey);
@@ -15,6 +23,10 @@ input[type="range"]::-ms-thumb { background: var(--spectra-mint-green); }
 
 .bg-mainContent {
     background-color: var(--graph-grey);
+}
+
+.bg-spectraGreen {
+    background-color: var(--spectra-mint-green);
 }
 
 

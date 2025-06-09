@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-translate="recording-title">Recording</title>
 
-  <link rel="stylesheet" href="../styles/recordingStyle.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="../styles/recordingStyle.css">
 
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script> <!-- xlsx -->
   <script src="../components/setupScript.js"></script>
@@ -76,10 +76,10 @@
               <span data-translate="stripe-width">Stripe Width</span>
             </label>
             <div class="d-flex align-items-center flex-nowrap gap-1 w-100">
-              <button class="btn btn-sm btn-secondary px-2" onclick="changeStripeWidth(-1)">-</button>
+              <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripeWidth(-1)">-</button>
               <input type="range" class="form-range flex-grow-1" id="stripeWidthRange" min="1" value="1"
                      onchange="changeStripeWidth(0)">
-              <button class="btn btn-sm btn-secondary px-2" onclick="changeStripeWidth(1)">+</button>
+              <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripeWidth(1)">+</button>
             </div>
             <div class="text-center">
               <span id="stripeWidthValue">1</span> px
@@ -92,10 +92,10 @@
               <span data-translate="stripe-place">Stripe Place</span>
             </label>
             <div class="d-flex align-items-center flex-nowrap gap-1 w-100">
-              <button class="btn btn-sm btn-secondary px-2" onclick="changeStripePlacement(-1)">-</button>
+              <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripePlacement(-1)">-</button>
               <input type="range" class="form-range flex-grow-1" id="stripePlacementRange" min="1"
                      onchange="changeStripePlacement(0)">
-              <button class="btn btn-sm btn-secondary px-2" onclick="changeStripePlacement(1)">+</button>
+              <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripePlacement(1)">+</button>
             </div>
             <div class="text-center">
               <span id="stripePlacementValue">1</span> px
@@ -225,7 +225,7 @@
 
     </div>  <!-- End of col-3 -->
 
-    <div class="col-9 position-relative d-flex flex-column p-2">
+    <div class="col-9 position-relative d-flex flex-column p-2 bg-mainContent">
 
       <!-- Graph -->
       <div id="graphWindowContainer">
@@ -288,7 +288,7 @@
           </div>
           <div id="gradientOpacitySliderContainer" style="display: none;" class="d-flex align-items-center gap-2">
             <label for="gradientOpacitySlider" class="form-label mb-0">Color Opacity</label>
-            <input type="range" class="form-range w-auto" style="width: 150px;" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
+            <input type="range" class="form-range darker-slider w-auto" style="width: 150px;" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
             <span id="gradientOpacityValue">0.7</span>
           </div>
         </div>
@@ -301,7 +301,7 @@
           </div>
           <div class="d-flex align-items-center gap-2">
             <label for="minValueRange" class="form-label mb-0">Minimum Value</label>
-            <input type="range" class="form-range w-auto" style="width: 150px;" id="minValueRange" min="0" max="255" value="0">
+            <input type="range" class="form-range darker-slider w-auto" style="width: 150px;" id="minValueRange" min="0" max="255" value="0">
             <span id="minValueValue">0</span>
           </div>
         </div>

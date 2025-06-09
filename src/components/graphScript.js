@@ -97,7 +97,7 @@ function drawGraph() {
     }
 
     if (captureReferenceGraph) {
-        referenceGraph.push([pixels, pixelWidth, minValue]);
+        referenceGraph.push([pixels, pixelWidth, minValue, calculateMaxValue(pixels)]);
         captureReferenceGraph = false;
     }
 
@@ -187,6 +187,14 @@ function drawGraph() {
  */
 function calculateMaxValue(pixels) {
     let maxValue = 0;
+    if (referenceGraph.length > 0 && showReferenceGraph) {
+        for (let i = 0; i < referenceGraph.length; i++) {
+            const tempMaxValue = referenceGraph[i][3];
+            if (tempMaxValue > maxValue) {
+                maxValue = tempMaxValue;
+            }
+        }
+    }
     for (let i = 0; i < pixels.length; i += 4) {
         const value = Math.max(pixels[i], pixels[i + 1], pixels[i + 2]);
         if (value > maxValue) {
@@ -522,6 +530,29 @@ function clearGraph(graphCtx, graphCanvas) {
 }
 
 /**
+ * Calculates the best step size for axis labels
+ */
+function niceStep(range, maxLabels) {
+    const roughStep = range / maxLabels;
+    const exponent = Math.floor(Math.log10(roughStep));
+    const fraction = roughStep / Math.pow(10, exponent);
+    let niceFraction;
+    if (fraction <= 1) {
+        niceFraction = 1;
+    }
+    else if (fraction <= 2) {
+        niceFraction = 2;
+    }
+    else if (fraction <= 5) {
+        niceFraction = 5;
+    }
+    else {
+        niceFraction = 10;
+    }
+    return niceFraction * Math.pow(10, exponent);
+}
+
+/**
  * Draws the grid on the graph canvas
  */
 function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
@@ -530,7 +561,9 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
     const padding = 30;
 
     let maxValue = calculateMaxValue(pixels);
+
     const numOfYLabels = Math.min(25, Math.floor(maxValue));
+    const yStep = niceStep(maxValue, numOfYLabels);
 
     graphCtx.beginPath();
     graphCtx.strokeStyle = '#e0e0e0';
@@ -538,9 +571,9 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
     graphCtx.font = '14px Arial';
     graphCtx.fillStyle = 'black';
 
-    for (let i = 0; i <= numOfYLabels; i++) {
-        const y = padding + ((height - 2 * padding) / numOfYLabels) * i;
-        const label = (Math.abs(maxValue - (i * (maxValue / numOfYLabels)))).toFixed(0);
+    for (let yValue = 0; yValue <= maxValue; yValue += yStep) {
+        const y = padding + ((height - 2 * padding) * (1 - yValue / maxValue));
+        const label = Math.round(yValue).toString();
         graphCtx.moveTo(padding, y);
         graphCtx.lineTo(width - padding, y);
         graphCtx.fillText(label, 5, y + 3);
@@ -549,9 +582,9 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
     const toggleXLabelsPx = document.getElementById('toggleXLabelsPx').checked;
     const zoomRange = zoomEnd - zoomStart;
     const numOfXLabels = Math.min(20, zoomRange);
-    const stepSize = Math.ceil(zoomRange / numOfXLabels);
+    const xStep = niceStep(zoomRange, numOfXLabels);
 
-    for (let i = Math.ceil(zoomStart / stepSize) * stepSize; i <= zoomEnd; i += stepSize) {
+    for (let i = Math.ceil(zoomStart / xStep) * xStep; i <= zoomEnd; i += xStep) {
         const x = calculateXPosition(i - zoomStart, zoomRange, width);
         graphCtx.moveTo(x, padding);
         graphCtx.lineTo(x, height - padding);
@@ -559,7 +592,7 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
         if (!toggleXLabelsPx) {
             label = getWaveLengthByPx(i).toFixed(1);
         } else {
-            label = i.toFixed(0);
+            label = Math.round(i).toString();
         }
         graphCtx.fillText(label, x - 10, height - 5);
     }

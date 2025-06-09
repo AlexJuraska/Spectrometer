@@ -187,7 +187,7 @@ function updateExposureValue(value) {
     if (rounded === 0) {
         rounded = 1;
     }
-    document.getElementById('exposureValue').textContent = rounded;
+    document.getElementById('exposureValue').textContent = rounded.toString();
 }
 
 /**

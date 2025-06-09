@@ -78,7 +78,8 @@
             <div class="d-flex align-items-center flex-nowrap gap-1 w-100">
               <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripeWidth(-1)">-</button>
               <input type="range" class="form-range flex-grow-1" id="stripeWidthRange" min="1" value="1"
-                     onchange="changeStripeWidth(0)">
+                     onchange="changeStripeWidth(0)"
+                     oninput="changeStripeLabels(this.value)">
               <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripeWidth(1)">+</button>
             </div>
             <div class="text-center">
@@ -94,7 +95,7 @@
             <div class="d-flex align-items-center flex-nowrap gap-1 w-100">
               <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripePlacement(-1)">-</button>
               <input type="range" class="form-range flex-grow-1" id="stripePlacementRange" min="1"
-                     onchange="changeStripePlacement(0)">
+                     onchange="changeStripePlacement(0)" oninput="changeStripePlacementLabel(this.value)">
               <button class="btn btn-sm bg-spectraGreen btn-secondary px-2" onclick="changeStripePlacement(1)">+</button>
             </div>
             <div class="text-center">

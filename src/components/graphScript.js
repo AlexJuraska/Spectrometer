@@ -471,10 +471,6 @@ function setupEventListeners() {
         document.getElementById('gradientOpacityValue').textContent = gradientOpacity.toFixed(1);
         redrawGraphIfLoadedImage();
     });
-
-    window.addEventListener("resize", () => {
-        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
-    });
 }
 
 /**

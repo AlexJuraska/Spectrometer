@@ -14,8 +14,6 @@ function changeSettingsScreen(changeTo) {
         document.getElementById('changeFromCalibrationButton').style.display = 'none';
         document.getElementById('changeToLongExpoButton').style.display = 'block';
         document.getElementById('changeFromLongExpoButton').style.display = 'none';
-
-        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
     } else if (changeTo === "Calibration") {
         document.getElementById('graphWindowContainer').style.display = 'none';
         document.getElementById('calibrationWindowContainer').style.display = 'block';

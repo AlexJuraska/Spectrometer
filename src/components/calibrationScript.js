@@ -506,6 +506,7 @@ function drawCalibrationPoints() {
 
 window.addEventListener("resize", () => {
     resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+    changeStripeWidth(0);
 });
 
 drawGridCalibration();

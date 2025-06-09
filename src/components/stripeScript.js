@@ -139,6 +139,40 @@ function getStripePositionRangeText() {
 }
 
 /**
+ * Changes the label of the stripe placement range in real time
+ */
+function changeStripePlacementLabel(currentValue) {
+    let middleHeight = parseInt(currentValue);
+    const rangeInputWidth = document.getElementById("stripeWidthRange");
+    let actualStripeWidth = rangeInputWidth.value;
+
+    if (parseInt(actualStripeWidth) === 1) {
+        document.getElementById('stripePlacementValue').textContent = `<${middleHeight},${middleHeight}>`;
+        return
+    }
+
+    let half = parseInt(actualStripeWidth / 2);
+
+    let final;
+    if (middleHeight-half < 1) {
+        final = `<1,${actualStripeWidth}>`;
+    } else if (middleHeight+half > cameraOutputHeight) {
+        final = `<${cameraOutputHeight-actualStripeWidth+1},${cameraOutputHeight}>`;
+    } else {
+        final = `<${middleHeight-half+1},${middleHeight+half}>`;
+    }
+    document.getElementById('stripePlacementValue').textContent = final;
+}
+
+/**
+ * Changes both width and placement labels based on the width value in real time
+ */
+function changeStripeLabels(value) {
+    document.getElementById('stripeWidthValue').textContent = value;
+    changeStripePlacementLabel(document.getElementById('stripePlacementRange').value);
+}
+
+/**
  * // Draws the yellow selection line knows as Stripe
  */
 function drawSelectionLine() {

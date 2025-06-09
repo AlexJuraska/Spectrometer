@@ -309,34 +309,28 @@ requestCameraAccess();
 // Flag to track recording state
 let isRecording = false;
 
-/**
- * Opens the camera exposure window
- */
-function openCameraExposure(){
-    const window = document.getElementById("cameraExposureWindow");
-    window.style.display = "block";
-}
 
 /**
  * Closes the camera exposure window
  */
 function closeCameraExposure(){
-    const window = document.getElementById("cameraExposureWindow");
-    window.style.display = "none";
+    changeSettingsScreen("Graph");
 }
 
 /**
  * Opens the waiting window while the graph is being recorded
  */
 function showCameraRecordingWindow(){
-    document.getElementById("cameraRecordingIsOn").style.display = "block";
+    const exposureWindow = document.getElementById("cameraRecordingIsOn");
+    exposureWindow.classList.add('show');
 }
 
 /**
  * Closes the waiting window while the graph is being recorded
  */
 function  closeCameraRecordingWindow(){
-    document.getElementById("cameraRecordingIsOn").style.display = "none";
+    const exposureWindow = document.getElementById("cameraRecordingIsOn");
+    exposureWindow.classList.remove('show');
 }
 
 /**

@@ -101,6 +101,7 @@ async function getCameras() {
         console.error('Error fetching devices: ', error);
     }
     resetCamera();
+    getBackToCameraStream();
 }
 
 /**
@@ -124,8 +125,6 @@ async function requestCameraAccess() {
  * Resets the camera stream with the current camera
  */
 async function resetCamera() {
-    // document.getElementById("playVideoButton").style.display = "none";
-    // document.getElementById("pauseVideoButton").style.display = "block";
     document.getElementById("pauseVideoButton").style.visibility = "visible";
     document.getElementById("playVideoButton").style.visibility = "hidden";
     await startStream(cameraUsed);
@@ -196,8 +195,6 @@ function updateExposureValue(value) {
  */
 async function pauseVideo(){
     videoElement.pause();
-    // document.getElementById("playVideoButton").style.display = "inline";
-    // document.getElementById("pauseVideoButton").style.display = "none";
     document.getElementById("pauseVideoButton").style.visibility = "hidden";
     document.getElementById("playVideoButton").style.visibility = "visible";
 
@@ -208,8 +205,6 @@ async function pauseVideo(){
  */
 async function playVideo(){
     videoElement.play();
-    // document.getElementById("playVideoButton").style.display = "none";
-    // document.getElementById("pauseVideoButton").style.display = "inline";
     document.getElementById("pauseVideoButton").style.visibility = "visible";
     document.getElementById("playVideoButton").style.visibility = "hidden";
 }
@@ -218,13 +213,13 @@ async function playVideo(){
  * Changes the videoElement from img to video, so the camera can be used
  */
 function getBackToCameraStream(){
-    videoElement.style.display = 'none'; // Hide the image element
+    videoElement.style.display = 'none';
     videoElement = document.getElementById('videoMain');
-    videoElement.style.display = 'inline'; // Show the video element
-    document.getElementById("cameraExposureButton").style.display = "inline";
-    document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "flex";
-    document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "none";
+    videoElement.style.display = 'block';
+    document.getElementById("pauseVideoButton").style.visibility = "visible";
+    document.getElementById("playVideoButton").style.visibility = "hidden";
     resetCamera();
+    syncCanvasToVideo();
 }
 
 /**
@@ -248,14 +243,15 @@ function loadImageIntoCamera() {
                     tracks.forEach(track => track.stop());
                     videoElement.srcObject = null;
                 }
+
                 videoElement.style.display = 'none'; // Hide the video element
-                document.getElementById("cameraWindowControlsOnMeasureCameraStreaming").style.display = "none";
-                document.getElementById("cameraWindowControlsOnMeasureFromPicture").style.display = "block";
-                document.getElementById("cameraExposureButton").style.display = "none";
+                document.getElementById("pauseVideoButton").style.visibility = "hidden";
+                document.getElementById("playVideoButton").style.visibility = "visible";
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;
                 videoElement.style.display = 'block'; // Show the image element
                 videoElement.onload = () => {
+                    syncCanvasToVideo();
                     needToRecalculateMaxima = true;
                     plotRGBLineFromCamera();
                 };
@@ -264,7 +260,6 @@ function loadImageIntoCamera() {
         }
     });
 
-    // Trigger the file input click event to open the file dialog
     input.click();
 }
 

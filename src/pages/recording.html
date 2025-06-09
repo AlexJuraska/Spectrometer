@@ -31,10 +31,10 @@
       <div id="cameraMainWindow" class="text-center">
 
         <div id="videoMainWindow" class="position-relative w-100">
-          <video id="videoMain" class="w-100 h-auto d-block" autoplay playsinline></video>
-          <img id="cameraImage" style="display: none">
+          <video id="videoMain" class="w-100 h-auto" autoplay playsinline></video>
+          <img id="cameraImage" class="w-100 h-auto" style="display: none">
 
-          <canvas data-translate="canvas-warning" id="cameraWindowCanvasRecording" class="position-absolute top-0 start-0">Your browser does not support the HTML canvas tag.</canvas>
+          <canvas data-translate="canvas-warning" id="cameraWindowCanvasRecording" class="position-absolute top-0 start-0 w-100">Your browser does not support the HTML canvas tag.</canvas>
         </div>
 
       </div>
@@ -61,7 +61,7 @@
               <button id="playVideoButton"
                       class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
                       style="visibility: hidden;"
-                      onclick="playVideo()"
+                      onclick="getBackToCameraStream()"
                       data-translate="play-button">Play</button>
             </div>
 

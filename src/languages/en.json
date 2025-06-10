@@ -29,7 +29,7 @@
   "pause-button": "Pause",
   "stripe-width": "Stripe width",
   "close-button": "Close",
-  "camExp-button": "Camera Exposure",
+  "camExp-button": "Frame limited recording",
   "numOfCap": "Number of Captures",
   "pauseBetCap": "Pause in between captures",
   "capture-button": "Capture",
@@ -103,6 +103,16 @@
   "step4choice7": "<strong>\"B\"</strong> – Displays the blue component of light.",
   "step4choice8": "<strong>\"Toggle Peaks\"</strong> – Highlights the highest parts of the graph.",
   "step4choice10": "<strong>\"Minimum value\"</strong> – Sets the minimum signal value on the graph.",
-  "step4choice11": "<strong>\"Set exposure\"</strong> – Allows manual adjustment of the camera exposure."
+  "step4choice11": "<strong>\"Set exposure\"</strong> – Allows manual adjustment of the camera exposure.",
+
+
+  "camera-select-tooltip": "Open a dropdown menu to select a camera",
+  "refresh-button-tooltip": "Refresh the list of available cameras",
+  "pause-button-tooltip": "Pause the recording",
+  "play-button-tooltip": "Resume the recording",
+  "load-image-tooltip": "Load an image from your device instead of using the camera",
+  "stripe-width-minus-tooltip": "Decrease the selection stripe width by 1 pixel",
+  "stripe-width-plus-tooltip": "Increase the selection stripe width by 1 pixel",
+  "stripe-width-range-tooltip": "Adjust the selection stripe width using the slider"
 }
 

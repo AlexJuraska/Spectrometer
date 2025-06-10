@@ -29,7 +29,7 @@
   "pause-button": "Pauza",
   "stripe-width": "Šírka pruhu",
   "close-button": "Zavrieť",
-  "camExp-button": "Expozícia kamery",
+  "camExp-button": "Snímkovo obmedzené nahrávanie",
   "numOfCap": "Počet snímok",
   "pauseBetCap": "Pauza medzi snímkami",
   "capture-button": "Zachytiť",
@@ -104,5 +104,14 @@
   "step4choice8": "<strong>\"Prepnúť vrcholy\"</strong> – Zvýrazní najvyššie časti grafu.",
   "step4choice9": "<strong>\"Hladkanie\"</strong> – Umožňuje aplikovať filter na zjemnenie grafu.",
   "step4choice10": "<strong>\"Minimálna hodnota\"</strong> – Nastaví minimálnu hodnotu signálu v grafe.",
-  "step4choice11": "<strong>\"Nastavenie expozície\"</strong> – Umožňuje manuálne nastavenie expozície kamery."
+  "step4choice11": "<strong>\"Nastavenie expozície\"</strong> – Umožňuje manuálne nastavenie expozície kamery.",
+
+  "camera-select-tooltip": "Otvoríte zoznam dostupných kamier",
+  "refresh-button-tooltip": "Obnovíte zoznam dostupných kamier",
+  "pause-button-tooltip": "Pozastavíte nahrávanie kamery",
+  "play-button-tooltip": "Znovu spustíte nahrávanie kamery",
+  "load-image-tooltip": "Nahráte obrázok zo zariadenia namiesto použitia kamery",
+  "stripe-width-minus-tooltip": "Znížite šírku meracieho pásika o 1 pixel",
+  "stripe-width-plus-tooltip": "Zvýšite šírku meracieho pásika o 1 pixel",
+  "stripe-width-tooltip": "Nastavíte šírku meracieho pásika, ktorý sa použije na analýzu obrazu"
 }

@@ -40,9 +40,16 @@ function updateTextContent() {
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
                 const value = translations[key];
-
                 if (value) {
                     element.innerHTML = value;
+                }
+            });
+
+            document.querySelectorAll('[data-translate-title]').forEach(element => {
+                const key = element.getAttribute('data-translate-title');
+                const value = translations[key];
+                if (value) {
+                    element.setAttribute('title', value);
                 }
             });
         }).catch(error => console.error("Error loading language file:", error));

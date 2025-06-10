@@ -26,7 +26,7 @@ function showSelectedStripe() {
     }
 
     const videoWidth = getElementWidth(videoElement);
-    const stripePosition = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
+    const stripePosition = getYPercentage() * getElementHeight(videoElement) - stripeWidth;
 
     let zoomStart = 0;
     let zoomEnd = videoWidth;
@@ -36,10 +36,10 @@ function showSelectedStripe() {
         zoomEnd = zoomList[zoomList.length - 1][1];
     }
 
-    stripeCtx.drawImage(videoElement, zoomStart, stripePosition, zoomEnd - zoomStart, stripeWidth, 0, 0, stripeCanvas.width, stripeCanvas.height);
+    stripeCtx.drawImage(videoElement, zoomStart, stripePosition, zoomEnd - zoomStart, stripeWidth*2, 0, 0, stripeCanvas.width, stripeCanvas.height);
 }
 
-function showSelectedStripeNewAndRejected() {
+/*function showSelectedStripeNewAndRejected() {
     const stripeCanvas = document.getElementById('stripeCanvas');
     if (!stripeCanvas) {
         console.error('stripeCanvas or graphCanvas element not found');
@@ -93,7 +93,7 @@ function showSelectedStripeNewAndRejected() {
         stripeCtx.fillStyle = `rgb(${r}, ${g}, ${b})`;
         stripeCtx.fillRect(x, 0, 1, canvasHeight);
     }
-}
+}*/
 
 /**
  * Similar to calculateMaxColor, this function returns the maximum color of a pixel,

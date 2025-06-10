@@ -42,7 +42,7 @@
       <div id="cameraSettingsWindow">
 
         <div id="cameraWindowControlsOnSetUp" class="p-2 w-100">
-          <select class="form-select form-select-sm" id="cameraSelect"></select> <!-- class="cameraWindowControlsOnSetUpButtons cameraButton" -->
+          <select class="form-select form-select-sm" id="cameraSelect" data-translate-title="camera-select-tooltip"></select> <!-- class="cameraWindowControlsOnSetUpButtons cameraButton" -->
         </div>
 
         <div id="cameraWindowControlsOnMeasure">
@@ -50,25 +50,28 @@
           <div id="cameraWindowControlsOnMeasureCameraStreaming"
                class="d-flex flex-row flex-wrap justify-content-center gap-1">
 
-            <button class="btn btn-sm btn-secondary p-1" onclick="getCameras()" data-translate="refresh-button">Refresh</button>
+            <button class="btn btn-sm btn-secondary p-1" onclick="getCameras()" data-translate="refresh-button" data-translate-title="refresh-button-tooltip">Refresh</button>
 
             <!-- Pause/Play toggle in a fixed-width wrapper -->
             <div style="position: relative; width: 80px; height: 30px;">
               <button id="pauseVideoButton"
                       class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
                       onclick="pauseVideo()"
-                      data-translate="pause-button">Pause</button>
+                      data-translate="pause-button"
+                      data-translate-title="pause-button-tooltip">Pause</button>
 
               <button id="playVideoButton"
                       class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
                       style="visibility: hidden;"
                       onclick="getBackToCameraStream()"
-                      data-translate="play-button">Play</button>
+                      data-translate="play-button"
+                      data-translate-title="play-button-tooltip">Play</button>
             </div>
 
             <button class="btn btn-sm btn-secondary p-1"
                     onclick="loadImageIntoCamera()"
-                    data-translate="load-image">Load Image</button>
+                    data-translate="load-image"
+                    data-translate-title="load-image-tooltip">Load Image</button>
           </div>
 
           <!-- Stripe Width -->
@@ -77,11 +80,16 @@
               <span data-translate="stripe-width">Stripe Width</span>
             </label>
             <div class="d-flex align-items-center flex-nowrap gap-1 w-100">
-              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2" onclick="changeStripeWidth(-1)">-</button>
+              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2"
+                      onclick="changeStripeWidth(-1)"
+                      data-translate-title="stripe-width-minus-tooltip">-</button>
               <input type="range" class="form-range flex-grow-1" id="stripeWidthRange" min="1" value="1"
                      onchange="changeStripeWidth(0)"
-                     oninput="changeStripeLabels(this.value)">
-              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2" onclick="changeStripeWidth(1)">+</button>
+                     oninput="changeStripeLabels(this.value)"
+                     data-translate-title="stripe-width-range-tooltip">
+              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2"
+                      onclick="changeStripeWidth(1)"
+                      data-translate-title="stripe-width-plus-tooltip">+</button>
             </div>
             <div class="text-center">
               <span id="stripeWidthValue">1</span> px

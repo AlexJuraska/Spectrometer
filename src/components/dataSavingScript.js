@@ -15,6 +15,11 @@ function saveRecordingData() {
  * Saves the numbers from the graph to a .xlsx file
  */
 function saveGraphValues() {
+
+    if (noGraphShown()) {
+        return;
+    }
+
     const stripeWidth = getStripeWidth();
 
     let pixels = lineCtx.getImageData(0, 0, getElementWidth(videoElement), stripeWidth).data;
@@ -56,13 +61,9 @@ function saveGraphValues() {
  * Saves the graph as an image
  */
 function saveGraphImage(){
-    const checkboxCombined = document.getElementById("toggleCombined");
-    const checkboxRed = document.getElementById("toggleR");
-    const checkboxGreen = document.getElementById("toggleG");
-    const checkboxBlue = document.getElementById("toggleB");
 
-    if (!checkboxCombined.checked && !checkboxRed.checked && !checkboxGreen.checked && !checkboxBlue.checked) {
-        alert("At least one checkbox with a color must be checked!");
+    if (noGraphShown()) {
+        callError("noGraphSelectedError");
         return;
     }
 
@@ -79,7 +80,6 @@ function saveGraphImage(){
 
     const graphImageData = graphCanvas.toDataURL('image/png');
 
-    // Temporary save link
     const link = document.createElement('a');
     link.href = graphImageData;
     link.download = 'graph.png';
@@ -94,13 +94,8 @@ function saveGraphImage(){
  * Saves the camera image as an image
  */
 function saveCameraImage(){
-    const checkboxCombined = document.getElementById("toggleCombined");
-    const checkboxRed = document.getElementById("toggleR");
-    const checkboxGreen = document.getElementById("toggleG");
-    const checkboxBlue = document.getElementById("toggleB");
 
-    if (!checkboxCombined.checked && !checkboxRed.checked && !checkboxGreen.checked && !checkboxBlue.checked) {
-        alert("At least one checkbox with a color must be checked!");
+    if (noGraphShown()) {
         return;
     }
 
@@ -117,10 +112,9 @@ function saveCameraImage(){
     ctx.drawImage(videoElement, 0, 0, videoCanvas.width, videoCanvas.height);
     const videoImageData = videoCanvas.toDataURL('image/png');
 
-    // Vytvorenie dočasného odkazu na stiahnutie
     const link = document.createElement('a');
     link.href = videoImageData;
-    link.download = 'image.png'; // Názov uloženého súboru
+    link.download = 'image.png';
     link.click();
 
     if (!wasPaused) {

@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="../styles/recordingStyle.css">
 
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script> <!-- xlsx -->
-  <script src="../components/setupScript.js"></script>
   <script src="../components/polynomialRegressionScript.js"></script>
   <script src="../components/zipScript.js"></script>
   <script src="../components/languageScript.js"></script>
@@ -233,7 +232,7 @@
         <button class="btn btn-md btn-secondary p-1" data-translate="record-button" id="changeFromLongExpoButton" onclick="changeSettingsScreen('Graph')" style="display: none">Record</button>
       </div>
 
-    </div>  <!-- End of col-3 -->
+    </div>
 
     <div class="col-9 position-relative d-flex flex-column p-2 bg-mainContent">
 
@@ -316,7 +315,6 @@
           </div>
         </div>
 
-
       </div>
 
     <div id="calibrationWindowContainer" class="w-100" style="display: none; background-color: #d74343;">
@@ -330,7 +328,7 @@
       </div>
 
 
-    </div> <!-- End of col-9 -->
+    </div>
 
     <div id="cameraRecordingIsOn" class="recording-toast">
       <div id="cameraRecordingIsOnWindows" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
@@ -339,9 +337,19 @@
       </div>
     </div>
 
+    <div id="errorBlock"></div>
+
+    <div id="errorBox" class="recording-toast">
+      <div id="errorBoxInside" class="container-sm bg-danger text-white rounded px-4 py-2 shadow">
+        <span id="errorMessage" data-translate="" class="mt-1">Error message</span>
+        <button class="btn btn-sm btn-light m-1" data-translate="acknowledge" onclick="uncallError()">I understand</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
+<script src="../components/setupScript.js"></script>
 <script src="../components/cameraScript.js"></script>
 <script src="../components/stripeScript.js"></script>
 <script src="../components/cameraSelection.js"></script>

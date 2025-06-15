@@ -113,23 +113,6 @@ function setCalibrationPoints() {
             const rawPx = pxInput.value.trim();
             const rawNm = nmInput.value.trim();
 
-            //In case we want , and . either way
-
-            // const isPxValid = /^\d+$/.test(rawPx);
-            // const isNmValid = /^\d+([.,]\d+)?$/.test(rawNm);
-
-            // if (!isPxValid) {
-            //     resetCalValues();
-            //     alert(`${rawPx} is not a valid number`)
-            //     return;
-            // }
-            //
-            // if (!isNmValid) {
-            //     resetCalValues();
-            //     alert(`${rawNm} is not a valid number`)
-            //     return;
-            // }
-
             const pxValue = parseFloat(rawPx);
             const nmValue = parseFloat(rawNm);
 
@@ -139,7 +122,7 @@ function setCalibrationPoints() {
                 calibrationData.push({ px: pxValue, nm: nmValue });
             } else {
                 resetCalValues();
-                alert(`Numbers out of allowed range`);
+                callError("notEnoughCalPointsError");
                 return;
             }
         }
@@ -147,7 +130,7 @@ function setCalibrationPoints() {
 
     if (calibrationData.length < minInputBoxNumber) {
         resetCalValues();
-        window.alert("Insufficient number of calibration points");
+        callError("notEnoughCalPointsError");
         return;
     }
 
@@ -214,7 +197,7 @@ function resetCalValues() {
  */
 function exportCalibrationFile() {
     if (calibrationData.length === 0) {
-        alert("No calibration data to export. Please calibrate first.");
+        callError("noCalPointsToExportError");
         return;
     }
 
@@ -252,7 +235,7 @@ function importCalibrationFile() {
     fileInput.value = "";
 
     if (!file) {
-        alert("Please select a file.");
+        callError("noFileSelectedError");
         return;
     }
 
@@ -262,28 +245,26 @@ function importCalibrationFile() {
 
     //reading the content of the file
     reader.onload = function(event) {
-        const fileContent = event.target.result; // Get file content as text
+        const fileContent = event.target.result;
 
         const lines = fileContent.trim().split("\n").map(line => line.trim()).filter(line => line.length > 0);
 
         if (lines.length < minInputBoxNumber || lines.length > maxInputBoxNumber) {
-            alert(`There must be between ${minInputBoxNumber} and ${maxInputBoxNumber} calibration points`);
-            resetInputBoxes()
+            callError("wrongNumberOfCalPointsError");
+            resetInputBoxes();
             return;
         }
 
-        // If there are more than minInputBoxNumber lines, add extra input pairs for the additional lines
         const extraLines = lines.length - inputBoxCounter;
         for (let i = 0; i < extraLines; i++) {
-            addInputPair(); // Add extra input fields dynamically
+            addInputPair();
         }
 
-        // Fills the input fields with the file content
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i]
 
             if (!validFormatRegex.test(line)) {
-                alert(`Invalid format at line ${i + 1}: "${line}"`);
+                callError("wrongCalPointsFormatError");
                 resetInputBoxes()
                 return;
             }
@@ -291,35 +272,22 @@ function importCalibrationFile() {
             const [px, nm] = lines[i].split(";");
 
             let pxValue = px.trim().replace(',', '.');
-            let nmValue = nm.trim().replace(',', '.'); // Replace comma with dot
+            let nmValue = nm.trim().replace(',', '.');
 
             const pxFloat = parseFloat(pxValue);
             const nmFloat = parseFloat(nmValue);
-
-            // if (pxValue < rangeBeginX || pxValue > rangeEndX) {
-            //     alert(`Invalid px value at line ${i + 1}: "${pxValue}". It must be between ${rangeBeginX} and ${rangeEndX}.`);
-            //     resetInputBoxes();
-            //     return;
-            // }
-
-            // Validate nm value
-            // if (nmFloat < rangeBeginY || nmFloat > rangeEndY) {
-            //     alert(`Invalid nm value at line ${i + 1}: "${nmFloat}". It must be between ${rangeBeginY} and ${rangeEndY}.`);
-            //     resetInputBoxes();
-            //     return;
-            // }
 
             const pxInput = document.querySelector(`#point${i+1}px`);
             const nmInput = document.querySelector(`#point${i+1}nm`);
 
             if (pxInput && nmInput) {
-                pxInput.value = pxFloat; // Set px value
-                nmInput.value = nmFloat; // Set nm value
+                pxInput.value = pxFloat;
+                nmInput.value = nmFloat;
             }
         }
     };
 
-    reader.readAsText(file); // Read the file as text (adjust if you need other formats)
+    reader.readAsText(file);
 }
 
 /**

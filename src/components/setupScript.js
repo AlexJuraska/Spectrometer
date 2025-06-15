@@ -45,3 +45,27 @@ function changeSettingsScreen(changeTo) {
 
     }
 }
+
+function callError(errorMessageTranslate) {
+    const errorMessageSpan = document.getElementById('errorMessage');
+    errorMessageSpan.dataset.translate = errorMessageTranslate;
+    updateTextContent();
+
+    const box = document.getElementById("errorBox");
+    box.classList.add('show');
+
+    const blocker = document.getElementById("errorBlock");
+    blocker.classList.add('show');
+}
+
+function uncallError() {
+    const box = document.getElementById("errorBox");
+    box.classList.remove('show');
+
+    const blocker = document.getElementById("errorBlock");
+    blocker.classList.remove('show');
+}
+
+document.getElementById("errorBlock").addEventListener("click", () => {
+    uncallError();
+})

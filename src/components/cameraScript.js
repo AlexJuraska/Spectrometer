@@ -70,7 +70,7 @@ async function startStream(deviceId) {
         };
     } catch (error) {
         console.error('Error accessing camera: ', error);
-        alert("Camera has not been found");
+        callError("cameraNotFoundError");
     }
 }
 
@@ -117,7 +117,7 @@ async function requestCameraAccess() {
         await getCameras();
     } catch (error) {
         console.error('Camera access was denied.', error);
-        alert('Camera access was denied.');
+        callError("cameraAccessDeniedError");
     }
 }
 
@@ -344,30 +344,26 @@ function stopOngoingRecording(){
  */
 function startCameraCapture(){
     if (videoElement.paused){
-        alert("Camera is paused! To start capture please unpause the camera!");
+        callError("FLRCameraPausedError")
         return;
     }
 
     const inputRange = document.getElementById("NumOfSamples").value;
     const inputTime = document.getElementById("timeOfPause").value;
-    const checkboxCombined = document.getElementById("toggleCombined");
-    const checkboxRed = document.getElementById("toggleR");
-    const checkboxGreen = document.getElementById("toggleG");
-    const checkboxBlue = document.getElementById("toggleB");
     const checkboxGraph = document.getElementById("screenshotOfGraph");
 
     if (isNaN(inputRange) || inputRange <= 0) {
-        alert("Number of captures must be a number greater than 0!");
+        callError("tooLowNumOfCapturesError")
         document.getElementById("NumOfSamples").focus();
         return;
     }
     if (isNaN(inputTime) || inputTime < 200) {
-        alert("Pause in between captures must be a greater/equal than 200!");
+        callError("lowGapBetweenCapturesError");
         document.getElementById("timeOfPause").focus();
         return;
     }
-    if (!checkboxCombined.checked && !checkboxRed.checked && !checkboxGreen.checked && !checkboxBlue.checked) {
-        alert("At least one checkbox with a color must be checked!");
+    if (checkboxGraph.checked && noGraphShown()) {
+        callError("noGraphSelectedError");
         return;
     }
 
@@ -406,25 +402,22 @@ function startCameraCapture(){
         }
 
         if (imageIndex < inputRange) {
-            setTimeout(captureGraph, inputTime-200); // Čaká a robí ďalšiu snímku
+            setTimeout(captureGraph, inputTime-200);
         } else {
             videoElement.play();
-            createZip(); // Po poslednej snímke vytvor ZIP
+            createZip();
         }
     }
 
-    // Creates a ZIP file with all the captured images
     function createZip() {
         if(!isRecording){
             return;
         }
 
         images.forEach(image => {
-            // Adds each image to the ZIP file
             zip.file(image.name, image.data.split(',')[1], { base64: true });
         });
 
-        // Generates the ZIP file and creates a download link
         zip.generateAsync({ type: 'blob' }).then(function (content) {
             const url = URL.createObjectURL(content); // Vytvorenie URL z blobu
             const link = document.createElement('a');
@@ -432,7 +425,6 @@ function startCameraCapture(){
             link.download = 'graphs.zip'; // Názov ZIP súboru
             link.click();
 
-            // Revoke the URL to free up memory
             URL.revokeObjectURL(url);
         });
 
@@ -440,9 +432,17 @@ function startCameraCapture(){
         closeCameraRecordingWindow();
     }
 
-    isRecording = true; // Set flag to true to start recording
+    isRecording = true;
     closeCameraExposure();
     showCameraRecordingWindow();
-    // Start the recording process
     captureGraph();
+}
+
+function noGraphShown() {
+    const checkboxCombined = document.getElementById("toggleCombined");
+    const checkboxRed = document.getElementById("toggleR");
+    const checkboxGreen = document.getElementById("toggleG");
+    const checkboxBlue = document.getElementById("toggleB");
+
+    return !checkboxCombined.checked && !checkboxRed.checked && !checkboxGreen.checked && !checkboxBlue.checked
 }

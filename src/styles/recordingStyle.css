@@ -139,3 +139,24 @@ input.darker-slider::-ms-track { background: var(--sidebar-grey); }
     width: 100%;
     text-align: center;
 }
+
+#errorBoxInside {
+    max-width: 500px;
+    width: 40%;
+    text-align: center;
+}
+
+#errorBlock {
+    display: none;
+    z-index: 1049;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(215, 67, 67, 0.5);
+}
+
+#errorBlock.show {
+    display: block;
+}

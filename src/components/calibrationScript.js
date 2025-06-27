@@ -237,8 +237,6 @@ function importCalibrationFile() {
     const fileInput = document.getElementById("my-file");
     const file = fileInput.files[0]; // Get the selected file
 
-    fileInput.value = "";
-
     if (!file) {
         callError("noFileSelectedError");
         return;

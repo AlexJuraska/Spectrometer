@@ -104,3 +104,25 @@ document.getElementById("infoPopupBlock").addEventListener("click", () => {
         closeInfoPopup();
     }
 })
+
+/**
+ * Opens the waiting window while the graph is being recorded
+ */
+function showCameraRecordingWindow(){
+    const exposureWindow = document.getElementById("cameraRecordingIsOn");
+    exposureWindow.classList.add('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.add('show');
+}
+
+/**
+ * Closes the waiting window while the graph is being recorded
+ */
+function  closeCameraRecordingWindow(){
+    const exposureWindow = document.getElementById("cameraRecordingIsOn");
+    exposureWindow.classList.remove('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.remove('show');
+}

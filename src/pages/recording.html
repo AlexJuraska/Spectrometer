@@ -330,6 +330,13 @@
 
     <div id="infoPopupBlock"></div>
 
+    <div id="cameraRecordingIsOn" class="recording-toast">
+      <div id="cameraRecordingIsOnWindows" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
+        <span data-translate="recording-screenshots" class="mt-1">Recording screenshots...</span>
+        <button class="btn btn-sm btn-light ms-3" data-translate="cancel" onclick="stopOngoingRecording()">Cancel</button>
+      </div>
+    </div>
+
     <div id="infoPopup" class="recording-toast">
       <div id="infoPopupInside" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
         <span id="infoPopupMessage" data-translate="" class="mt-1">Info message</span>

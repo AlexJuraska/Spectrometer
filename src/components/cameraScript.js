@@ -313,30 +313,13 @@ function closeCameraExposure(){
 }
 
 /**
- * Opens the waiting window while the graph is being recorded
- */
-function showCameraRecordingWindow(){
-    const exposureWindow = document.getElementById("cameraRecordingIsOn");
-    exposureWindow.classList.add('show');
-}
-
-/**
- * Closes the waiting window while the graph is being recorded
- */
-function  closeCameraRecordingWindow(){
-    const exposureWindow = document.getElementById("cameraRecordingIsOn");
-    exposureWindow.classList.remove('show');
-}
-
-/**
  * Terminates the ongoing recording
  */
 function stopOngoingRecording(){
     if (isRecording) {
         isRecording = false;
-        videoElement.play();
-        // closeCameraRecordingWindow();
-        closeInfoPopup();
+        playVideo();
+        closeCameraRecordingWindow();
     }
 }
 
@@ -435,8 +418,7 @@ function startCameraCapture(){
 
     isRecording = true;
     closeCameraExposure();
-    // showCameraRecordingWindow();
-    showInfoPopup("recording-screenshots", "cancel");
+    showCameraRecordingWindow();
     captureGraph();
 }
 

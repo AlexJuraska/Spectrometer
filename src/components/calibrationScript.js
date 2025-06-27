@@ -1,4 +1,4 @@
-const minInputBoxNumber = 4
+const minInputBoxNumber = 3
 const maxInputBoxNumber = 15
 
 const rangeBeginX = 0;
@@ -15,6 +15,8 @@ let nMAxis = []
 
 let graphCanvasCalibration;
 let graphCtxCalibration;
+
+let previousFileName = null;
 
 /**
  *Adds a pair of input boxes
@@ -232,15 +234,15 @@ function exportCalibrationFile() {
  * Lets the user choose a file and then automatically fill out input boxes with the calibration points from the file
  */
 function importCalibrationFile() {
-    resetInputBoxes();
 
     const fileInput = document.getElementById("my-file");
     const file = fileInput.files[0]; // Get the selected file
 
     if (!file) {
-        callError("noFileSelectedError");
         return;
     }
+
+    resetInputBoxes();
 
     const reader = new FileReader();
 

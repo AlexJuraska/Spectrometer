@@ -160,7 +160,7 @@
           </div>
           <input type="text" class="form-control form-control-sm" id="exportCalibrationNameInput" placeholder="Enter filename">
           <button class="btn btn-sm text-light bg-secondary flex-fill" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
-          <input type="file" name="my_file" id="my-file" accept=".txt" class="form-control form-control-sm" onchange="importCalibrationFile()">
+          <input type="file" name="my_file" id="my-file" accept=".txt" class="form-control form-control-sm" onclick="this.value=null" onchange="importCalibrationFile()">
         </div>
 
         <div class="input-header">
@@ -189,11 +189,11 @@
             <input id="point3nm" type="number" class="form-control form-control-sm"/>
           </div>
 
-          <div class="input-pair">
-            <label><span data-translate="point"></span> 4:</label>
-            <input id="point4px" type="number" class="form-control form-control-sm"/>
-            <input id="point4nm" type="number" class="form-control form-control-sm"/>
-          </div>
+<!--          <div class="input-pair">-->
+<!--            <label><span data-translate="point"></span> 4:</label>-->
+<!--            <input id="point4px" type="number" class="form-control form-control-sm"/>-->
+<!--            <input id="point4nm" type="number" class="form-control form-control-sm"/>-->
+<!--          </div>-->
 
         </div>
       </div>

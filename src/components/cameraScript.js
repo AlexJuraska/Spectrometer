@@ -333,9 +333,10 @@ function  closeCameraRecordingWindow(){
  */
 function stopOngoingRecording(){
     if (isRecording) {
-        isRecording = false; // Set flag to false to stop recording
-        videoElement.play(); // Resume video playback
-        closeCameraRecordingWindow();
+        isRecording = false;
+        videoElement.play();
+        // closeCameraRecordingWindow();
+        closeInfoPopup();
     }
 }
 
@@ -429,12 +430,13 @@ function startCameraCapture(){
         });
 
         isRecording = false;
-        closeCameraRecordingWindow();
+        closeInfoPopup();
     }
 
     isRecording = true;
     closeCameraExposure();
-    showCameraRecordingWindow();
+    // showCameraRecordingWindow();
+    showInfoPopup("recording-screenshots", "cancel");
     captureGraph();
 }
 

@@ -164,6 +164,11 @@ function calibrate() {
     // }
 }
 
+// TODO zmeniť na bool ktory sa setne pri kalibracii
+function isCalibrated() {
+    return calibrationData.length !== 0;
+}
+
 /**
  * Gets the wave Length from the pixel
  */

@@ -326,14 +326,14 @@
       <div class="graph-nav position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2 z-3">
         <a href="index.html" class="btn btn-secondary btn-md" data-translate="home-button">Home</a>
       </div>
-
-
     </div>
 
-    <div id="cameraRecordingIsOn" class="recording-toast">
-      <div id="cameraRecordingIsOnWindows" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
-        <span data-translate="recording-screenshots" class="mt-1">Recording screenshots...</span>
-        <button class="btn btn-sm btn-light ms-3" data-translate="cancel" onclick="stopOngoingRecording()">Cancel</button>
+    <div id="infoPopupBlock"></div>
+
+    <div id="infoPopup" class="recording-toast">
+      <div id="infoPopupInside" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
+        <span id="infoPopupMessage" data-translate="" class="mt-1">Info message</span>
+        <button id="infoPopupButton" class="btn btn-sm btn-light ms-3" data-translate="" onclick="closeInfoPopup()">Cancel</button>
       </div>
     </div>
 

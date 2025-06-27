@@ -134,7 +134,7 @@ input.darker-slider::-ms-track { background: var(--sidebar-grey); }
     pointer-events: auto;
 }
 
-#cameraRecordingIsOnWindows {
+#cameraRecordingIsOnWindows, #infoPopupInside {
     max-width: 500px;
     width: 100%;
     text-align: center;
@@ -146,7 +146,7 @@ input.darker-slider::-ms-track { background: var(--sidebar-grey); }
     text-align: center;
 }
 
-#errorBlock {
+#errorBlock, #infoPopupBlock {
     display: none;
     z-index: 1049;
     position: absolute;
@@ -154,9 +154,17 @@ input.darker-slider::-ms-track { background: var(--sidebar-grey); }
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(215, 67, 67, 0.5);
+    pointer-events: auto;
 }
 
-#errorBlock.show {
+#errorBlock {
+    background-color: var(--error-red);
+}
+
+#infoPopupBlock {
+    background-color: var(--popup-grey);
+}
+
+#errorBlock.show, #infoPopupBlock.show {
     display: block;
 }

@@ -264,6 +264,8 @@ function resetCalValues() {
     pixelCalPoints = [];
     nmCalPoints = [];
     nMAxis = [];
+
+    document.getElementById("my-file").value = null;
 }
 
 /**
@@ -367,7 +369,7 @@ function importCalibrationFile() {
  * @returns {*[]}
  */
 function convertPxAxisIntoNm(){
-    for (let i = 1; i <= 1920; i++) {
+    for (let i = 1; i <= rangeEndX; i++) {
         nMAxis.push(getWaveLengthByPx(i));
     }
     return nMAxis;
@@ -467,19 +469,19 @@ function drawCalibrationLine() {
     const height = graphCanvasCalibration.getBoundingClientRect().height;
     const padding = 30;
 
-    const interpolate = lagrangeInterpolation(pixelCalPoints, nmCalPoints);
+    nMAxis = convertPxAxisIntoNm();
 
     graphCtxCalibration.beginPath();
 
-    const stepSize = 5; // Space between plot points
     let firstPoint = true;
 
-    for (let x = 0; x <= 1280; x += stepSize) {
-        const yInterpolated = interpolate(x);
+    for (let i = 0; i < nMAxis.length; i++) {
+        const px = i + 1; // pixel positions are 1-based
+        const nm = nMAxis[i];
 
-        // Scale x and y to fit within the graph dimensions
-        let xScaled = padding + ((x - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
-        let yScaled = height - padding - ((yInterpolated - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+        // Scale coordinates to fit the canvas
+        const xScaled = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
+        const yScaled = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
 
         if (firstPoint) {
             graphCtxCalibration.moveTo(xScaled, yScaled);

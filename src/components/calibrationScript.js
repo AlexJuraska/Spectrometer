@@ -33,49 +33,102 @@ function addInputPair() {
     const div = document.createElement("div");
     div.classList.add("input-pair")
 
-    // Label for the translation of "Point" and for the numbering
+    // "Point n"
     const pointLabel = document.createElement("label");
     const spanLabel = document.createElement("span");
     spanLabel.setAttribute("data-translate", "point");
     pointLabel.appendChild(spanLabel);
     pointLabel.append(` ${inputBoxCounter}:`);
 
-    // Create the first input for px with label
+    // Px input
     const inputPx = document.createElement("input");
     inputPx.id = `point${inputBoxCounter}px`;
     inputPx.type = "number";
     inputPx.classList.add("form-control");
     inputPx.classList.add("form-control-sm");
 
-    // Create the second input for nm with label
+    // Nm input
     const inputNm = document.createElement("input");
     inputNm.id = `point${inputBoxCounter}nm`;
     inputNm.type = "number";
     inputNm.classList.add("form-control");
     inputNm.classList.add("form-control-sm");
 
+    // Point delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.id = `deleteButton${inputBoxCounter}`;
+    deleteButton.innerHTML = '&times;';
+    deleteButton.classList.add("btn", "btn-sm", "btn-danger", "btn-secondary", "pb-0.5");
+
+    const id = inputBoxCounter;
+    deleteButton.onclick = function () { removeInputPair(id); };
+
     // Append everything to the div
     div.appendChild(pointLabel);
     div.appendChild(inputPx);
     div.appendChild(inputNm);
+    div.appendChild(deleteButton);
 
     // Append the div to the container
     container.appendChild(div);
 
     // Sets the labels for the new pair
     updateTextContent();
+
+    if (inputBoxCounter > minInputBoxNumber) {
+        enablePairRemoveButtons();
+    }
+}
+
+function removeInputPair(inputBoxNumber) {
+    if (inputBoxNumber > maxInputBoxNumber || inputBoxNumber < 1) {
+        return;
+    }
+
+    if (inputBoxNumber > inputBoxCounter) {
+        return;
+    }
+
+    if (inputBoxCounter === minInputBoxNumber) {
+        disablePairRemoveButtons();
+        return;
+    }
+
+    let currPx = document.getElementById(`point${inputBoxNumber}px`);
+    let currNm = document.getElementById(`point${inputBoxNumber}nm`);
+    for (let i = inputBoxNumber+1; i <= inputBoxCounter; i++) {
+        let nextPx = document.getElementById(`point${i}px`);
+        let nextNm = document.getElementById(`point${i}nm`);
+
+        currPx.value = nextPx.value;
+        currNm.value = nextNm.value;
+
+        currPx = nextPx;
+        currNm = nextNm;
+    }
+
+    removeLastInputPair();
+
+    if (inputBoxCounter === minInputBoxNumber) {
+        disablePairRemoveButtons();
+        return;
+    }
 }
 
 /**
  * Removes one pair of input boxes
  */
-function removeInputPair() {
+function removeLastInputPair() {
     const inputContainer = document.getElementById("input-container");
     if (inputContainer.children.length > minInputBoxNumber) {
         const lastInputPair = inputContainer.lastElementChild;
         inputContainer.removeChild(lastInputPair); // Remove the last input pair
         inputBoxCounter --;
-        }
+    }
+
+    if (inputBoxCounter === minInputBoxNumber) {
+        disablePairRemoveButtons();
+    }
 }
 
 /**
@@ -96,8 +149,22 @@ function clearInputBoxes() {
 function deleteAllAdditionalInputPairs() {
     if (inputBoxCounter !== minInputBoxNumber) {
         for (let i = inputBoxCounter; i > minInputBoxNumber; i--) {
-            removeInputPair();
+            removeLastInputPair();
         }
+    }
+}
+
+function disablePairRemoveButtons() {
+    for (let i = 1; i <= inputBoxCounter; i++) {
+        const button = document.getElementById(`deleteButton${i}`);
+        button.disabled = true;
+    }
+}
+
+function enablePairRemoveButtons() {
+    for (let i = 1; i <= inputBoxCounter; i++) {
+        const button = document.getElementById(`deleteButton${i}`);
+        button.disabled = false;
     }
 }
 

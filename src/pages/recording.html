@@ -152,7 +152,7 @@
         <div class="d-flex flex-column gap-2 margin-left-15px" style="max-width: 100%;">
           <div class="d-flex flex-wrap gap-2 justify-content-between">
             <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add</button>
-            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="removeCalPoints-button" id="removePoints" onclick="removeInputPair(this)">Remove</button>
+            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="removeCalPoints-button" id="removePoints" onclick="removeLastInputPair(this)">Remove</button>
           </div>
           <div class="d-flex flex-wrap gap-2 justify-content-between">
             <button class="btn btn-sm btn-spectraGreen btn-secondary flex-fill p-1" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>
@@ -175,25 +175,22 @@
             <label><span data-translate="point"></span> 1:</label>
             <input id="point1px" type="number" class="form-control form-control-sm"/>
             <input id="point1nm" type="number" class="form-control form-control-sm"/>
+            <button id="deleteButton1" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(1)" disabled>&times;</button>
           </div>
 
           <div class="input-pair">
             <label><span data-translate="point"></span> 2:</label>
             <input id="point2px" type="number" class="form-control form-control-sm"/>
             <input id="point2nm" type="number" class="form-control form-control-sm"/>
+            <button id="deleteButton2" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(2)" disabled>&times;</button>
           </div>
 
           <div class="input-pair">
             <label><span data-translate="point"></span> 3:</label>
             <input id="point3px" type="number" class="form-control form-control-sm"/>
             <input id="point3nm" type="number" class="form-control form-control-sm"/>
+            <button id="deleteButton3" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(3)" disabled>&times;</button>
           </div>
-
-<!--          <div class="input-pair">-->
-<!--            <label><span data-translate="point"></span> 4:</label>-->
-<!--            <input id="point4px" type="number" class="form-control form-control-sm"/>-->
-<!--            <input id="point4nm" type="number" class="form-control form-control-sm"/>-->
-<!--          </div>-->
 
         </div>
       </div>

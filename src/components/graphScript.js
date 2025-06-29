@@ -575,17 +575,32 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
         graphCtx.fillText(label, 5, y + 3);
     }
 
-    const toggleXLabelsPx = document.getElementById('toggleXLabelsPx').checked;
+    const toggleXLabelsPx = document.getElementById('toggleXLabelsPx');
+    const toggleXLabelsNm = document.getElementById("toggleXLabelsNm");
     const zoomRange = zoomEnd - zoomStart;
     const numOfXLabels = Math.min(20, zoomRange);
     const xStep = niceStep(zoomRange, numOfXLabels);
+
+    let showNm;
+    if (toggleXLabelsNm.checked) {
+        if (!isCalibrated()) {
+            showNm = false;
+            toggleXLabelsPx.checked = true;
+            toggleXLabelsNm.checked = false;
+            showInfoPopup("noNmNeedToCalibrate", "acknowledge");
+        } else {
+            showNm = true;
+        }
+    } else {
+        showNm = false;
+    }
 
     for (let i = Math.ceil(zoomStart / xStep) * xStep; i <= zoomEnd; i += xStep) {
         const x = calculateXPosition(i - zoomStart, zoomRange, width);
         graphCtx.moveTo(x, padding);
         graphCtx.lineTo(x, height - padding);
         let label;
-        if (!toggleXLabelsPx) {
+        if (showNm) {
             label = getWaveLengthByPx(i).toFixed(1);
         } else {
             label = Math.round(i).toString();

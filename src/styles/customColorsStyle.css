@@ -3,6 +3,8 @@
     --spectra-mint-darkgreen: #579f7d;
     --sidebar-grey: #c8c8c8;
     --graph-grey: #e1e1e1;
+    --error-red: rgba(215, 67, 67, 0.5);
+    --popup-grey: rgba(87, 85, 85, 0.5);
 }
 
 .bg-sidebar {
@@ -22,5 +24,3 @@
     background-color: var(--spectra-mint-darkgreen);
     border-color: var(--spectra-mint-darkgreen);
 }
-
-.btn-spectraGreen, input

@@ -106,6 +106,7 @@
   "step4choice11": "<strong>\"Set exposure\"</strong> – Allows manual adjustment of the camera exposure.",
 
   "acknowledge": "I understand",
+  "noNmNeedToCalibrate" : "To show graph in nm, please first calibrate.",
   "notEnoughCalPointsError" : "Insufficient number of calibration points",
   "noCalPointsToExportError" : "No calibration data to export. Please calibrate first.",
   "noFileSelectedError" : "Please select a file.",

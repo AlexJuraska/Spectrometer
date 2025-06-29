@@ -69,3 +69,60 @@ function uncallError() {
 document.getElementById("errorBlock").addEventListener("click", () => {
     uncallError();
 })
+
+/**
+ * Opens a message window
+ */
+function showInfoPopup(messageTranslate, buttonTranslate){
+    const messageSpan = document.getElementById('infoPopupMessage');
+    messageSpan.dataset.translate = messageTranslate;
+
+    const button = document.getElementById("infoPopupButton");
+    button.dataset.translate = buttonTranslate;
+    updateTextContent();
+
+    const popupWindow = document.getElementById("infoPopup");
+    popupWindow.classList.add('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.add('show');
+}
+
+/**
+ * Closes the message window
+ */
+function closeInfoPopup(){
+    const popupWindow = document.getElementById("infoPopup");
+    popupWindow.classList.remove('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.remove('show');
+}
+
+document.getElementById("infoPopupBlock").addEventListener("click", () => {
+    if (!isRecording) {
+        closeInfoPopup();
+    }
+})
+
+/**
+ * Opens the waiting window while the graph is being recorded
+ */
+function showCameraRecordingWindow(){
+    const exposureWindow = document.getElementById("cameraRecordingIsOn");
+    exposureWindow.classList.add('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.add('show');
+}
+
+/**
+ * Closes the waiting window while the graph is being recorded
+ */
+function  closeCameraRecordingWindow(){
+    const exposureWindow = document.getElementById("cameraRecordingIsOn");
+    exposureWindow.classList.remove('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.remove('show');
+}

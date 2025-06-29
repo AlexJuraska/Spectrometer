@@ -44,7 +44,7 @@ function addReferenceLineFromExcel() {
                     pixels.push(...[array[i][2], array[i][3], array[i][4], 0]);
                 }
 
-                referenceGraph.push([pixels, pixelWidth, minValue]);
+                referenceGraph.push([pixels, pixelWidth, minValue, calculateMaxValue(pixels)]);
             }
             reader.readAsArrayBuffer(file);
         }

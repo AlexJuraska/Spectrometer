@@ -107,6 +107,7 @@
   "step4choice11": "<strong>\"Nastavenie expozície\"</strong> – Umožňuje manuálne nastavenie expozície kamery.",
 
   "acknowledge": "Rozumiem",
+  "noNmNeedToCalibrate" : "Pre zobrazenie grafu v nm je potrebné nakalibrovať.",
   "notEnoughCalPointsError" : "Nedostatočný počet kalibračných bodov",
   "noCalPointsToExportError" : "Žiadne kalibračné dáta pre export. Najprv prosím nakalibrujte.",
   "noFileSelectedError" : "Prosím vyberte súbor.",

@@ -152,7 +152,7 @@
         <div class="d-flex flex-column gap-2 margin-left-15px" style="max-width: 100%;">
           <div class="d-flex flex-wrap gap-2 justify-content-between">
             <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add</button>
-            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="removeCalPoints-button" id="removePoints" onclick="removeInputPair(this)">Remove</button>
+            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="removeCalPoints-button" id="removePoints" onclick="removeLastInputPair(this)">Remove</button>
           </div>
           <div class="d-flex flex-wrap gap-2 justify-content-between">
             <button class="btn btn-sm btn-spectraGreen btn-secondary flex-fill p-1" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>
@@ -160,7 +160,7 @@
           </div>
           <input type="text" class="form-control form-control-sm" id="exportCalibrationNameInput" placeholder="Enter filename">
           <button class="btn btn-sm text-light bg-secondary flex-fill" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
-          <input type="file" name="my_file" id="my-file" class="form-control form-control-sm" onchange="importCalibrationFile()">
+          <input type="file" name="my_file" id="my-file" accept=".txt" class="form-control form-control-sm" onclick="this.value=null" onchange="importCalibrationFile()">
         </div>
 
         <div class="input-header">
@@ -175,24 +175,21 @@
             <label><span data-translate="point"></span> 1:</label>
             <input id="point1px" type="number" class="form-control form-control-sm"/>
             <input id="point1nm" type="number" class="form-control form-control-sm"/>
+            <button id="deleteButton1" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(1)" disabled>&times;</button>
           </div>
 
           <div class="input-pair">
             <label><span data-translate="point"></span> 2:</label>
             <input id="point2px" type="number" class="form-control form-control-sm"/>
             <input id="point2nm" type="number" class="form-control form-control-sm"/>
+            <button id="deleteButton2" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(2)" disabled>&times;</button>
           </div>
 
           <div class="input-pair">
             <label><span data-translate="point"></span> 3:</label>
             <input id="point3px" type="number" class="form-control form-control-sm"/>
             <input id="point3nm" type="number" class="form-control form-control-sm"/>
-          </div>
-
-          <div class="input-pair">
-            <label><span data-translate="point"></span> 4:</label>
-            <input id="point4px" type="number" class="form-control form-control-sm"/>
-            <input id="point4nm" type="number" class="form-control form-control-sm"/>
+            <button id="deleteButton3" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(3)" disabled>&times;</button>
           </div>
 
         </div>
@@ -326,14 +323,21 @@
       <div class="graph-nav position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2 z-3">
         <a href="index.html" class="btn btn-secondary btn-md" data-translate="home-button">Home</a>
       </div>
-
-
     </div>
+
+    <div id="infoPopupBlock"></div>
 
     <div id="cameraRecordingIsOn" class="recording-toast">
       <div id="cameraRecordingIsOnWindows" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
         <span data-translate="recording-screenshots" class="mt-1">Recording screenshots...</span>
         <button class="btn btn-sm btn-light ms-3" data-translate="cancel" onclick="stopOngoingRecording()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="infoPopup" class="recording-toast">
+      <div id="infoPopupInside" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
+        <span id="infoPopupMessage" data-translate="" class="mt-1">Info message</span>
+        <button id="infoPopupButton" class="btn btn-sm btn-light ms-3" data-translate="" onclick="closeInfoPopup()">Cancel</button>
       </div>
     </div>
 

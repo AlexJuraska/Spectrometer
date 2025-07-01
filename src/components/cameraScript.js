@@ -328,8 +328,7 @@ function stopOngoingRecording(){
  */
 function startCameraCapture(){
     if (videoElement.paused){
-        callError("FLRCameraPausedError")
-        return;
+        playVideo();
     }
 
     const inputRange = document.getElementById("NumOfSamples").value;
@@ -351,8 +350,6 @@ function startCameraCapture(){
         return;
     }
 
-    const zip = new JSZip();
-    const images = [];
     let imageIndex = 0;
 
     // Creates one shot during the recording
@@ -366,18 +363,12 @@ function startCameraCapture(){
         await videoElement.pause();
 
         // Capture video frame
-        const videoCanvas = document.createElement('canvas');
-        const ctx = videoCanvas.getContext('2d');
-        videoCanvas.width = videoElement.videoWidth;
-        videoCanvas.height = videoElement.videoHeight;
-        ctx.drawImage(videoElement, 0, 0, videoCanvas.width, videoCanvas.height);
-        const videoImageData = videoCanvas.toDataURL('image/png');
-        images.push({ name: `video_frame_${imageIndex + 1}.png`, data: videoImageData });
+        saveCameraImage();
 
         // Optionally capture graph if checkbox is checked
         if (checkboxGraph.checked) {
-            const graphImageData = graphCanvas.toDataURL('image/png');
-            images.push({ name: `graph_${imageIndex + 1}.png`, data: graphImageData });
+            saveGraphImage();
+            // TODO???? saveGraphValues();
         }
 
         imageIndex++;
@@ -389,31 +380,9 @@ function startCameraCapture(){
             setTimeout(captureGraph, inputTime-200);
         } else {
             videoElement.play();
-            createZip();
+            isRecording = false;
+            closeCameraRecordingWindow();
         }
-    }
-
-    function createZip() {
-        if(!isRecording){
-            return;
-        }
-
-        images.forEach(image => {
-            zip.file(image.name, image.data.split(',')[1], { base64: true });
-        });
-
-        zip.generateAsync({ type: 'blob' }).then(function (content) {
-            const url = URL.createObjectURL(content); // Vytvorenie URL z blobu
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'graphs.zip'; // Názov ZIP súboru
-            link.click();
-
-            URL.revokeObjectURL(url);
-        });
-
-        isRecording = false;
-        closeInfoPopup();
     }
 
     isRecording = true;

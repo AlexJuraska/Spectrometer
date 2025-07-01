@@ -201,12 +201,16 @@ async function pauseVideo(){
 }
 
 /**
- * Plays the video stream
+ * Plays the video stream, also accounts for loaded image
  */
 async function playVideo(){
-    videoElement.play();
-    document.getElementById("pauseVideoButton").style.visibility = "visible";
-    document.getElementById("playVideoButton").style.visibility = "hidden";
+    if (videoElement instanceof HTMLImageElement) {
+        getBackToCameraStream();
+    } else {
+        videoElement.play();
+        document.getElementById("pauseVideoButton").style.visibility = "visible";
+        document.getElementById("playVideoButton").style.visibility = "hidden";
+    }
 }
 
 /**
@@ -226,7 +230,6 @@ function getBackToCameraStream(){
  * Loads an image from the user's computer into the camera window
  */
 function loadImageIntoCamera() {
-    // Create a file input element
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -244,12 +247,12 @@ function loadImageIntoCamera() {
                     videoElement.srcObject = null;
                 }
 
-                videoElement.style.display = 'none'; // Hide the video element
+                videoElement.style.display = 'none';
                 document.getElementById("pauseVideoButton").style.visibility = "hidden";
                 document.getElementById("playVideoButton").style.visibility = "visible";
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;
-                videoElement.style.display = 'block'; // Show the image element
+                videoElement.style.display = 'block';
                 videoElement.onload = () => {
                     syncCanvasToVideo();
                     needToRecalculateMaxima = true;

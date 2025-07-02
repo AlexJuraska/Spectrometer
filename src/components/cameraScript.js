@@ -10,6 +10,7 @@ const cameraSelect = document.getElementById('cameraSelect');
 let cameraUsed = "";
 // Exposure slider
 const exposureSlider = document.getElementById('exposure');
+let exposureValues = [];
 
 let cameraOutputHeight;
 let cameraOutputWidth;
@@ -32,6 +33,7 @@ async function startStream(deviceId) {
 
         const videoTrack = stream.getVideoTracks()[0];
         const capabilities = videoTrack.getCapabilities();
+        console.log(capabilities);
 
         if ('exposureMode' in capabilities) {
             // Set the exposure mode to manual
@@ -40,17 +42,18 @@ async function startStream(deviceId) {
             });
 
             if ('exposureTime' in capabilities) {
-                const { min, max } = capabilities.exposureTime;
+                const { min, max, step } = capabilities.exposureTime;
 
-                updateExposureSlider(min, max);
+                updateExposureSlider(min, max, step);
+                console.log(exposureValues);
 
                 await videoTrack.applyConstraints({
-                    advanced: [{ exposureTime: exposureSlider.value }]
+                    advanced: [{ exposureTime: exposureValues[exposureSlider.value] }]
                 });
             }
             exposureSlider.addEventListener('change', () => {
                 videoTrack.applyConstraints({
-                    advanced: [{ exposureTime: parseFloat(exposureSlider.value) }]
+                    advanced: [{ exposureTime: parseFloat(exposureValues[exposureSlider.value]) }]
                 });
             });
         }
@@ -107,7 +110,6 @@ async function getCameras() {
 /**
  * Request camera access first to ensure permissions are granted
  */
-// Request camera access first to ensure permissions are granted
 async function requestCameraAccess() {
     try {
         await navigator.mediaDevices.getUserMedia({ video: {
@@ -158,24 +160,40 @@ function getCameraResolutionWidth() {
  * Updates the exposureSlider to the given values
  * @param max
  * @param min
+ * @param step
  */
-function updateExposureSlider(min, max) {
-    exposureSlider.min = min;
-    exposureSlider.max = max;
+function updateExposureSlider(min, max, step) {
 
-    exposureSlider.step = (max-min) / 1000;
+    exposureValues = generateStepValues(min, max, step);
 
-    let sliderValue;
-    if (max > 7000) {
-        sliderValue = 1000;
-    } else if (max > 3000) {
-        sliderValue = 750;
+    exposureSlider.min = 0;
+    exposureSlider.max = exposureValues.length-1;
+    exposureSlider.step = 1;
+
+    if (exposureSlider.max > 3) {
+        exposureSlider.value = 3;
     } else {
-        sliderValue = (min + max) / 4;
+        exposureSlider.value = 0;
     }
 
-    exposureSlider.value = sliderValue
     updateExposureValue(exposureSlider.value);
+}
+
+/**
+ * Returns an array of generated steps for the exposure slider
+ */
+function generateStepValues(min, max, step) {
+    const values = [];
+    let current = min;
+    let i = 0;
+
+    while (current <= max) {
+        values.push(current);
+        current += step * 2 ** i;
+        i++;
+    }
+
+    return values;
 }
 
 /**
@@ -183,11 +201,7 @@ function updateExposureSlider(min, max) {
  * @param value
  */
 function updateExposureValue(value) {
-    let rounded = Math.round(Math.abs(value) / 10) * 10;
-    if (rounded === 0) {
-        rounded = 1;
-    }
-    document.getElementById('exposureValue').textContent = rounded.toString();
+    document.getElementById('exposureValue').textContent = (value - exposureSlider.max).toString();
 }
 
 /**
@@ -201,12 +215,16 @@ async function pauseVideo(){
 }
 
 /**
- * Plays the video stream
+ * Plays the video stream, also accounts for loaded image
  */
 async function playVideo(){
-    videoElement.play();
-    document.getElementById("pauseVideoButton").style.visibility = "visible";
-    document.getElementById("playVideoButton").style.visibility = "hidden";
+    if (videoElement instanceof HTMLImageElement) {
+        getBackToCameraStream();
+    } else {
+        videoElement.play();
+        document.getElementById("pauseVideoButton").style.visibility = "visible";
+        document.getElementById("playVideoButton").style.visibility = "hidden";
+    }
 }
 
 /**
@@ -226,7 +244,6 @@ function getBackToCameraStream(){
  * Loads an image from the user's computer into the camera window
  */
 function loadImageIntoCamera() {
-    // Create a file input element
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -244,12 +261,12 @@ function loadImageIntoCamera() {
                     videoElement.srcObject = null;
                 }
 
-                videoElement.style.display = 'none'; // Hide the video element
+                videoElement.style.display = 'none';
                 document.getElementById("pauseVideoButton").style.visibility = "hidden";
                 document.getElementById("playVideoButton").style.visibility = "visible";
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;
-                videoElement.style.display = 'block'; // Show the image element
+                videoElement.style.display = 'block';
                 videoElement.onload = () => {
                     syncCanvasToVideo();
                     needToRecalculateMaxima = true;
@@ -368,7 +385,7 @@ function startCameraCapture(){
         // Optionally capture graph if checkbox is checked
         if (checkboxGraph.checked) {
             saveGraphImage();
-            // TODO???? saveGraphValues();
+            saveGraphValues();
         }
 
         imageIndex++;

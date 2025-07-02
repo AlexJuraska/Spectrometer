@@ -35,6 +35,9 @@ let lineCtx;
 
 let gradientOpacity = 0.7;
 
+let lowerPeakBound = 1;
+let upperPeakBound = 255;
+
 /**
  * Plots the RGB line graph from the camera or image element, deals with resizing, event listeners and drawing
  */
@@ -228,20 +231,40 @@ function averagePixels(pixels, pixelWidth) {
 /**
  * Finds the peaks of the graph
  */
-function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1) {
+function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence = 10) {
+    function getValue(x) {
+        return colorOffset === -1
+            ? calculateMaxColor(pixels, x)
+            : pixels[x * 4 + colorOffset];
+    }
+
+    function findLeftMin(startX) {
+        let min = getValue(startX);
+        for (let i = startX - 1; i >= 0; i--) {
+            let val = getValue(i);
+            if (val < min) min = val;
+            else break;
+        }
+        return min;
+    }
+
+    function findRightMin(startX) {
+        let min = getValue(startX);
+        for (let i = startX + 1; i < pixelWidth; i++) {
+            let val = getValue(i);
+            if (val < min) min = val;
+            else break;
+        }
+        return min;
+    }
+
     let maxima = [];
     let start = null;
 
     for (let x = 1; x < pixelWidth - 1; x++) {
-        let value = colorOffset === -1
-            ? calculateMaxColor(pixels, x)
-            : pixels[x * 4 + colorOffset];
-        let prevValue = colorOffset === -1
-            ? calculateMaxColor(pixels, x - 1)
-            : pixels[(x - 1) * 4 + colorOffset];
-        let nextValue = colorOffset === -1
-            ? calculateMaxColor(pixels, x + 1)
-            : pixels[(x + 1) * 4 + colorOffset];
+        let value = getValue(x);
+        let prevValue = getValue(x - 1);
+        let nextValue = getValue(x + 1);
 
         if (value > minValue && value >= prevValue && value >= nextValue) {
             if (start === null && prevValue < value) {
@@ -249,41 +272,91 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1) {
             }
         } else {
             if (start !== null) {
-                let plateauValue = colorOffset === -1
-                    ? calculateMaxColor(pixels, start)
-                    : pixels[start * 4 + colorOffset];
-                let nextPlateauValue = colorOffset === -1
-                    ? calculateMaxColor(pixels, x)
-                    : pixels[x * 4 + colorOffset];
+                let plateauValue = getValue(start);
+                let nextPlateauValue = getValue(x);
 
                 if (plateauValue > nextPlateauValue) {
-                    maxima.push({ x: start, value: plateauValue });
+                    const leftMin = findLeftMin(start);
+                    const rightMin = findRightMin(x - 1);
+                    const leftProminence = plateauValue - leftMin;
+                    const rightProminence = plateauValue - rightMin;
+                    const checkedMinValue = Math.min(leftProminence, rightProminence);
+                    if (lowerPeakBound <= checkedMinValue && checkedMinValue <= upperPeakBound) {
+                        maxima.push({ x: start, value: plateauValue });
+                    }
                 }
                 start = null;
             }
         }
     }
 
-    const firstPixelValue = colorOffset === -1
-        ? calculateMaxColor(pixels, 0)
-        : pixels[4 + colorOffset];
-    if (firstPixelValue > (colorOffset === -1
-        ? calculateMaxColor(pixels, 1)
-        : pixels[4 + colorOffset]) && firstPixelValue > minValue) {
-        maxima.push({ x: 0, value: Math.floor(firstPixelValue) });
+    const firstValue = getValue(0);
+    if (firstValue > getValue(1) && firstValue > minValue) {
+        const rightMin = findRightMin(1);
+        const rightProminence = firstValue - rightMin;
+
+        if (lowerPeakBound <= rightProminence && rightProminence <= upperPeakBound) {
+            maxima.push({ x: 0, value: firstValue });
+        }
     }
 
-    const lastPixelValue = colorOffset === -1
-        ? calculateMaxColor(pixels, pixelWidth - 1)
-        : pixels[(pixelWidth - 1) * 4 + colorOffset];
-    if (lastPixelValue > (colorOffset === -1
-        ? calculateMaxColor(pixels, pixelWidth - 2)
-        : pixels[(pixelWidth - 2) * 4 + colorOffset]) && lastPixelValue > minValue) {
-        maxima.push({ x: pixelWidth - 1, value: Math.floor(lastPixelValue) });
+    const lastX = pixelWidth - 1;
+    const lastValue = getValue(lastX);
+    if (lastValue > getValue(lastX - 1) && lastValue > minValue) {
+        const leftMin = findLeftMin(lastX - 1);
+        const leftProminence = lastValue - leftMin;
+
+        if (lowerPeakBound <= leftProminence && leftProminence <= upperPeakBound) {
+            maxima.push({ x: lastX, value: lastValue });
+        }
     }
 
     return maxima;
 }
+
+function getLowerPeakBound() {
+    return parseInt(document.getElementById('peakSizeLower').value, 10);
+}
+
+function getUpperPeakBound() {
+    return parseInt(document.getElementById('peakSizeUpper').value, 10);
+}
+
+function setPeakBounds() {
+    const lowerBound = document.getElementById('peakSizeLower').value;
+    const upperBound = document.getElementById('peakSizeUpper').value;
+
+    if (lowerBound === '' || upperBound === '') {
+        //showInfoPopup("peakBoundsEmpty", "acknowledge");
+        document.getElementById('peakSizeLower').value = '1';
+        document.getElementById('peakSizeUpper').value = '255';
+        lowerPeakBound = getLowerPeakBound();
+        upperPeakBound = getUpperPeakBound();
+        return;
+    }
+
+    const lowerBoundInt = getLowerPeakBound();
+    const upperBoundInt = getUpperPeakBound();
+
+    if (lowerBoundInt > upperBoundInt) {
+        //showInfoPopup("peakBoundBadRange", "acknowledge");
+        document.getElementById('peakSizeLower').value = '1';
+        document.getElementById('peakSizeUpper').value = '255';
+        lowerPeakBound = getLowerPeakBound();
+        upperPeakBound = getUpperPeakBound();
+        return;
+    }
+    if (Math.min(lowerBoundInt, upperBoundInt) < 0 || Math.max(lowerBoundInt, upperBoundInt) > 255) {
+        //showInfoPopup("peakBoundOutsideOfRange", "acknowledge");
+        document.getElementById('peakSizeLower').value = '1';
+        document.getElementById('peakSizeUpper').value = '255';
+        lowerPeakBound = getLowerPeakBound();
+        upperPeakBound = getUpperPeakBound();
+    }
+    lowerPeakBound = lowerBoundInt;
+    upperPeakBound = upperBoundInt;
+}
+
 
 /**
  * Draws dotted lines below the peaks on the graph canvas
@@ -370,12 +443,6 @@ function setupEventListeners() {
         redrawGraphIfLoadedImage(true);
     });
 
-    addEventListener(document.getElementById('minValueRange'), 'input', function() {
-        minValue = parseInt(this.value, 10);
-        document.getElementById('minValueValue').textContent = minValue;
-        redrawGraphIfLoadedImage(true);
-    });
-
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         addEventListener(checkbox, 'change', () => {
             needToRecalculateMaxima = true;
@@ -447,7 +514,7 @@ function setupEventListeners() {
         const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
         const elementWidth = getElementWidth(videoElement);
         const zoomRange = zoomEnd - zoomStart;
-        const step = Math.ceil(zoomRange / 10);
+        const step = Math.ceil(zoomRange / 20);
 
         if (event.key === 'ArrowLeft') {
             const newZoomStart = Math.max(0, zoomStart - step);
@@ -658,38 +725,44 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
 function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
     const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
     const zoomRange = zoomEnd - zoomStart;
-    const zoomedSpectrum = spectrumList.slice(zoomStart, zoomEnd);
     const padding = 30;
     const width = graphCtx.canvas.width;
     const height = graphCtx.canvas.height;
 
-    const gradient = graphCtx.createLinearGradient(padding, 0, width - padding, 0);
-    for (let x = 0; x < zoomedSpectrum.length; x += Math.ceil(zoomedSpectrum.length / 10)) {
-        const stop = x / (zoomedSpectrum.length - 1);
-        const color = zoomedSpectrum[x].replace('rgb', 'rgba').replace(')', `, ${gradientOpacity})`);
-        gradient.addColorStop(stop, color);
-    }
+    const onlyR = toggleR && !toggleG && !toggleB;
+    const onlyG = !toggleR && toggleG && !toggleB;
+    const onlyB = !toggleR && !toggleG && toggleB;
 
-    graphCtx.beginPath();
     for (let x = 0; x < zoomRange; x++) {
-        let value = calculateGradient(pixels, x);
-        const y = calculateYPosition(value, height, maxValue);
-        const scaledX = calculateXPosition(x, zoomRange, width);
-        if (x === 0) {
-            graphCtx.moveTo(scaledX, y);
+        const pxIndex = x * 4;
+        let r = pixels[pxIndex];
+        let g = pixels[pxIndex + 1];
+        let b = pixels[pxIndex + 2];
+
+        let value, fillColor;
+        if (onlyR) {
+            value = r;
+            fillColor = `rgba(${r},0,0,${gradientOpacity})`;
+        } else if (onlyG) {
+            value = g;
+            fillColor = `rgba(0,${g},0,${gradientOpacity})`;
+        } else if (onlyB) {
+            value = b;
+            fillColor = `rgba(0,0,${b},${gradientOpacity})`;
         } else {
-            graphCtx.lineTo(scaledX, graphCtx.currentY || y);
-            graphCtx.lineTo(scaledX, y);
+            value = calculateGradient(pixels, x);
+            fillColor = `rgba(${r},${g},${b},${gradientOpacity})`;
         }
-        graphCtx.currentY = y;
+
+        const y = calculateYPosition(value, height, maxValue);
+        const leftX = calculateXPosition(x, zoomRange, width);
+        const rightX = (x < zoomRange - 1)
+            ? calculateXPosition(x + 1, zoomRange, width)
+            : width - padding;
+
+        graphCtx.fillStyle = fillColor;
+        graphCtx.fillRect(leftX, y, rightX - leftX, height - padding - y);
     }
-
-    graphCtx.lineTo(calculateXPosition(zoomRange - 1, zoomRange, width), height - padding);
-    graphCtx.lineTo(calculateXPosition(0, zoomRange, width), height - padding);
-    graphCtx.closePath();
-
-    graphCtx.fillStyle = gradient;
-    graphCtx.fill();
 }
 
 /**

@@ -325,9 +325,11 @@
               <label class="form-check-label" for="togglePeaksCheckbox">Toggle Peaks</label>
             </div>
             <div class="d-flex align-items-center gap-2">
-              <label for="minValueRange" class="form-label mb-0">Minimum Value</label>
-              <input type="range" class="form-range darker-slider w-auto" style="width: 150px;" id="minValueRange" min="0" max="255" value="0">
-              <span id="minValueValue">0</span>
+              <label for="peakSizeLower" class="form-label mb-0">Lower bound</label>
+              <input type="number" id="peakSizeLower" value="1" min="1" max="255" style="width:60px;">
+              <label for="peakSizeUpper" class="form-label mb-0">Upper bound</label>
+              <input type="number" id="peakSizeUpper" value="255" min="1" max="255" style="width:60px;">
+              <input type="button" id="setPeakBoundsButton" class="btn btn-secondary btn-sm" value="Set Bounds" onclick="setPeakBounds()">
             </div>
           </div>
         </div>

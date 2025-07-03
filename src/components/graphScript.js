@@ -514,7 +514,8 @@ function setupEventListeners() {
         const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
         const elementWidth = getElementWidth(videoElement);
         const zoomRange = zoomEnd - zoomStart;
-        const step = Math.ceil(zoomRange / 20);
+        const step = Math.ceil(zoomRange / 25);
+        console.log(zoomRange, step)
 
         if (event.key === 'ArrowLeft') {
             const newZoomStart = Math.max(0, zoomStart - step);

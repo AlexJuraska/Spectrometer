@@ -26,7 +26,7 @@
 <div class="container-fluid p-0">
   <div id="appContainer" class="d-flex flex-row min-vh-100 w-100">
 
-    <div id="sidebar" class="sidebar bg-sidebar">
+    <div id="sidebar-left" class="sidebar bg-sidebar">
     <!-- Camera -->
       <div id="cameraMainWindow" class="text-center">
 
@@ -231,11 +231,10 @@
 
     </div>
 
-    <div id="sidebarHoverZone" class="moved"></div>
-    <div id="sidebarToggleHandle" class="sidebar-handle btn-spectraGreen moved" onclick="changeDisplayScreen('settings')">
+    <div id="sidebarHoverZoneLeft" class="moved"></div>
+    <div id="sidebarToggleHandleLeft" class="sidebar-handle btn-spectraGreen moved" onclick="changeDisplayScreen('settings')">
       <span>↩</span>
     </div>
-
 
     <div id="mainContent" class="main-content flex-grow-1 bg-mainContent">
 
@@ -339,6 +338,13 @@
 
       </div>
 
+    </div>
+
+    <div id="sidebar-right" class="sidebar bg-sidebar hidden"></div>
+
+    <div id="sidebarHoverZoneRight"></div>
+    <div id="sidebarToggleHandleRight" class="sidebar-handle btn-spectraGreen" onclick="changeDisplayScreen('imgSelect')">
+      <span>↩</span>
     </div>
 
     <div id="infoPopupBlock"></div>

@@ -88,29 +88,45 @@ html, body {
     overflow: hidden;
 }
 
-#sidebar {
-    width: 22%;
+#sidebar-left {
+    width: 22vw;
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
     flex-shrink: 0;
 }
 
-#sidebar.hidden {
-    margin-left: -22%;
+#sidebar-left.hidden {
+    margin-left: -22vw;
 }
 
-#sidebarHoverZone {
+#sidebar-right {
+    width: 22vw;
+    transition: margin-right 0.3s ease-in-out, width 0.3s ease-in-out;
+    flex-shrink: 0;
+}
+
+#sidebar-right.hidden {
+    margin-right: -22vw;
+}
+
+#sidebarHoverZoneLeft, #sidebarHoverZoneRight {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 16px;
+    width: 30px;
     height: 100vh;
     z-index: 104;
+}
+
+#sidebarHoverZoneLeft {
+    left: 0;
+}
+
+#sidebarHoverZoneRight {
+    right: 0;
 }
 
 .sidebar-handle {
     position: fixed;
     top: 50%;
-    left: 0;
     width: 30px;
     height: 80px;
     color: white;
@@ -126,8 +142,20 @@ html, body {
     pointer-events: none;
 }
 
-#sidebarHoverZone.moved, .sidebar-handle.moved {
-    left: 22%;
+#sidebarToggleHandleLeft.sidebar-handle {
+    left: 0;
+}
+
+#sidebarToggleHandleRight.sidebar-handle {
+    right: 0;
+}
+
+#sidebarHoverZoneLeft.moved, #sidebarToggleHandleLeft.moved {
+    left: 22vw;
+}
+
+#sidebarHoverZoneRight.moved, #sidebarToggleHandleRight.moved {
+    right: 22vw;
 }
 
 #mainContent {

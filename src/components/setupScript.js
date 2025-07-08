@@ -2,59 +2,54 @@
  * Changes the active settings screen on the sidebar
  */
 function changeSettingsScreen(changeTo) {
+    const show = (id, display = 'block') => document.getElementById(id).style.display = display;
+    const hide = (id) => show(id, 'none');
+
+    const hideAll = () => {
+        hide('graphWindowContainer');
+        hide('calibrationWindowContainer');
+        hide('calibrationSettings');
+        hide('cameraSettingsWindow');
+        hide('videoMainWindow');
+        hide('cameraExposureWindow');
+        hide('changeToCalibrationButton');
+        hide('changeFromCalibrationButton');
+        hide('changeToLongExpoButton');
+        hide('changeFromLongExpoButton');
+    };
+
+    hideAll();
 
     if (changeTo === "Graph") {
-        document.getElementById('graphWindowContainer').style.display = 'block';
-        document.getElementById('calibrationWindowContainer').style.display = 'none';
-
-        document.getElementById('calibrationSettings').style.display = 'none';
-        document.getElementById('cameraSettingsWindow').style.display = 'block';
-        document.getElementById('videoMainWindow').style.display = 'block';
-        document.getElementById('cameraExposureWindow').style.display = 'none';
-
-        document.getElementById('changeToCalibrationButton').style.display = 'block';
-        document.getElementById('changeFromCalibrationButton').style.display = 'none';
-        document.getElementById('changeToLongExpoButton').style.display = 'block';
-        document.getElementById('changeFromLongExpoButton').style.display = 'none';
+        show('graphWindowContainer');
+        show('cameraSettingsWindow');
+        show('videoMainWindow');
+        show('changeToCalibrationButton');
+        show('changeToLongExpoButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
-        changeDisplayScreen("graph");
+        changeDisplayScreen('graph');
     } else if (changeTo === "Calibration") {
-        document.getElementById('graphWindowContainer').style.display = 'none';
-        document.getElementById('calibrationWindowContainer').style.display = 'block';
-
-        document.getElementById('calibrationSettings').style.display = 'flex';
-        document.getElementById('cameraSettingsWindow').style.display = 'none';
-        document.getElementById('videoMainWindow').style.display = 'none';
-        document.getElementById('cameraExposureWindow').style.display = 'none';
-
-        document.getElementById('changeToCalibrationButton').style.display = 'none';
-        document.getElementById('changeFromCalibrationButton').style.display = 'block';
-        document.getElementById('changeToLongExpoButton').style.display = 'block';
-        document.getElementById('changeFromLongExpoButton').style.display = 'none';
+        show('calibrationWindowContainer');
+        show('calibrationSettings', 'flex');
+        show('changeFromCalibrationButton');
+        show('changeToLongExpoButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
 
         resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
     } else if (changeTo === "LongExpo") {
-        document.getElementById('graphWindowContainer').style.display = 'block';
-        document.getElementById('calibrationWindowContainer').style.display = 'none';
-
-        document.getElementById('calibrationSettings').style.display = 'none';
-        document.getElementById('cameraSettingsWindow').style.display = 'none';
-        document.getElementById('videoMainWindow').style.display = 'block';
-        document.getElementById('cameraExposureWindow').style.display = 'block';
-
-        document.getElementById('changeToCalibrationButton').style.display = 'block';
-        document.getElementById('changeFromCalibrationButton').style.display = 'none';
-        document.getElementById('changeToLongExpoButton').style.display = 'none';
-        document.getElementById('changeFromLongExpoButton').style.display = 'block';
+        show('graphWindowContainer');
+        show('videoMainWindow');
+        show('cameraExposureWindow');
+        show('changeToCalibrationButton');
+        show('changeFromLongExpoButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
-        changeDisplayScreen("graph");
+        changeDisplayScreen('graph');
     }
 }
 
@@ -62,28 +57,43 @@ function changeSettingsScreen(changeTo) {
  * Changes which sections are displayed on the main screen
  */
 function changeDisplayScreen(action) {
-    const settings = document.getElementById('sidebar');
-    const drawer = document.getElementById('graphSettingsDrawer');
-    const handle = document.getElementById('sidebarToggleHandle');
-    const detectionArea = document.getElementById('sidebarHoverZone');
+    const bottomDrawer = document.getElementById('graphSettingsDrawer');
+
+    const settings = document.getElementById('sidebar-left');
+    const leftHandle = document.getElementById('sidebarToggleHandleLeft');
+    const leftDetectionArea = document.getElementById('sidebarHoverZoneLeft');
+
+    const imageSelection = document.getElementById('sidebar-right')
+    const rightHandle = document.getElementById('sidebarToggleHandleRight');
+    const rightDetectionArea = document.getElementById('sidebarHoverZoneRight');
 
     if (action === "main") {
+        imageSelection.classList.add('hidden');
         settings.classList.add('hidden');
-        drawer.classList.add('hidden');
+        bottomDrawer.classList.add('hidden');
 
-        handle.classList.remove('moved');
-        detectionArea.classList.remove('moved');
+        leftHandle.classList.remove('moved');
+        leftDetectionArea.classList.remove('moved');
+
+        rightHandle.classList.remove('moved');
+        rightDetectionArea.classList.remove('moved');
 
         document.getElementById("graphCanvas").classList.remove("withDrawer");
     } else if (action === "settings") {
         const isHidden = settings.classList.toggle('hidden');
-        handle.innerHTML = isHidden ? '↪' : '↩';
+        leftHandle.innerHTML = isHidden ? '↪' : '↩';
 
-        handle.classList.toggle('moved');
-        detectionArea.classList.toggle('moved');
+        leftHandle.classList.toggle('moved');
+        leftDetectionArea.classList.toggle('moved');
+    } else if (action === "imgSelect") {
+        const isHidden = imageSelection.classList.toggle('hidden');
+        rightHandle.innerHTML = isHidden ? '↩' : '↪';
+
+        rightHandle.classList.toggle('moved');
+        rightDetectionArea.classList.toggle('moved');
     } else if (action === "graph") {
         document.getElementById("graphCanvas").classList.toggle("withDrawer");
-        drawer.classList.toggle('hidden');
+        bottomDrawer.classList.toggle('hidden');
     }
 
     document.activeElement.blur();
@@ -170,25 +180,48 @@ function  closeCameraRecordingWindow(){
     blocker.classList.remove('show');
 }
 
-const handle = document.getElementById('sidebarToggleHandle');
-const hoverZone = document.getElementById('sidebarHoverZone');
+const handleLeft = document.getElementById('sidebarToggleHandleLeft');
+const hoverZoneLeft = document.getElementById('sidebarHoverZoneLeft');
 
-hoverZone.addEventListener('mouseenter', () => {
-    handle.style.opacity = '1';
-    handle.style.pointerEvents = 'auto';
+hoverZoneLeft.addEventListener('mouseenter', () => {
+    handleLeft.style.opacity = '1';
+    handleLeft.style.pointerEvents = 'auto';
 });
 
-handle.addEventListener('mouseenter', () => {
-    handle.style.opacity = '1';
-    handle.style.pointerEvents = 'auto';
+handleLeft.addEventListener('mouseenter', () => {
+    handleLeft.style.opacity = '1';
+    handleLeft.style.pointerEvents = 'auto';
 });
 
-hoverZone.addEventListener('mouseleave', () => {
-    handle.style.opacity = '0';
-    handle.style.pointerEvents = 'none';
+hoverZoneLeft.addEventListener('mouseleave', () => {
+    handleLeft.style.opacity = '0';
+    handleLeft.style.pointerEvents = 'none';
 });
 
-handle.addEventListener('mouseleave', () => {
-    handle.style.opacity = '0';
-    handle.style.pointerEvents = 'none';
+handleLeft.addEventListener('mouseleave', () => {
+    handleLeft.style.opacity = '0';
+    handleLeft.style.pointerEvents = 'none';
+});
+
+const handleRight = document.getElementById('sidebarToggleHandleRight');
+const hoverZoneRight = document.getElementById('sidebarHoverZoneRight');
+
+hoverZoneRight.addEventListener('mouseenter', () => {
+    handleRight.style.opacity = '1';
+    handleRight.style.pointerEvents = 'auto';
+});
+
+handleRight.addEventListener('mouseenter', () => {
+    handleRight.style.opacity = '1';
+    handleRight.style.pointerEvents = 'auto';
+});
+
+hoverZoneRight.addEventListener('mouseleave', () => {
+    handleRight.style.opacity = '0';
+    handleRight.style.pointerEvents = 'none';
+});
+
+handleRight.addEventListener('mouseleave', () => {
+    handleRight.style.opacity = '0';
+    handleRight.style.pointerEvents = 'none';
 });

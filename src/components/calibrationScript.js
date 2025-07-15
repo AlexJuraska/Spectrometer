@@ -1,4 +1,4 @@
-const minInputBoxNumber = 3
+const minInputBoxNumber = 2
 const maxInputBoxNumber = 15
 
 const rangeBeginX = 0;

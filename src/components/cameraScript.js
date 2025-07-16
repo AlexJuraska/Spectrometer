@@ -33,7 +33,7 @@ async function startStream(deviceId) {
 
         const videoTrack = stream.getVideoTracks()[0];
         const capabilities = videoTrack.getCapabilities();
-        console.log(capabilities);
+        console.log(navigator.userAgent);
 
         if ('exposureMode' in capabilities) {
             // Set the exposure mode to manual
@@ -56,7 +56,13 @@ async function startStream(deviceId) {
                     advanced: [{ exposureTime: parseFloat(exposureValues[exposureSlider.value]) }]
                 });
             });
+        } else {
+            const exposureElement = document.getElementById('cameraExposure');
+            if (exposureElement) { exposureElement.remove(); }
+
+            showInfoPopup("exposureUnsupportedBrowser", "acknowledge");
         }
+
         // Makes sure the graph is drawn into its canvas the moment the stream starts
         videoElement.onloadedmetadata = () => {
             cameraOutputWidth = videoElement.videoWidth;

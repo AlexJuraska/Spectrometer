@@ -67,6 +67,8 @@ function changeDisplayScreen(action) {
     const rightHandle = document.getElementById('sidebarToggleHandleRight');
     const rightDetectionArea = document.getElementById('sidebarHoverZoneRight');
 
+    const graphCanvas = document.getElementById("graphCanvas");
+
     if (action === "main") {
         imageSelection.classList.add('hidden');
         settings.classList.add('hidden');
@@ -78,7 +80,7 @@ function changeDisplayScreen(action) {
         rightHandle.classList.remove('moved');
         rightDetectionArea.classList.remove('moved');
 
-        document.getElementById("graphCanvas").classList.remove("withDrawer");
+        graphCanvas.classList.remove("withDrawer");
     } else if (action === "settings") {
         const isHidden = settings.classList.toggle('hidden');
         leftHandle.innerHTML = isHidden ? '↪' : '↩';
@@ -94,12 +96,36 @@ function changeDisplayScreen(action) {
         rightHandle.classList.toggle('moved');
         rightDetectionArea.classList.toggle('moved');
     } else if (action === "graph") {
-        document.getElementById("graphCanvas").classList.toggle("withDrawer");
+        graphCanvas.classList.toggle("withDrawer");
         bottomDrawer.classList.toggle('hidden');
     }
 
+    matchGraphHeightWithDrawer();
     document.activeElement.blur();
 }
+
+/**
+ * Sets the maximum height for the canvas based on the height of the drawer
+ */
+function matchGraphHeightWithDrawer() {
+    const canvas = document.getElementById("graphCanvas");
+    const drawer = document.getElementById('graphSettingsDrawer');
+
+    const fixedOffset = 50 + 16; // pixels (16px ~= 1rem)
+
+    if (canvas.classList.contains('withDrawer')) {
+        const drawerHeight = drawer.offsetHeight;
+        const adjustedHeight = document.documentElement.clientHeight - drawerHeight - fixedOffset;
+        canvas.style.maxHeight = `${adjustedHeight}px`;
+    } else {
+        canvas.style.maxHeight = `calc(100vh - ${fixedOffset}px)`;
+    }
+}
+
+new ResizeObserver(() => {
+    matchGraphHeightWithDrawer();
+});
+document.addEventListener('DOMContentLoaded', matchGraphHeightWithDrawer);
 
 function callError(errorMessageTranslate) {
     const errorMessageSpan = document.getElementById('errorMessage');

@@ -33,7 +33,7 @@ async function startStream(deviceId) {
 
         const videoTrack = stream.getVideoTracks()[0];
         const capabilities = videoTrack.getCapabilities();
-        console.log(capabilities);
+        // console.log(navigator.userAgent);
 
         if ('exposureMode' in capabilities) {
             // Set the exposure mode to manual
@@ -45,7 +45,7 @@ async function startStream(deviceId) {
                 const { min, max, step } = capabilities.exposureTime;
 
                 updateExposureSlider(min, max, step);
-                console.log(exposureValues);
+                // console.log(exposureValues);
 
                 await videoTrack.applyConstraints({
                     advanced: [{ exposureTime: exposureValues[exposureSlider.value] }]
@@ -56,7 +56,13 @@ async function startStream(deviceId) {
                     advanced: [{ exposureTime: parseFloat(exposureValues[exposureSlider.value]) }]
                 });
             });
+        } else {
+            const exposureElement = document.getElementById('cameraExposure');
+            if (exposureElement) { exposureElement.remove(); }
+
+            showInfoPopup("exposureUnsupportedBrowser", "acknowledge");
         }
+
         // Makes sure the graph is drawn into its canvas the moment the stream starts
         videoElement.onloadedmetadata = () => {
             cameraOutputWidth = videoElement.videoWidth;
@@ -72,7 +78,7 @@ async function startStream(deviceId) {
             plotRGBLineFromCamera();
         };
     } catch (error) {
-        console.error('Error accessing camera: ', error);
+        // console.error('Error accessing camera: ', error);
         callError("cameraNotFoundError");
     }
 }
@@ -118,7 +124,7 @@ async function requestCameraAccess() {
             } });
         await getCameras();
     } catch (error) {
-        console.error('Camera access was denied.', error);
+        // console.error('Camera access was denied.', error);
         callError("cameraAccessDeniedError");
     }
 }
@@ -291,7 +297,7 @@ function getElementWidth(element) {
     } else if (element instanceof HTMLImageElement) {
         return element.naturalWidth;
     } else {
-        console.log('Unsupported element type');
+        // console.log('Unsupported element type');
         throw new Error('Unsupported element type');
     }
 }

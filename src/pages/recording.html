@@ -255,80 +255,79 @@
 
       <div id="graphSettingsDrawer" class="graph-drawer">
 
-        <div class="d-flex flex-wrap gap-2 align-items-center p-2">
-          <button class="btn btn-secondary btn-sm" data-translate="reset-zoom" id="resetZoomButton">Reset Zoom</button>
-          <button class="btn btn-secondary btn-sm" id="stepBackButton" data-translate="zoom-step-back">Step Back</button>
+          <div class="d-flex flex-wrap gap-2 align-items-center p-2">
+            <button class="btn btn-secondary btn-sm" data-translate="reset-zoom" id="resetZoomButton">Reset Zoom</button>
+            <button class="btn btn-secondary btn-sm" id="stepBackButton" data-translate="zoom-step-back">Step Back</button>
 
-          <div class="form-check form-check-inline mb-0">
-            <input class="form-check-input" type="radio" id="toggleXLabelsPx" name="toggleXLabels" value="px" checked>
-            <label class="form-check-label" for="toggleXLabelsPx">
-              <span data-translate="X-px">X-axis Labels (px)</span>
-            </label>
-          </div>
-
-          <div class="form-check form-check-inline mb-0">
-            <input class="form-check-input" type="radio" id="toggleXLabelsNm" name="toggleXLabels" value="nm">
-            <label class="form-check-label" for="toggleXLabelsNm">
-              <span data-translate="X-nm">X-axis Labels (nm)</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Settings grid row -->
-        <div class="d-flex flex-row flex-wrap gap-4 px-2">
-
-          <!-- Combined/R/G/B stacked -->
-          <div class="d-flex flex-column gap-1">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="toggleCombined" checked>
-              <label class="form-check-label" for="toggleCombined">Combined</label>
+            <div class="form-check form-check-inline mb-0">
+              <input class="form-check-input" type="radio" id="toggleXLabelsPx" name="toggleXLabels" value="px" checked>
+              <label class="form-check-label" for="toggleXLabelsPx">
+                <span data-translate="X-px">X-axis Labels (px)</span>
+              </label>
             </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="toggleR">
-              <label class="form-check-label" for="toggleR">R</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="toggleG">
-              <label class="form-check-label" for="toggleG">G</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="toggleB">
-              <label class="form-check-label" for="toggleB">B</label>
+
+            <div class="form-check form-check-inline mb-0">
+              <input class="form-check-input" type="radio" id="toggleXLabelsNm" name="toggleXLabels" value="nm">
+              <label class="form-check-label" for="toggleXLabelsNm">
+                <span data-translate="X-nm">X-axis Labels (nm)</span>
+              </label>
             </div>
           </div>
 
-          <!-- Color Graph + Opacity -->
-          <div class="d-flex flex-column gap-2 align-self-center">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="colorGraph">
-              <label class="form-check-label" for="colorGraph">Color the Graph</label>
+          <!-- Settings grid row -->
+          <div class="d-flex flex-row flex-wrap gap-4 px-2">
+
+            <!-- Combined/R/G/B stacked -->
+            <div class="d-flex flex-column gap-1">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="toggleCombined" checked>
+                <label class="form-check-label" for="toggleCombined">Combined</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="toggleR">
+                <label class="form-check-label" for="toggleR">R</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="toggleG">
+                <label class="form-check-label" for="toggleG">G</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="toggleB">
+                <label class="form-check-label" for="toggleB">B</label>
+              </div>
             </div>
-            <div id="gradientOpacitySliderContainer" style="display: none;" class="d-flex align-items-center gap-2">
-              <label for="gradientOpacitySlider" class="form-label mb-0">Color Opacity</label>
-              <input type="range" class="form-range darker-slider w-auto" style="width: 150px;" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
-              <span id="gradientOpacityValue">0.7</span>
+
+            <!-- Color Graph + Opacity -->
+            <div class="d-flex flex-column gap-2 align-self-center">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="colorGraph">
+                <label class="form-check-label" for="colorGraph">Color the Graph</label>
+              </div>
+              <div id="gradientOpacitySliderContainer" style="display: none;" class="d-flex align-items-center gap-2">
+                <label for="gradientOpacitySlider" class="form-label mb-0">Color Opacity</label>
+                <input type="range" class="form-range darker-slider w-auto" style="width: 150px;" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
+                <span id="gradientOpacityValue">0.7</span>
+              </div>
+            </div>
+
+            <!-- Toggle Peaks + Min Value -->
+            <div class="d-flex flex-column gap-2 align-self-center">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="togglePeaksCheckbox">
+                <label class="form-check-label" for="togglePeaksCheckbox">Toggle Peaks</label>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <label for="peakSizeLower" class="form-label mb-0">Lower bound</label>
+                <input type="number" id="peakSizeLower" value="1" min="1" max="255" style="width:60px;">
+                <label for="peakSizeUpper" class="form-label mb-0">Upper bound</label>
+                <input type="number" id="peakSizeUpper" value="255" min="1" max="255" style="width:60px;">
+                <input type="button" id="setPeakBoundsButton" class="btn btn-secondary btn-sm" value="Set Bounds" onclick="setPeakBounds()">
+              </div>
             </div>
           </div>
-
-          <!-- Toggle Peaks + Min Value -->
-          <div class="d-flex flex-column gap-2 align-self-center">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="togglePeaksCheckbox">
-              <label class="form-check-label" for="togglePeaksCheckbox">Toggle Peaks</label>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <label for="peakSizeLower" class="form-label mb-0">Lower bound</label>
-              <input type="number" id="peakSizeLower" value="1" min="1" max="255" style="width:60px;">
-              <label for="peakSizeUpper" class="form-label mb-0">Upper bound</label>
-              <input type="number" id="peakSizeUpper" value="255" min="1" max="255" style="width:60px;">
-              <input type="button" id="setPeakBoundsButton" class="btn btn-secondary btn-sm" value="Set Bounds" onclick="setPeakBounds()">
-            </div>
+          <div class="graph-nav position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2 z-3">
+            <a href="index.html" class="btn btn-secondary btn-md" data-translate="home-button">Home</a>
           </div>
-        </div>
-        <div class="graph-nav position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2 z-3">
-          <a href="index.html" class="btn btn-secondary btn-md" data-translate="home-button">Home</a>
-        </div>
-
       </div>
 
     </div>

@@ -108,6 +108,8 @@
 
   "acknowledge": "Rozumiem",
   "noNmNeedToCalibrate" : "Pre zobrazenie grafu v nm je potrebné nakalibrovať.",
+  "exposureUnsupportedBrowser" : "Ovládanie expozičnej doby nie je vo Vašom prehliadači podporované, toto nastavenie nebude k dispozícii.",
+
   "notEnoughCalPointsError" : "Nedostatočný počet kalibračných bodov",
   "noCalPointsToExportError" : "Žiadne kalibračné dáta pre export. Najprv prosím nakalibrujte.",
   "noFileSelectedError" : "Prosím vyberte súbor.",

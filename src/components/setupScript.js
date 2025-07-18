@@ -122,7 +122,7 @@ function matchGraphHeightWithDrawer() {
     }
 }
 
-new ResizeObserver(() => {
+window.addEventListener('resize', () => {
     matchGraphHeightWithDrawer();
 });
 document.addEventListener('DOMContentLoaded', matchGraphHeightWithDrawer);

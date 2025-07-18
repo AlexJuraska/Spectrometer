@@ -29,7 +29,7 @@ let fillArea = false;
 let graphCanvas = document.getElementById('graphCanvas');
 let graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
 
-const MAX_ZOOM_HISTORY = 4;
+const MAX_Y_VALUE_PADDING = 5;
 
 let lineCtx;
 
@@ -100,7 +100,7 @@ function drawGraph() {
     }
 
     if (captureReferenceGraph) {
-        referenceGraph.push([pixels, pixelWidth, minValue, calculateMaxValue(pixels)]);
+        referenceGraph.push([pixels, pixelWidth, minValue, calculateMaxValue(pixels) - MAX_Y_VALUE_PADDING]);
         captureReferenceGraph = false;
     }
 
@@ -204,7 +204,7 @@ function calculateMaxValue(pixels) {
             maxValue = value;
         }
     }
-    return maxValue + 5;
+    return maxValue + MAX_Y_VALUE_PADDING;
 }
 
 /**
@@ -841,20 +841,12 @@ function addZoomRange(startX, endX) {
     newZoom[0] = Math.max(0, newZoom[0]);
     newZoom[1] = Math.min(getElementWidth(videoElement), newZoom[1]);
 
-    shiftZoomListIfFull();
     zoomList.push(newZoom);
     console.log(zoomList);
 }
 
 function resetZoom() {
-    shiftZoomListIfFull();
-    zoomList.push([0, getElementWidth(videoElement)]);
-}
-
-function shiftZoomListIfFull() {
-    if (zoomList.length === MAX_ZOOM_HISTORY) {
-        zoomList.shift();
-    }
+    zoomList = [[0, getElementWidth(videoElement)]];
 }
 
 /**

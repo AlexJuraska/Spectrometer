@@ -58,7 +58,10 @@
   "distance": "Distance",
   "adjust-exposure": "Adjust Exposure",
   "play-button": "Play",
-  "togglePeaks": "Toggle Peaks",
+  "toggle-peaks": "Toggle Peaks",
+  "lower-bound": "Lower bound",
+  "upper-bound": "Upper bound",
+  "set-bounds": "Set bounds",
 
   "step1": "Step 1: Enabling and selecting the camera",
   "allowingAccessToCam": "1. Allow camera access",

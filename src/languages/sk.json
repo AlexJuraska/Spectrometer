@@ -58,7 +58,10 @@
   "distance": "Vzdialenosť",
   "adjust-exposure": "Nastaviť expozíciu",
   "play-button": "Prehrať",
-  "togglePeaks": "Prepnúť Vrcholy",
+  "toggle-peaks": "Prepnúť Vrcholy",
+  "lower-bound": "Spodná hranica",
+  "upper-bound": "Vrchná hranica",
+  "set-bounds": "Nastaviť hranice",
 
   "step1": "Krok 1: Povolenie a výber kamery",
   "allowingAccessToCam": "1. Povoliť prístup ku kamere",

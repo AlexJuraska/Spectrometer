@@ -374,6 +374,18 @@ function startCameraCapture(){
     }
 
     let imageIndex = 0;
+/*    let hiddenCanvas;
+
+    if (checkboxGraph.checked) {
+        if (checkboxGraph.checked) {
+            hiddenCanvas = document.createElement('canvas');
+            hiddenCanvas.id = 'hiddenGraphCanvas';
+            hiddenCanvas.width = 1920;
+            hiddenCanvas.height = 1080;
+            hiddenCanvas.style.display = 'none';
+            document.body.appendChild(hiddenCanvas);
+        }
+    }*/
 
     // Creates one shot during the recording
     async function captureGraph() {
@@ -405,6 +417,9 @@ function startCameraCapture(){
             videoElement.play();
             isRecording = false;
             closeCameraRecordingWindow();
+/*            if (checkboxGraph.checked && hiddenCanvas) {
+                hiddenCanvas.remove();
+            }*/
         }
     }
 

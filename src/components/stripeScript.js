@@ -228,10 +228,9 @@ stripeGraphCanvas.addEventListener("click", function (event) {
 
     const stripePlacementSlider = document.getElementById("stripePlacementRange");
     const stripePlacementValue = document.getElementById("stripePlacementValue");
-    let sliderPosition = convertCanvasToActualValue(y)
 
-    stripePlacementSlider.value = sliderPosition;
-    stripePlacementValue.textContent = getStripePositionRangeText();;
+    stripePlacementSlider.value = convertCanvasToActualValue(y);
+    stripePlacementValue.textContent = getStripePositionRangeText();
 
     drawSelectionLine(); // Redraw line at the new position
     if (videoElement) {

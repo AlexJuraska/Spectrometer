@@ -88,7 +88,9 @@ function changeDisplayScreen(action) {
         leftHandle.classList.toggle('moved');
         leftDetectionArea.classList.toggle('moved');
 
-        playVideo();
+        if (!videoElement.paused) {
+            playVideo();
+        }
     } else if (action === "imgSelect") {
         const isHidden = imageSelection.classList.toggle('hidden');
         rightHandle.innerHTML = isHidden ? '↩' : '↪';

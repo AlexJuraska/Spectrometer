@@ -300,7 +300,7 @@ function exportCalibrationFile() {
     }
 
     const filenameInput = document.getElementById("exportCalibrationNameInput").value.trim();
-    const filename = filenameInput !== "" ? filenameInput : "calibration_points.txt";
+    const filename = filenameInput !== "" ? filenameInput : `calibration_points_${getTimestamp()}.txt`;
 
     const finalFilename = filename.endsWith(".txt") ? filename : filename + ".txt";
 

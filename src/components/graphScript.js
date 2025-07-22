@@ -281,7 +281,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
                     const leftProminence = plateauValue - leftMin;
                     const rightProminence = plateauValue - rightMin;
                     const checkedMinValue = Math.min(leftProminence, rightProminence);
-                    if (lowerPeakBound <= checkedMinValue && checkedMinValue <= upperPeakBound) {
+                    if (lowerPeakBound <= checkedMinValue) {
                         maxima.push({ x: start, value: plateauValue });
                     }
                 }
@@ -295,7 +295,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
         const rightMin = findRightMin(1);
         const rightProminence = firstValue - rightMin;
 
-        if (lowerPeakBound <= rightProminence && rightProminence <= upperPeakBound) {
+        if (lowerPeakBound <= rightProminence) {
             maxima.push({ x: 0, value: firstValue });
         }
     }
@@ -306,7 +306,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
         const leftMin = findLeftMin(lastX - 1);
         const leftProminence = lastValue - leftMin;
 
-        if (lowerPeakBound <= leftProminence && leftProminence <= upperPeakBound) {
+        if (lowerPeakBound <= leftProminence) {
             maxima.push({ x: lastX, value: lastValue });
         }
     }
@@ -318,43 +318,26 @@ function getLowerPeakBound() {
     return parseInt(document.getElementById('peakSizeLower').value, 10);
 }
 
-function getUpperPeakBound() {
-    return parseInt(document.getElementById('peakSizeUpper').value, 10);
-}
-
 function setPeakBounds() {
     const lowerBound = document.getElementById('peakSizeLower').value;
-    const upperBound = document.getElementById('peakSizeUpper').value;
 
-    if (lowerBound === '' || upperBound === '') {
-        //showInfoPopup("peakBoundsEmpty", "acknowledge");
-        document.getElementById('peakSizeLower').value = '1';
-        document.getElementById('peakSizeUpper').value = '255';
-        lowerPeakBound = getLowerPeakBound();
-        upperPeakBound = getUpperPeakBound();
+    if (lowerBound === '') {
+        resetPeakBounds()
         return;
     }
 
     const lowerBoundInt = getLowerPeakBound();
-    const upperBoundInt = getUpperPeakBound();
 
-    if (lowerBoundInt > upperBoundInt) {
-        //showInfoPopup("peakBoundBadRange", "acknowledge");
-        document.getElementById('peakSizeLower').value = '1';
-        document.getElementById('peakSizeUpper').value = '255';
-        lowerPeakBound = getLowerPeakBound();
-        upperPeakBound = getUpperPeakBound();
+    if (lowerBoundInt < 0 || lowerBoundInt > 255) {
+        resetPeakBounds();
         return;
     }
-    if (Math.min(lowerBoundInt, upperBoundInt) < 0 || Math.max(lowerBoundInt, upperBoundInt) > 255) {
-        //showInfoPopup("peakBoundOutsideOfRange", "acknowledge");
-        document.getElementById('peakSizeLower').value = '1';
-        document.getElementById('peakSizeUpper').value = '255';
-        lowerPeakBound = getLowerPeakBound();
-        upperPeakBound = getUpperPeakBound();
-    }
     lowerPeakBound = lowerBoundInt;
-    upperPeakBound = upperBoundInt;
+}
+
+function resetPeakBounds() {
+    document.getElementById('peakSizeLower').value = '1';
+    lowerPeakBound = getLowerPeakBound();
 }
 
 
@@ -538,6 +521,11 @@ function setupEventListeners() {
         gradientOpacity = parseFloat(this.value);
         document.getElementById('gradientOpacityValue').textContent = gradientOpacity.toFixed(1);
         redrawGraphIfLoadedImage();
+    });
+
+    document.getElementById('peakSizeLower').addEventListener('change', () => {
+        setPeakBounds();
+        redrawGraphIfLoadedImage(true);
     });
 }
 
@@ -756,13 +744,16 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
         }
 
         const y = calculateYPosition(value, height, maxValue);
-        const leftX = calculateXPosition(x, zoomRange, width);
-        const rightX = (x < zoomRange - 1)
-            ? calculateXPosition(x + 1, zoomRange, width)
-            : width - padding;
+        const leftX = Math.round(calculateXPosition(x, zoomRange, width));
+        const rightX = Math.round(
+            x < zoomRange - 1
+                ? calculateXPosition(x + 1, zoomRange, width)
+                : width - padding
+        );
+        const rectWidth = rightX - leftX;
 
         graphCtx.fillStyle = fillColor;
-        graphCtx.fillRect(leftX, y, rightX - leftX, height - padding - y);
+        graphCtx.fillRect(leftX, Math.floor(y), rectWidth, Math.ceil(height - padding - y));
     }
 }
 
@@ -864,7 +855,7 @@ function stepBackZoom() {
 document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', () => {
         if (videoElement) {
-            plotRGBLineFromCamera();
+            redrawGraphIfLoadedImage();
         }
     });
 });

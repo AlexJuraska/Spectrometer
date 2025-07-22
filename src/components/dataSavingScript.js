@@ -49,7 +49,7 @@ function saveGraphValues() {
         // result.push([ x, nm, intensity, r, g, b ]);
         result.push([ x, nm, r, g, b ]);
     }
-    const filename = "values.xlsx"
+    const filename = `values_${getTimestamp()}.xlsx`
 
     const worksheet = XLSX.utils.aoa_to_sheet(result);
     const workbook = XLSX.utils.book_new();
@@ -82,7 +82,7 @@ function saveGraphImage(){
 
     const link = document.createElement('a');
     link.href = graphImageData;
-    link.download = 'graph.png';
+    link.download = `graph_${getTimestamp()}.png`;
     link.click();
 
     if (!wasPaused) {
@@ -114,10 +114,27 @@ function saveCameraImage(){
 
     const link = document.createElement('a');
     link.href = videoImageData;
-    link.download = 'image.png';
+    link.download = `image_${getTimestamp()}.png`;
     link.click();
 
     if (!wasPaused) {
         videoElement.play();
     }
+}
+
+/**
+ * Returns a string with a date-time stamp
+ */
+function getTimestamp() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${day}-${month}-${year}_${hours}-${minutes}-${seconds}`;
 }

@@ -587,7 +587,7 @@ function drawGridDivergence() {
 
     const xMin = rangeBeginX;
     const xMax = rangeEndX;
-    const xStep = 200;
+    const xStep = 40;
 
     const deltas = divergencePoints.map(p => p.delta);
     let maxAbs = Math.max(...deltas.map(Math.abs));
@@ -617,14 +617,18 @@ function drawGridDivergence() {
     }
 
     for (let xVal = xMin; xVal <= xMax; xVal += xStep) {
+        const isMultiple200 = xVal % 200 === 0;
+        const isEndpoint = (xVal === xMin || xVal === xMax);
         const x = padding + ((xVal - xMin) / (xMax - xMin)) * (width - 2 * padding);
 
-        graphCtxDivergence.moveTo(x, padding);
-        graphCtxDivergence.lineTo(x, height - padding);
+        if (isMultiple200 || isEndpoint) {
+            graphCtxDivergence.moveTo(x, padding);
+            graphCtxDivergence.lineTo(x, height - padding);
 
-        const label = xVal.toFixed(0);
-        const textWidth = graphCtxDivergence.measureText(label).width;
-        graphCtxDivergence.fillText(label, x - textWidth / 2, height - padding + 15);
+            const label = xVal.toFixed(0);
+            const textWidth = graphCtxDivergence.measureText(label).width;
+            graphCtxDivergence.fillText(label, x - textWidth / 2, height - padding + 15);
+        }
     }
 
     graphCtxDivergence.font = '11px Arial';

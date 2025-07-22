@@ -110,12 +110,12 @@
 
   "acknowledge": "I understand",
   "noNmNeedToCalibrate" : "To show graph in nm, please first calibrate.",
-  "exposureUnsupportedBrowser" : "Exposure control is not supported in your browser, this setting will not be available",
+  "exposureUnsupportedBrowser" : "Exposure control is not supported by your browser or your camera, this setting will not be available",
 
   "notEnoughCalPointsError" : "Insufficient number of calibration points",
   "noCalPointsToExportError" : "No calibration data to export. Please calibrate first.",
   "noFileSelectedError" : "Please select a file.",
-  "wrongNumberOfCalPointsError" : "Calibration must contain between 4 and 15 points!",
+  "wrongNumberOfCalPointsError" : "Calibration must contain between 2 and 15 points!",
   "wrongCalPointsFormatError" : "Wrong calibration points format!",
   "cameraNotFoundError" : "Camera has not been found",
   "cameraAccessDeniedError" : "Camera access was denied.",

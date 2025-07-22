@@ -1,12 +1,12 @@
-const minInputBoxNumber = 2
-const maxInputBoxNumber = 15
+const minInputBoxNumber = 2;
+const maxInputBoxNumber = 15;
 
 const rangeBeginX = 0;
 const rangeEndX = 1280;
 const rangeBeginY = 350;
 const rangeEndY = 1000;
 
-let inputBoxCounter = minInputBoxNumber;
+let inputBoxCounter = 0;
 let polyFitCoefficientsArray = [];
 let calibrationData = [];
 let pixelCalPoints = [];
@@ -18,12 +18,31 @@ let graphCtxCalibration;
 
 let previousFileName = null;
 
+function initializeCalibration() {
+    addInputPair();
+    addInputPair();
+    disablePairRemoveButtons();
+}
+
+function addInputPairListener(div) {
+    const inputs = div.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener("input", function() {
+            const [inputPx, inputNm] = inputs;
+            console.log(`Input changed: Px = ${inputPx.value}, Nm = ${inputNm.value}`);
+            if (inputPx.value.trim() !== "" && inputNm.value.trim() !== "") {
+                setCalibrationPoints();
+            }
+        });
+    });
+}
+
 /**
  *Adds a pair of input boxes
  */
 function addInputPair() {
-
     if (inputBoxCounter === maxInputBoxNumber) {
+        callError("maxNumberOfCalibrationPointsError");
         return;
     }
 
@@ -72,6 +91,8 @@ function addInputPair() {
     // Append the div to the container
     container.appendChild(div);
 
+    addInputPairListener(div);
+
     // Sets the labels for the new pair
     updateTextContent();
 
@@ -89,7 +110,7 @@ function removeInputPair(inputBoxNumber) {
         return;
     }
 
-    if (inputBoxCounter === minInputBoxNumber) {
+    if (inputBoxCounter <= minInputBoxNumber) {
         disablePairRemoveButtons();
         return;
     }
@@ -189,21 +210,18 @@ function setCalibrationPoints() {
                 !isNaN(nmValue)
             ) {
                 calibrationData.push({ px: pxValue, nm: nmValue });
-            } else {
-                resetCalValues();
-                callError("notEnoughCalPointsError");
-                return;
             }
+            // else {
+            //     resetCalValues();
+            //     callError("notEnoughCalPointsError");
+            //     return;
+            // }
         }
     }
 
-    if (calibrationData.length < minInputBoxNumber) {
-        resetCalValues();
-        callError("notEnoughCalPointsError");
-        return;
+    if (calibrationData.length >= minInputBoxNumber) {
+        calibrate();
     }
-
-    calibrate();
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
     drawGridCalibration();
     drawCalibrationLine();
@@ -216,6 +234,11 @@ function setCalibrationPoints() {
 function calibrate() {
     for (let i = 0; i < calibrationData.length; i++) {
         const point = calibrationData[i];
+        if (pixelCalPoints.includes(point.px) || nmCalPoints.includes(point.nm)) {
+            callError("duplicateCalPointsError");
+            resetCalValues();
+            return;
+        }
         pixelCalPoints.push(point.px);
         nmCalPoints.push(point.nm);
     }

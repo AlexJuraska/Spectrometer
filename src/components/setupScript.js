@@ -128,6 +128,7 @@ window.addEventListener('resize', () => {
 document.addEventListener('DOMContentLoaded', matchGraphHeightWithDrawer);
 
 function callError(errorMessageTranslate) {
+    document.activeElement.blur()
     const errorMessageSpan = document.getElementById('errorMessage');
     errorMessageSpan.dataset.translate = errorMessageTranslate;
     updateTextContent();
@@ -155,6 +156,7 @@ document.getElementById("errorBlock").addEventListener("click", () => {
  * Opens a message window
  */
 function showInfoPopup(messageTranslate, buttonTranslate){
+    document.activeElement.blur()
     const messageSpan = document.getElementById('infoPopupMessage');
     messageSpan.dataset.translate = messageTranslate;
 

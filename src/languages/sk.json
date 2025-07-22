@@ -124,6 +124,8 @@
   "tooLowNumOfCapturesError" : "Počet snímkov musí byť väčší ako 0!",
   "lowGapBetweenCapturesError" : "Pauza medzi snímkami musí byť väčšia/rovná 200ms!",
   "noGraphSelectedError" : "Musí byť vybraný aspoň jeden graf farebného spektra!",
+  "maxNumberOfCalibrationPointsError" : "Maximálny počet kalibračných bodov je 15!",
+  "duplicateCalPointsError" : "Zistené duplicitné kalibračné body! Prosím, uistite sa, že všetky body sú jedinečné.",
 
   "camera-select-tooltip": "Otvoríte zoznam dostupných kamier",
   "refresh-button-tooltip": "Obnovíte zoznam dostupných kamier",

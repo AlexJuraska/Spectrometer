@@ -123,6 +123,8 @@
   "tooLowNumOfCapturesError" : "Number of captures must be a number greater than 0!",
   "lowGapBetweenCapturesError" : "Pause in between captures must be a greater/equal than 200ms!",
   "noGraphSelectedError" : "At least one color spectrum graph must be selected!",
+  "maxNumberOfCalibrationPointsError" : "Maximum number of calibration points is 15!",
+  "duplicateCalPointsError" : "Duplicate calibration points detected! Please ensure all points are unique.",
 
   "camera-select-tooltip": "Open a dropdown menu to select a camera",
   "refresh-button-tooltip": "Refresh the list of available cameras",

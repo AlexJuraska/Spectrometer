@@ -80,6 +80,10 @@ function addInputPair() {
     }
 }
 
+/**
+ * Removes a specific input pair based on an id
+ * @param inputBoxNumber - id of wanted input pair, indexing from 1
+ */
 function removeInputPair(inputBoxNumber) {
     if (inputBoxNumber > maxInputBoxNumber || inputBoxNumber < 1) {
         return;
@@ -172,12 +176,16 @@ function enablePairRemoveButtons() {
  * Saves the calibration points from the input boxes
  */
 function setCalibrationPoints() {
-    resetCalValues(); // resets the content of arrays before saving new calibration points
-    for (let i = 1; i < inputBoxCounter + 1; i++) {
+    resetCalValues();
+
+    const seen = new Set();
+    const tempData = [];
+    let hasDuplicates = false;
+
+    for (let i = 1; i <= inputBoxCounter; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
 
-        // Ensure both inputs exist before trying to get their values
         if (pxInput && nmInput) {
             const rawPx = pxInput.value.trim();
             const rawNm = nmInput.value.trim();
@@ -185,23 +193,33 @@ function setCalibrationPoints() {
             const pxValue = parseFloat(rawPx);
             const nmValue = parseFloat(rawNm);
 
-            if (!isNaN(pxValue) &&
-                !isNaN(nmValue)
-            ) {
-                calibrationData.push({ px: pxValue, nm: nmValue });
-            } else {
+            if (isNaN(pxValue) && isNaN(nmValue)) {
                 resetCalValues();
                 callError("notEnoughCalPointsError");
                 return;
             }
+
+            const key = `${pxValue},${nmValue}`;
+            if (seen.has(key)) {
+                hasDuplicates = true;
+            } else {
+                seen.add(key);
+                tempData.push({ px: pxValue, nm: nmValue });
+            }
         }
     }
 
-    if (calibrationData.length < minInputBoxNumber) {
-        resetCalValues();
+    if (hasDuplicates) {
+        callError("repeatedCalPairsError");
+        return;
+    }
+
+    if (tempData.length < minInputBoxNumber) {
         callError("notEnoughCalPointsError");
         return;
     }
+
+    calibrationData = tempData;
 
     calibrate();
     clearGraph(graphCtxCalibration, graphCanvasCalibration);

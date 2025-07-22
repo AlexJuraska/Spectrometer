@@ -88,7 +88,8 @@ function changeDisplayScreen(action) {
         leftHandle.classList.toggle('moved');
         leftDetectionArea.classList.toggle('moved');
 
-        if (!videoElement.paused) {
+        const playButton = document.getElementById("playVideoButton");
+        if (window.getComputedStyle(playButton).visibility === 'hidden') {
             playVideo();
         }
     } else if (action === "imgSelect") {

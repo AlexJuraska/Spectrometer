@@ -12,9 +12,13 @@ let calibrationData = [];
 let pixelCalPoints = [];
 let nmCalPoints = [];
 let nMAxis = []
+let divergencePoints = [];
 
 let graphCanvasCalibration;
 let graphCtxCalibration;
+
+let graphCanvasDivergence;
+let graphCtxDivergence;
 
 let previousFileName = null;
 
@@ -223,9 +227,14 @@ function setCalibrationPoints() {
 
     calibrate();
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
+
     drawGridCalibration();
     drawCalibrationLine();
     drawCalibrationPoints();
+
+    drawGridDivergence();
+    drawDivergenceLine();
+    drawDivergencePoints();
 }
 
 /**
@@ -239,19 +248,13 @@ function calibrate() {
     }
     const polyfit = new Polyfit(pixelCalPoints, nmCalPoints);
 
-    const degree = Math.min(minInputBoxNumber - 1, nmCalPoints.length - 1)
+    const maxReasonableDegree = 5;
+    const maxAllowedDegree = Math.min(nmCalPoints.length - 1, maxReasonableDegree);
+    const degree = Math.max(1, maxAllowedDegree);
 
-    polyFitCoefficientsArray = polyfit.computeCoefficients(degree)
-
-    // if (nmCalPoints.length === 3) {
-    //     polyFitCoefficientsArray = polyfit.computeCoefficients(2);
-    // }
-    // else if (nmCalPoints.length > 3) {
-    //     polyFitCoefficientsArray = polyfit.computeCoefficients(3);
-    // }
+    polyFitCoefficientsArray = polyfit.computeCoefficients(degree);
 }
 
-// TODO zmeniť na bool ktory sa setne pri kalibracii
 function isCalibrated() {
     return calibrationData.length !== 0;
 }
@@ -282,6 +285,7 @@ function resetCalValues() {
     pixelCalPoints = [];
     nmCalPoints = [];
     nMAxis = [];
+    divergencePoints = [];
 
     document.getElementById("my-file").value = null;
 }
@@ -400,6 +404,7 @@ function resetCalibrationPoints() {
     resetCalValues();
     inputBoxCounter = minInputBoxNumber;
     drawGridCalibration();
+    drawGridDivergence();
 }
 
 /**
@@ -417,6 +422,9 @@ function drawGridCalibration() {
     graphCanvasCalibration = document.getElementById('graphCalibration');
     graphCtxCalibration = graphCanvasCalibration.getContext('2d');
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
+
+    resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "None");
+
     const width = graphCanvasCalibration.getBoundingClientRect().width;
     const height = graphCanvasCalibration.getBoundingClientRect().height;
     const padding = 30;
@@ -564,9 +572,191 @@ function drawCalibrationPoints() {
     }
 }
 
+function drawGridDivergence() {
+    graphCanvasDivergence = document.getElementById('graphDivergence');
+    graphCtxDivergence = graphCanvasDivergence.getContext('2d');
+    clearGraph(graphCtxDivergence, graphCanvasDivergence);
+
+    resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "None");
+
+    computeDivergence();
+
+    const width = graphCanvasDivergence.getBoundingClientRect().width;
+    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const padding = 30;
+
+    const xMin = rangeBeginX;
+    const xMax = rangeEndX;
+    const xStep = 200;
+
+    const deltas = divergencePoints.map(p => p.delta);
+    let maxAbs = Math.max(...deltas.map(Math.abs));
+
+    if (maxAbs < 0.001) {
+        maxAbs = 0.001;
+    }
+
+    const yMax = maxAbs * 1.25;
+    const yMin = -yMax;
+    const yStep = yMax / 3;
+
+    graphCtxDivergence.beginPath();
+    graphCtxDivergence.strokeStyle = '#e0e0e0';
+    graphCtxDivergence.lineWidth = 0.5;
+    graphCtxDivergence.font = '9px Arial';
+    graphCtxDivergence.fillStyle = 'black';
+
+    for (let yVal = yMin; yVal <= yMax + 1e-6; yVal += yStep) {
+        const y = height - padding - ((yVal - yMin) / (yMax - yMin)) * (height - 2 * padding);
+
+        graphCtxDivergence.moveTo(padding, y);
+        graphCtxDivergence.lineTo(width - padding, y);
+
+        const label = yVal.toFixed(3);
+        graphCtxDivergence.fillText(label, 5, y + 3);
+    }
+
+    for (let xVal = xMin; xVal <= xMax; xVal += xStep) {
+        const x = padding + ((xVal - xMin) / (xMax - xMin)) * (width - 2 * padding);
+
+        graphCtxDivergence.moveTo(x, padding);
+        graphCtxDivergence.lineTo(x, height - padding);
+
+        const label = xVal.toFixed(0);
+        const textWidth = graphCtxDivergence.measureText(label).width;
+        graphCtxDivergence.fillText(label, x - textWidth / 2, height - padding + 15);
+    }
+
+    graphCtxDivergence.font = '11px Arial';
+    graphCtxDivergence.fillText("nm", 10, padding - 10);
+    graphCtxDivergence.fillText("px", width - padding + 14, height - padding + 15);
+
+    graphCtxDivergence.stroke();
+
+    drawZeroLineDivergence();
+}
+
+function drawZeroLineDivergence() {
+    if (!graphCtxDivergence || !graphCanvasDivergence) return;
+
+    const width = graphCanvasDivergence.getBoundingClientRect().width;
+    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const padding = 30;
+
+    const deltas = divergencePoints.map(p => p.delta);
+    let maxAbs = Math.max(...deltas.map(Math.abs));
+
+    if (maxAbs < 0.001) {
+        maxAbs = 0.001;
+    }
+
+    const yMax = maxAbs * 1.25;
+    const yMin = -yMax;
+
+    const yZero = height - padding - ((0 - yMin) / (yMax - yMin)) * (height - 2 * padding);
+
+    const xStart = padding;
+    const xEnd = width - padding;
+
+    graphCtxDivergence.beginPath();
+    graphCtxDivergence.strokeStyle = 'red';
+    graphCtxDivergence.lineWidth = 1;
+    graphCtxDivergence.moveTo(xStart, yZero);
+    graphCtxDivergence.lineTo(xEnd, yZero);
+    graphCtxDivergence.stroke();
+}
+
+
+function drawDivergenceLine() {
+    if (divergencePoints.length < 2) return;
+
+    const width = graphCanvasDivergence.getBoundingClientRect().width;
+    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const padding = 30;
+
+    const xMin = rangeBeginX;
+    const xMax = rangeEndX;
+
+    const deltas = divergencePoints.map(p => p.delta);
+    let maxAbs = Math.max(...deltas.map(Math.abs));
+
+    if (maxAbs < 0.001) {
+        maxAbs = 0.001;
+    }
+
+    const yMax = maxAbs * 1.25;
+    const yMin = -yMax;
+
+    graphCtxDivergence.beginPath();
+    graphCtxDivergence.strokeStyle = 'blue';
+    graphCtxDivergence.lineWidth = 1.5;
+
+    for (let i = 0; i < divergencePoints.length; i++) {
+        const point = divergencePoints[i];
+        const x = padding + ((point.px - xMin) / (xMax - xMin)) * (width - 2 * padding);
+        const y = height - padding - ((point.delta - yMin) / (yMax - yMin)) * (height - 2 * padding);
+
+        if (i === 0) {
+            graphCtxDivergence.moveTo(x, y);
+        } else {
+            graphCtxDivergence.lineTo(x, y);
+        }
+    }
+
+    graphCtxDivergence.stroke();
+}
+
+function drawDivergencePoints() {
+    const width = graphCanvasDivergence.getBoundingClientRect().width;
+    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const padding = 30;
+
+    const xMin = rangeBeginX;
+    const xMax = rangeEndX;
+
+    const deltas = divergencePoints.map(p => p.delta);
+    let maxAbs = Math.max(...deltas.map(Math.abs));
+
+    if (maxAbs < 0.001) {
+        maxAbs = 0.001;
+    }
+
+    const yMax = maxAbs * 1.25;
+    const yMin = -yMax;
+
+    for (const point of divergencePoints) {
+        const x = padding + ((point.px - xMin) / (xMax - xMin)) * (width - 2 * padding);
+        const y = height - padding - ((point.delta - yMin) / (yMax - yMin)) * (height - 2 * padding);
+
+        graphCtxDivergence.fillStyle = 'red';
+        graphCtxDivergence.beginPath();
+        graphCtxDivergence.arc(x, y, 3, 0, 2 * Math.PI);
+        graphCtxDivergence.fill();
+    }
+}
+
+function computeDivergence() {
+    divergencePoints = [];
+
+    for (let i = 0; i < calibrationData.length; i++) {
+        const { px, nm } = calibrationData[i];
+        const predictedNm = getWaveLengthByPx(px);
+        const delta = predictedNm - nm;
+
+        divergencePoints.push({
+            px: px,
+            realNm: nm,
+            predictedNm: predictedNm,
+            delta: delta
+        });
+    }
+}
+
 window.addEventListener("resize", () => {
     resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+    resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
     changeStripeWidth(0);
 });
 
 drawGridCalibration();
+drawGridDivergence();

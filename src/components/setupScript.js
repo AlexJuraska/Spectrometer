@@ -40,6 +40,7 @@ function changeSettingsScreen(changeTo) {
         changeDisplayScreen('settings');
 
         resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
     } else if (changeTo === "LongExpo") {
         show('graphWindowContainer');
         show('videoMainWindow');

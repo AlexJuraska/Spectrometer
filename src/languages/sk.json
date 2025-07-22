@@ -115,6 +115,7 @@
 
   "notEnoughCalPointsError" : "Nedostatočný počet kalibračných bodov",
   "noCalPointsToExportError" : "Žiadne kalibračné dáta pre export. Najprv prosím nakalibrujte.",
+  "repeatedCalPairsError" : "Kalibrácia nesmie obsahovať opakujúce sa body",
   "noFileSelectedError" : "Prosím vyberte súbor.",
   "wrongNumberOfCalPointsError" : "Kalibrácia musí obsahovať medzi 4 a 15 bodov!",
   "wrongCalPointsFormatError" : "Nesprávny formát kalibračných bodov!",

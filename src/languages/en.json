@@ -114,6 +114,7 @@
 
   "notEnoughCalPointsError" : "Insufficient number of calibration points",
   "noCalPointsToExportError" : "No calibration data to export. Please calibrate first.",
+  "repeatedCalPairsError" : "Calibration must not contain repeated points",
   "noFileSelectedError" : "Please select a file.",
   "wrongNumberOfCalPointsError" : "Calibration must contain between 4 and 15 points!",
   "wrongCalPointsFormatError" : "Wrong calibration points format!",

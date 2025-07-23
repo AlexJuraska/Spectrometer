@@ -76,7 +76,6 @@ async function startStream(deviceId) {
                 document.getElementById("videoMainWindow").style.height = "214px";
             }
             plotRGBLineFromCamera();
-            initializeCalibration();
         };
     } catch (error) {
         // console.error('Error accessing camera: ', error);

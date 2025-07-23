@@ -771,5 +771,6 @@ window.addEventListener("resize", () => {
     changeStripeWidth(0);
 });
 
+initializeCalibration();
 drawGridCalibration();
 drawGridDivergence();

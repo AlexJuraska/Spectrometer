@@ -242,7 +242,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
         let min = getValue(startX);
         for (let i = startX - 1; i >= 0; i--) {
             let val = getValue(i);
-            if (val < min) min = val;
+            if (val <= min) min = val;
             else break;
         }
         return min;
@@ -252,7 +252,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
         let min = getValue(startX);
         for (let i = startX + 1; i < pixelWidth; i++) {
             let val = getValue(i);
-            if (val < min) min = val;
+            if (val <= min) min = val;
             else break;
         }
         return min;
@@ -260,6 +260,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
 
     let maxima = [];
     let start = null;
+    let numOfOkPeaks = 0;
 
     for (let x = 1; x < pixelWidth - 1; x++) {
         let value = getValue(x);
@@ -523,7 +524,7 @@ function setupEventListeners() {
         redrawGraphIfLoadedImage();
     });
 
-    document.getElementById('peakSizeLower').addEventListener('change', () => {
+    document.getElementById('peakSizeLower').addEventListener("input", () => {
         setPeakBounds();
         redrawGraphIfLoadedImage(true);
     });

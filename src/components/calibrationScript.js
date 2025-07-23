@@ -247,7 +247,7 @@ function setCalibrationPoints() {
 function calibrate() {
     for (let i = 0; i < calibrationData.length; i++) {
         const point = calibrationData[i];
-        if (pixelCalPoints.includes(point.px) || nmCalPoints.includes(point.nm)) {
+        if (pixelCalPoints.includes(point.px) && nmCalPoints.includes(point.nm)) {
             callError("duplicateCalPointsError");
             resetCalValues();
             return;
@@ -257,9 +257,7 @@ function calibrate() {
     }
     const polyfit = new Polyfit(pixelCalPoints, nmCalPoints);
 
-    const maxReasonableDegree = 5;
-    const maxAllowedDegree = Math.min(nmCalPoints.length - 1, maxReasonableDegree);
-    const degree = Math.max(1, maxAllowedDegree);
+    const degree = Math.min(minInputBoxNumber - 1, nmCalPoints.length - 1)
 
     polyFitCoefficientsArray = polyfit.computeCoefficients(degree);
 }
@@ -390,6 +388,7 @@ function importCalibrationFile() {
                 nmInput.value = nmFloat;
             }
         }
+        setCalibrationPoints();
     };
 
     reader.readAsText(file);
@@ -763,6 +762,7 @@ function computeDivergence() {
             delta: delta
         });
     }
+    divergencePoints.sort((a, b) => a.px - b.px);
 }
 
 window.addEventListener("resize", () => {

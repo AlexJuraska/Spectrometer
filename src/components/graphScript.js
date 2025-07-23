@@ -888,6 +888,10 @@ function resizeCanvasToDisplaySize(ctx, canvas, type) {
         drawGridCalibration();
         drawCalibrationLine();
         drawCalibrationPoints();
+    } else if (type === "Divergence") {
+        drawGridDivergence();
+        drawDivergenceLine();
+        drawDivergencePoints();
     } else if (type === "Normal") {
         plotRGBLineFromCamera();
     }

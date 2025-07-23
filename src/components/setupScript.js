@@ -40,6 +40,7 @@ function changeSettingsScreen(changeTo) {
         changeDisplayScreen('settings');
 
         resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
     } else if (changeTo === "LongExpo") {
         show('graphWindowContainer');
         show('videoMainWindow');
@@ -88,7 +89,10 @@ function changeDisplayScreen(action) {
         leftHandle.classList.toggle('moved');
         leftDetectionArea.classList.toggle('moved');
 
-        playVideo();
+        const playButton = document.getElementById("playVideoButton");
+        if (window.getComputedStyle(playButton).visibility === 'hidden') {
+            playVideo();
+        }
     } else if (action === "imgSelect") {
         const isHidden = imageSelection.classList.toggle('hidden');
         rightHandle.innerHTML = isHidden ? '↩' : '↪';

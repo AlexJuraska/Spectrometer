@@ -111,12 +111,13 @@
 
   "acknowledge": "Rozumiem",
   "noNmNeedToCalibrate" : "Pre zobrazenie grafu v nm je potrebné nakalibrovať.",
-  "exposureUnsupportedBrowser" : "Ovládanie expozičnej doby nie je vo Vašom prehliadači podporované, toto nastavenie nebude k dispozícii.",
+  "exposureUnsupportedBrowser" : "Ovládanie expozičnej doby nie je podporované vo Vašom prehliadači alebo kamere, toto nastavenie nebude k dispozícii.",
 
   "notEnoughCalPointsError" : "Nedostatočný počet kalibračných bodov",
   "noCalPointsToExportError" : "Žiadne kalibračné dáta pre export. Najprv prosím nakalibrujte.",
+  "repeatedCalPairsError" : "Kalibrácia nesmie obsahovať opakujúce sa body",
   "noFileSelectedError" : "Prosím vyberte súbor.",
-  "wrongNumberOfCalPointsError" : "Kalibrácia musí obsahovať medzi 4 a 15 bodov!",
+  "wrongNumberOfCalPointsError" : "Kalibrácia musí obsahovať medzi 2 a 15 bodov!",
   "wrongCalPointsFormatError" : "Nesprávny formát kalibračných bodov!",
   "cameraNotFoundError" : "Kamera sa nenašla.",
   "cameraAccessDeniedError" : "Prístup ku kamere bol zamietnutý.",

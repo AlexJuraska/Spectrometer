@@ -3,7 +3,7 @@
  */
 function addReferenceLine() {
     captureReferenceGraph = true;
-    plotRGBLineFromCamera();
+    redrawGraphIfLoadedImage();
 }
 
 /**

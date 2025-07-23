@@ -1,12 +1,12 @@
-const minInputBoxNumber = 2
-const maxInputBoxNumber = 15
+const minInputBoxNumber = 2;
+const maxInputBoxNumber = 15;
 
 const rangeBeginX = 0;
 const rangeEndX = 1280;
 const rangeBeginY = 350;
 const rangeEndY = 1000;
 
-let inputBoxCounter = minInputBoxNumber;
+let inputBoxCounter = 0;
 let polyFitCoefficientsArray = [];
 let calibrationData = [];
 let pixelCalPoints = [];
@@ -22,12 +22,31 @@ let graphCtxDivergence;
 
 let previousFileName = null;
 
+function initializeCalibration() {
+    addInputPair();
+    addInputPair();
+    disablePairRemoveButtons();
+}
+
+function addInputPairListener(div) {
+    const inputs = div.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener("input", function() {
+            const [inputPx, inputNm] = inputs;
+            console.log(`Input changed: Px = ${inputPx.value}, Nm = ${inputNm.value}`);
+            if (inputPx.value.trim() !== "" && inputNm.value.trim() !== "") {
+                setCalibrationPoints();
+            }
+        });
+    });
+}
+
 /**
  *Adds a pair of input boxes
  */
 function addInputPair() {
-
     if (inputBoxCounter === maxInputBoxNumber) {
+        callError("maxNumberOfCalibrationPointsError");
         return;
     }
 
@@ -76,6 +95,8 @@ function addInputPair() {
     // Append the div to the container
     container.appendChild(div);
 
+    addInputPairListener(div);
+
     // Sets the labels for the new pair
     updateTextContent();
 
@@ -97,7 +118,7 @@ function removeInputPair(inputBoxNumber) {
         return;
     }
 
-    if (inputBoxCounter === minInputBoxNumber) {
+    if (inputBoxCounter <= minInputBoxNumber) {
         disablePairRemoveButtons();
         return;
     }
@@ -180,16 +201,12 @@ function enablePairRemoveButtons() {
  * Saves the calibration points from the input boxes
  */
 function setCalibrationPoints() {
-    resetCalValues();
-
-    const seen = new Set();
-    const tempData = [];
-    let hasDuplicates = false;
-
-    for (let i = 1; i <= inputBoxCounter; i++) {
+    resetCalValues(); // resets the content of arrays before saving new calibration points
+    for (let i = 1; i < inputBoxCounter + 1; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
 
+        // Ensure both inputs exist before trying to get their values
         if (pxInput && nmInput) {
             const rawPx = pxInput.value.trim();
             const rawNm = nmInput.value.trim();
@@ -197,35 +214,22 @@ function setCalibrationPoints() {
             const pxValue = parseFloat(rawPx);
             const nmValue = parseFloat(rawNm);
 
-            if (isNaN(pxValue) && isNaN(nmValue)) {
-                resetCalValues();
-                callError("notEnoughCalPointsError");
-                return;
+            if (!isNaN(pxValue) &&
+                !isNaN(nmValue)
+            ) {
+                calibrationData.push({ px: pxValue, nm: nmValue });
             }
-
-            const key = `${pxValue},${nmValue}`;
-            if (seen.has(key)) {
-                hasDuplicates = true;
-            } else {
-                seen.add(key);
-                tempData.push({ px: pxValue, nm: nmValue });
-            }
+            // else {
+            //     resetCalValues();
+            //     callError("notEnoughCalPointsError");
+            //     return;
+            // }
         }
     }
 
-    if (hasDuplicates) {
-        callError("repeatedCalPairsError");
-        return;
+    if (calibrationData.length >= minInputBoxNumber) {
+        calibrate();
     }
-
-    if (tempData.length < minInputBoxNumber) {
-        callError("notEnoughCalPointsError");
-        return;
-    }
-
-    calibrationData = tempData;
-
-    calibrate();
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
 
     drawGridCalibration();
@@ -243,14 +247,17 @@ function setCalibrationPoints() {
 function calibrate() {
     for (let i = 0; i < calibrationData.length; i++) {
         const point = calibrationData[i];
+        if (pixelCalPoints.includes(point.px) && nmCalPoints.includes(point.nm)) {
+            callError("duplicateCalPointsError");
+            resetCalValues();
+            return;
+        }
         pixelCalPoints.push(point.px);
         nmCalPoints.push(point.nm);
     }
     const polyfit = new Polyfit(pixelCalPoints, nmCalPoints);
 
-    const maxReasonableDegree = 5;
-    const maxAllowedDegree = Math.min(nmCalPoints.length - 1, maxReasonableDegree);
-    const degree = Math.max(1, maxAllowedDegree);
+    const degree = Math.min(minInputBoxNumber - 1, nmCalPoints.length - 1)
 
     polyFitCoefficientsArray = polyfit.computeCoefficients(degree);
 }
@@ -381,6 +388,7 @@ function importCalibrationFile() {
                 nmInput.value = nmFloat;
             }
         }
+        setCalibrationPoints();
     };
 
     reader.readAsText(file);
@@ -754,6 +762,7 @@ function computeDivergence() {
             delta: delta
         });
     }
+    divergencePoints.sort((a, b) => a.px - b.px);
 }
 
 window.addEventListener("resize", () => {

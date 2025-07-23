@@ -72,10 +72,11 @@ async function startStream(deviceId) {
             document.getElementById("stripePlacementRange").value = cameraOutputHeight * yPercentage;
             document.getElementById("stripePlacementValue").textContent = getStripePositionRangeText();
 
-            if(videoElement.videoWidth === 1280){
+            if (videoElement.videoWidth === 1280) {
                 document.getElementById("videoMainWindow").style.height = "214px";
             }
             plotRGBLineFromCamera();
+            initializeCalibration();
         };
     } catch (error) {
         // console.error('Error accessing camera: ', error);

@@ -84,8 +84,7 @@ function updateStripeWidth() {
     }
     drawSelectionLine();
     if (videoElement) {
-        needToRecalculateMaxima = true;
-        plotRGBLineFromCamera();
+        redrawGraphIfLoadedImage(true);
     }
 }
 
@@ -234,8 +233,7 @@ stripeGraphCanvas.addEventListener("click", function (event) {
 
     drawSelectionLine(); // Redraw line at the new position
     if (videoElement) {
-        needToRecalculateMaxima = true;
-        plotRGBLineFromCamera();
+        redrawGraphIfLoadedImage(true);
     }
 });
 

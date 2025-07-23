@@ -260,7 +260,6 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence
 
     let maxima = [];
     let start = null;
-    let numOfOkPeaks = 0;
 
     for (let x = 1; x < pixelWidth - 1; x++) {
         let value = getValue(x);

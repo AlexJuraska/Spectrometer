@@ -20,20 +20,25 @@ let graphCtxCalibration;
 let graphCanvasDivergence;
 let graphCtxDivergence;
 
-let previousFileName = null;
-
+/**
+ * Creates the initial minimum number of calibration input pairs
+ */
 function initializeCalibration() {
-    addInputPair();
-    addInputPair();
+    for (let i = 1; i <= minInputBoxNumber; i++) {
+        addInputPair();
+    }
     disablePairRemoveButtons();
 }
 
+/**
+ * Adds event listeners to all number inputs in the input div, the event listeners
+ * activate calibration upon a value being entered
+ */
 function addInputPairListener(div) {
     const inputs = div.querySelectorAll('input[type="number"]');
     inputs.forEach(input => {
         input.addEventListener("input", function() {
             const [inputPx, inputNm] = inputs;
-            console.log(`Input changed: Px = ${inputPx.value}, Nm = ${inputNm.value}`);
             if (inputPx.value.trim() !== "" && inputNm.value.trim() !== "") {
                 setCalibrationPoints();
             }
@@ -86,13 +91,11 @@ function addInputPair() {
     const id = inputBoxCounter;
     deleteButton.onclick = function () { removeInputPair(id); };
 
-    // Append everything to the div
     div.appendChild(pointLabel);
     div.appendChild(inputPx);
     div.appendChild(inputNm);
     div.appendChild(deleteButton);
 
-    // Append the div to the container
     container.appendChild(div);
 
     addInputPairListener(div);
@@ -145,13 +148,13 @@ function removeInputPair(inputBoxNumber) {
 }
 
 /**
- * Removes one pair of input boxes
+ * Removes the last pair of input boxes
  */
 function removeLastInputPair() {
     const inputContainer = document.getElementById("input-container");
     if (inputContainer.children.length > minInputBoxNumber) {
         const lastInputPair = inputContainer.lastElementChild;
-        inputContainer.removeChild(lastInputPair); // Remove the last input pair
+        inputContainer.removeChild(lastInputPair);
         inputBoxCounter --;
     }
 
@@ -167,8 +170,8 @@ function clearInputBoxes() {
     for (let i = 1; i <= inputBoxCounter; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
-        pxInput.value = ""; // Set px value
-        nmInput.value = ""; // Set nm value
+        pxInput.value = "";
+        nmInput.value = "";
     }
 }
 
@@ -183,6 +186,9 @@ function deleteAllAdditionalInputPairs() {
     }
 }
 
+/**
+ * Disables the [X] removal buttons for all input pairs
+ */
 function disablePairRemoveButtons() {
     for (let i = 1; i <= inputBoxCounter; i++) {
         const button = document.getElementById(`deleteButton${i}`);
@@ -190,6 +196,9 @@ function disablePairRemoveButtons() {
     }
 }
 
+/**
+ * Enables the [X] removal buttons for all input pairs
+ */
 function enablePairRemoveButtons() {
     for (let i = 1; i <= inputBoxCounter; i++) {
         const button = document.getElementById(`deleteButton${i}`);
@@ -201,12 +210,11 @@ function enablePairRemoveButtons() {
  * Saves the calibration points from the input boxes
  */
 function setCalibrationPoints() {
-    resetCalValues(); // resets the content of arrays before saving new calibration points
+    resetCalValues();
     for (let i = 1; i < inputBoxCounter + 1; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
 
-        // Ensure both inputs exist before trying to get their values
         if (pxInput && nmInput) {
             const rawPx = pxInput.value.trim();
             const rawNm = nmInput.value.trim();
@@ -219,11 +227,6 @@ function setCalibrationPoints() {
             ) {
                 calibrationData.push({ px: pxValue, nm: nmValue });
             }
-            // else {
-            //     resetCalValues();
-            //     callError("notEnoughCalPointsError");
-            //     return;
-            // }
         }
     }
 
@@ -257,13 +260,16 @@ function calibrate() {
     }
     const polyfit = new Polyfit(pixelCalPoints, nmCalPoints);
 
-    const degree = Math.min(nmCalPoints.length-1, 3);
+    const degree = Math.min(3, nmCalPoints.length-1);
 
     polyFitCoefficientsArray = polyfit.computeCoefficients(degree);
 }
 
+/**
+ * Returns true if there is an active calibration, false otherwise
+ */
 function isCalibrated() {
-    return calibrationData.length !== 0;
+    return nmCalPoints.length !== 0;
 }
 
 /**
@@ -277,14 +283,14 @@ function getWaveLengthByPx(pixel) {
             waveLength += number;
         }
         else {
-            waveLength += number * Math.pow(pixel, i); // Calculate each term: coefficient * (pixel^i)
+            waveLength += number * Math.pow(pixel, i);
         }
     }
     return waveLength;
 }
 
 /**
- * deletes the content of polyFitCoefficientsArray, calibrationData, pixelCalPoints, nmCalPoints before saving new values
+ * Deletes the content of polyFitCoefficientsArray, calibrationData, pixelCalPoints, nmCalPoints before saving new values
  */
 function resetCalValues() {
     polyFitCoefficientsArray = [];
@@ -316,14 +322,12 @@ function exportCalibrationFile() {
     const blob = new Blob([lines], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
 
-    // Temporary <a> element to trigger the download
     const a = document.createElement("a");
     a.href = url;
     a.download = finalFilename;
     document.body.appendChild(a);
     a.click();
 
-    // Clean up by revoking the Object URL and removing the element
     URL.revokeObjectURL(url);
     document.body.removeChild(a);
 }
@@ -334,7 +338,7 @@ function exportCalibrationFile() {
 function importCalibrationFile() {
 
     const fileInput = document.getElementById("my-file");
-    const file = fileInput.files[0]; // Get the selected file
+    const file = fileInput.files[0];
 
     if (!file) {
         return;
@@ -346,7 +350,6 @@ function importCalibrationFile() {
 
     const validFormatRegex = /^(\d+(?:[.,]\d+)?);(\d+(?:[.,]\d+)?)(?:\n|$)/;
 
-    //reading the content of the file
     reader.onload = function(event) {
         const fileContent = event.target.result;
 
@@ -396,7 +399,6 @@ function importCalibrationFile() {
 
 /**
  * Converts the Px Axis into Nm using with the help of the calibration points
- * @returns {*[]}
  */
 function convertPxAxisIntoNm(){
     for (let i = 1; i <= rangeEndX; i++) {
@@ -510,10 +512,9 @@ function drawCalibrationLine() {
     let firstPoint = true;
 
     for (let i = 0; i < nMAxis.length; i++) {
-        const px = i + 1; // pixel positions are 1-based
+        const px = i + 1;
         const nm = nMAxis[i];
 
-        // Scale coordinates to fit the canvas
         const xScaled = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const yScaled = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
 
@@ -528,29 +529,6 @@ function drawCalibrationLine() {
     graphCtxCalibration.strokeStyle = 'blue';
     graphCtxCalibration.lineWidth = 1.5;
     graphCtxCalibration.stroke();
-}
-
-/**
- * Returns a function made from arrX and arrY points
- * @param arrX represents the x value for each point
- * @param arrY represents the y value for each point
- * @returns {function(*): number}
- */
-function lagrangeInterpolation(arrX, arrY) {
-    return function(x) {
-        let result = 0;
-
-        for (let i = 0; i < arrX.length; i++) {
-            let term = arrY[i];
-            for (let j = 0; j < arrX.length; j++) {
-                if (i !== j) {
-                    term *= (x - arrX[j]) / (arrX[i] - arrX[j]);
-                }
-            }
-            result += term;
-        }
-        return result;
-    };
 }
 
 /**
@@ -570,7 +548,6 @@ function drawCalibrationPoints() {
         const x = padding + ((pixelCalPoints[i] - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const y = height - padding - ((nmCalPoints[i] - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
 
-        // Draw point
         graphCtxCalibration.fillStyle = 'red';
         graphCtxCalibration.strokeStyle = 'red';
         graphCtxCalibration.beginPath();
@@ -580,6 +557,10 @@ function drawCalibrationPoints() {
     }
 }
 
+/**
+ * Draws up the graph representing the distance from calibration points to the created calibration function.
+ * Creates the graph itself, then fills it using adjacent functions
+ */
 function drawGridDivergence() {
     graphCanvasDivergence = document.getElementById('graphDivergence');
     graphCtxDivergence = graphCanvasDivergence.getContext('2d');
@@ -648,6 +629,9 @@ function drawGridDivergence() {
     drawZeroLineDivergence();
 }
 
+/**
+ * Draws a line representing the created calibration function, the function is represented as Y=0 on the graph
+ */
 function drawZeroLineDivergence() {
     if (!graphCtxDivergence || !graphCanvasDivergence) return;
 
@@ -678,7 +662,9 @@ function drawZeroLineDivergence() {
     graphCtxDivergence.stroke();
 }
 
-
+/**
+ * Draws dotted lines indicating the distance from calibration points to the created calibration function
+ */
 function drawDivergenceLine() {
     if (divergencePoints.length < 2) return;
 
@@ -711,7 +697,6 @@ function drawDivergenceLine() {
             graphCtxDivergence.lineTo(x, y);
         }
 
-        // Draw vertical dotted line from point to zero line
         graphCtxDivergence.beginPath();
         graphCtxDivergence.setLineDash([6, 4]);
         const yZero = height - padding - ((0 - yMin) / (yMax - yMin)) * (height - 2 * padding);
@@ -720,13 +705,17 @@ function drawDivergenceLine() {
         graphCtxDivergence.strokeStyle = 'gray';
         graphCtxDivergence.lineWidth = 2;
         graphCtxDivergence.stroke();
-        graphCtxDivergence.setLineDash([]); // Reset to solid
+        graphCtxDivergence.setLineDash([]);
     }
 
 
     graphCtxDivergence.stroke();
 }
 
+/**
+ * Draws the input calibration points into the graph in positions informing their distance from
+ * the created calibration function
+ */
 function drawDivergencePoints() {
     const width = graphCanvasDivergence.getBoundingClientRect().width;
     const height = graphCanvasDivergence.getBoundingClientRect().height;
@@ -756,6 +745,9 @@ function drawDivergencePoints() {
     }
 }
 
+/**
+ * Calculates the differences between the calibration points and the created calibration function
+ */
 function computeDivergence() {
     divergencePoints = [];
 

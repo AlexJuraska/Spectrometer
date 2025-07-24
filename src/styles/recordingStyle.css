@@ -231,14 +231,14 @@ html, body {
 
 #graphCalibration {
     width: 100%;
-    height: calc(50vh - 0.75rem);
+    height: calc(65vh - 0.75rem);
     display: flex;
     margin-bottom: 0.5rem;
 }
 
 #graphDivergence {
     width: 100%;
-    height: calc(50vh - 0.75rem);
+    height: calc(35vh - 0.75rem);
     display: flex;
 }
 

@@ -671,8 +671,8 @@ function drawZeroLineDivergence() {
     const xEnd = width - padding;
 
     graphCtxDivergence.beginPath();
-    graphCtxDivergence.strokeStyle = 'red';
-    graphCtxDivergence.lineWidth = 1;
+    graphCtxDivergence.strokeStyle = 'blue';
+    graphCtxDivergence.lineWidth = 1.5;
     graphCtxDivergence.moveTo(xStart, yZero);
     graphCtxDivergence.lineTo(xEnd, yZero);
     graphCtxDivergence.stroke();
@@ -699,21 +699,30 @@ function drawDivergenceLine() {
     const yMax = maxAbs * 1.25;
     const yMin = -yMax;
 
-    graphCtxDivergence.beginPath();
-    graphCtxDivergence.strokeStyle = 'blue';
-    graphCtxDivergence.lineWidth = 1.5;
-
     for (let i = 0; i < divergencePoints.length; i++) {
         const point = divergencePoints[i];
         const x = padding + ((point.px - xMin) / (xMax - xMin)) * (width - 2 * padding);
         const y = height - padding - ((point.delta - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
         if (i === 0) {
+            graphCtxDivergence.beginPath();
             graphCtxDivergence.moveTo(x, y);
         } else {
             graphCtxDivergence.lineTo(x, y);
         }
+
+        // Draw vertical dotted line from point to zero line
+        graphCtxDivergence.beginPath();
+        graphCtxDivergence.setLineDash([6, 4]);
+        const yZero = height - padding - ((0 - yMin) / (yMax - yMin)) * (height - 2 * padding);
+        graphCtxDivergence.moveTo(x, y);
+        graphCtxDivergence.lineTo(x, yZero);
+        graphCtxDivergence.strokeStyle = 'gray';
+        graphCtxDivergence.lineWidth = 2;
+        graphCtxDivergence.stroke();
+        graphCtxDivergence.setLineDash([]); // Reset to solid
     }
+
 
     graphCtxDivergence.stroke();
 }

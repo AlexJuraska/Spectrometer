@@ -257,7 +257,7 @@ function calibrate() {
     }
     const polyfit = new Polyfit(pixelCalPoints, nmCalPoints);
 
-    const degree = Math.min(minInputBoxNumber - 1, nmCalPoints.length - 1)
+    const degree = Math.min(nmCalPoints.length-1, 3);
 
     polyFitCoefficientsArray = polyfit.computeCoefficients(degree);
 }

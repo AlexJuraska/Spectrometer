@@ -760,7 +760,7 @@ function computeDivergence() {
             px: px,
             realNm: nm,
             predictedNm: predictedNm,
-            delta: delta
+            delta: -delta
         });
     }
     divergencePoints.sort((a, b) => a.px - b.px);

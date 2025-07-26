@@ -16,6 +16,7 @@
   <script src="../components/languageScript.js"></script>
   <script src="../components/dataSavingScript.js"></script>
   <script src="../components/referenceGraphScript.js"></script>
+  <script src="../components/imageLoadingScript.js"></script>
 
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>-->
 
@@ -330,7 +331,16 @@
 
     </div>
 
-    <div id="sidebar-right" class="sidebar bg-sidebar hidden"></div>
+    <div id="sidebar-right" class="sidebar bg-sidebar hidden">
+      <div class="image-loaded small-camera-image-entry">
+        <div class="image-controls">
+          <input type="radio" id="imageRadio0" onclick="checkRadio(0)" checked/>
+        </div>
+        <div class="camera-image-text">
+          <span data-translate="imageFromCamera">Camera image</span>
+        </div>
+      </div>
+    </div>
 
     <div id="sidebarHoverZoneRight"></div>
     <div id="sidebarToggleHandleRight" class="sidebar-handle btn-spectraGreen" onclick="changeDisplayScreen('imgSelect')">

@@ -108,6 +108,8 @@
   "step4choice10": "<strong>\"Minimum value\"</strong> – Sets the minimum signal value on the graph.",
   "step4choice11": "<strong>\"Set exposure\"</strong> – Allows manual adjustment of the camera exposure.",
 
+  "imageFromCamera": "Image from the camera",
+
   "acknowledge": "I understand",
   "noNmNeedToCalibrate" : "To show graph in nm, please first calibrate.",
   "exposureUnsupportedBrowser" : "Exposure control is not supported by your browser or your camera, this setting will not be available",

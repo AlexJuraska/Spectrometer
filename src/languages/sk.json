@@ -109,6 +109,8 @@
   "step4choice10": "<strong>\"Minimálna hodnota\"</strong> – Nastaví minimálnu hodnotu signálu v grafe.",
   "step4choice11": "<strong>\"Nastavenie expozície\"</strong> – Umožňuje manuálne nastavenie expozície kamery.",
 
+  "imageFromCamera": "Obraz z kamery",
+
   "acknowledge": "Rozumiem",
   "noNmNeedToCalibrate" : "Pre zobrazenie grafu v nm je potrebné nakalibrovať.",
   "exposureUnsupportedBrowser" : "Ovládanie expozičnej doby nie je podporované vo Vašom prehliadači alebo kamere, toto nastavenie nebude k dispozícii.",

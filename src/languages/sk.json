@@ -35,6 +35,8 @@
   "capture-button": "Zachytiť",
   "checkbox-comb": "Kombinované",
   "load-image": "Načítať obrázok",
+  "compare-multiple-images-button": "Porovnať obrázky",
+  "stop-comparison-button": "Skončiť porovnanie",
   "stripe-place": "Miesto pruhu",
   "resume-camera": "Obnoviť kameru",
   "screenshot-camera": "Sniímka obrazovky kamery",
@@ -135,6 +137,8 @@
   "pause-button-tooltip": "Pozastavíte nahrávanie kamery",
   "play-button-tooltip": "Znovu spustíte nahrávanie kamery",
   "load-image-tooltip": "Nahráte obrázok zo zariadenia namiesto použitia kamery",
+  "compare-multiple-images-button-tooltip": "Načítate až do 5 obrázkov pre ich porovnanie v grafe",
+  "stop-comparison-button-tooltip": "Ukončiť porovnávanie obrázkov",
   "stripe-width-minus-tooltip": "Znížite šírku meracieho pásika o 1 pixel",
   "stripe-width-plus-tooltip": "Zvýšite šírku meracieho pásika o 1 pixel",
   "stripe-width-tooltip": "Nastavíte šírku meracieho pásika, ktorý sa použije na analýzu obrazu"

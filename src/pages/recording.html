@@ -72,6 +72,21 @@
                     onclick="loadImageIntoCamera()"
                     data-translate="load-image"
                     data-translate-title="load-image-tooltip">Load Image</button>
+
+            <div style="position: relative; width: 140px; height: 30px;">
+              <button id="loadMultipleImagesButton"
+                      class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
+                      onclick="loadMultipleImages()"
+                      data-translate="compare-multiple-images-button"
+                      data-translate-title="compare-multiple-images-button-tooltip">Compare images</button>
+
+              <button id="removeMultipleImagesButton"
+                      class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
+                      style="visibility: hidden;"
+                      onclick="removeLoadedImages()"
+                      data-translate="stop-comparison-button"
+                      data-translate-title="stop-comparison-button-tooltip">Stop comparison</button>
+            </div>
           </div>
 
           <!-- Stripe Width -->
@@ -332,7 +347,7 @@
     </div>
 
     <div id="sidebar-right" class="sidebar bg-sidebar hidden">
-      <div class="image-loaded small-camera-image-entry">
+      <div class="image-loaded-wrapper small-camera-image-entry">
         <div class="image-controls">
           <input type="radio" id="imageRadio0" onclick="checkRadio(0)" checked/>
         </div>

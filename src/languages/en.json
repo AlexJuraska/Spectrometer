@@ -35,6 +35,8 @@
   "capture-button": "Capture",
   "checkbox-comb": "Combined",
   "load-image": "Load Image",
+  "compare-multiple-images-button": "Compare Images",
+  "stop-comparison-button": "Stop comparison",
   "stripe-place": "Stripe Place",
   "resume-camera": "Resume Camera",
   "screenshot-camera": "Screenshot Camera",
@@ -134,6 +136,8 @@
   "pause-button-tooltip": "Pause the recording",
   "play-button-tooltip": "Resume the recording",
   "load-image-tooltip": "Load an image from your device instead of using the camera",
+  "compare-multiple-images-button-tooltip": "Load up to 5 images which will be shown in the graph for comparison",
+  "stop-comparison-button-tooltip": "Stop comparison of multiple images",
   "stripe-width-minus-tooltip": "Decrease the selection stripe width by 1 pixel",
   "stripe-width-plus-tooltip": "Increase the selection stripe width by 1 pixel",
   "stripe-width-range-tooltip": "Adjust the selection stripe width using the slider"

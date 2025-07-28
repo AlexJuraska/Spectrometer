@@ -113,11 +113,11 @@ html, body {
     margin-right: -22vw;
 }
 
-.image-loaded {
+.image-loaded-wrapper {
     display: flex;
     align-items: center;
     background-color: #f8f9fa;
-    border: 1px solid #ddd;
+    border: 4px solid;
     border-radius: 8px;
     padding: 0.5rem;
     gap: 0.5rem;
@@ -133,7 +133,16 @@ html, body {
     flex-shrink: 0;
 }
 
-.image-wrapper {
+.outer-image-wrapper {
+    flex-grow: 1;
+    width: 100%;
+}
+
+.camera-image-text {
+    margin-bottom: 0.3rem;
+}
+
+.inner-image-wrapper {
     flex-grow: 1;
     position: relative;
     width: 100%;
@@ -145,6 +154,14 @@ html, body {
     display: block;
     object-fit: contain;
     border-radius: 4px;
+}
+
+.loaded-image-stripe-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .small-camera-image-entry {

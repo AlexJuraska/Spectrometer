@@ -5,12 +5,12 @@ let dragEndX = 0;
 let animationId;
 let minValue = 0;
 let spectrumList = [];
-let referenceColors = ['#ff7602' ,'#ffdd00' ,'#00ffd3' ,'#8f5bf8',
-    '#d64d4d', '#a6794b', '#77ba7b', '#f800ff',
-    '#f89a8e', '#cabb6e', '#237c24', '#3109a5',
-    '#ff6767', '#545a03', '#4cb15f', '#6a0345',
-    '#a51104', '#ffbb28', '#1a371a', '#470925',
-    '#9f9f00', '#a8ac6b', '#956f83', '#a53be4']
+let referenceColors = ['#ff7602' ,'#ffdd00' ,'#00ffd3',
+    '#a6794b', '#77ba7b', '#f800ff',
+    '#f89a8e', '#237c24', '#3109a5',
+    '#ff6767', '#545a03', '#6a0345',
+    '#a51104', '#ffbb28', '#470925',
+    '#9f9f00', '#956f83', '#a53be4']
 let referenceGraph = [];
 let captureReferenceGraph = false;
 let showReferenceGraph = false;
@@ -142,6 +142,19 @@ function drawGraph() {
         }
     }
 
+    if (comparisonGraph && comparisonGraph.length > 0) {
+        for (let i = 0; i < comparisonGraph.length; i++) {
+            if (comparisonGraph[i]) {
+                let [tempPixels, tempPixelWidth] = comparisonGraph[i];
+                if (zoomList.length !== 0) {
+                    tempPixels = tempPixels.slice(zoomStart * 4, zoomEnd * 4);
+                    tempPixelWidth = zoomEnd - zoomStart;
+                }
+                drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue);
+            }
+        }
+    }
+
     if (fillArea && (toggleCombined || toggleR || toggleG || toggleB)) {
         drawGradient(graphCtx, pixels, pixelWidth, maxValue);
     }
@@ -195,6 +208,16 @@ function calculateMaxValue(pixels) {
             const tempMaxValue = referenceGraph[i][3];
             if (tempMaxValue > maxValue) {
                 maxValue = tempMaxValue;
+            }
+        }
+    }
+    if (comparisonGraph && comparisonGraph.length > 0) {
+        for (let i = 0; i < comparisonGraph.length; i++) {
+            if (comparisonGraph[i]) {
+                const tempMaxValue = comparisonGraph[i][3];
+                if (tempMaxValue > maxValue) {
+                    maxValue = tempMaxValue;
+                }
             }
         }
     }

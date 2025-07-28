@@ -83,6 +83,7 @@ function updateStripeWidth() {
         yPercentage = y / stripeGraphCanvas.height;
     }
     drawSelectionLine();
+    updateLoadedImageStripeCanvases();
     if (videoElement) {
         redrawGraphIfLoadedImage(true);
     }
@@ -232,6 +233,7 @@ stripeGraphCanvas.addEventListener("click", function (event) {
     stripePlacementValue.textContent = getStripePositionRangeText();
 
     drawSelectionLine(); // Redraw line at the new position
+    updateLoadedImageStripeCanvases();
     if (videoElement) {
         redrawGraphIfLoadedImage(true);
     }

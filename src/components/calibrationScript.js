@@ -297,8 +297,6 @@ function resetCalValues() {
     nmCalPoints = [];
     nMAxis = [];
     divergencePoints = [];
-
-    document.getElementById("my-file").value = null;
 }
 
 /**

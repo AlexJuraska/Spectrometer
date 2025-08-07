@@ -3,6 +3,7 @@ let loadedImageCounter = 0;
 let comparisonColors = ['#d64d4d','#5b915b','#362cba',
     '#cabb6e', '#4cb199'];
 let comparisonGraph = [];
+let checkedComparisonId = null;
 
 /**
  * Loads an image from the user's computer into the camera window
@@ -63,7 +64,7 @@ function loadMultipleImages() {
             const uniqueKey = file.name;
             if (!uniqueMap.has(uniqueKey)) {
                 uniqueMap.set(uniqueKey, file);
-                if (uniqueMap.size === maxLoadableImages) break;
+                if (uniqueMap.size === maxLoadableImages+1) break;
             }
         }
 
@@ -184,9 +185,13 @@ function checkRadio(radioId) {
         const radioButton = document.getElementById(`imageRadio${i}`);
         if (radioButton) {
             radioButton.checked = i === radioId;
+            if (radioButton.checked) {
+                checkedComparisonId = i === 0 ? null : i - 1;
+            }
         }
     }
-
+    needToRecalculateMaxima = true;
+    redrawGraphIfLoadedImage();
     // TODO Functionality for radioId - select the image as videoElement
 }
 
@@ -207,6 +212,9 @@ function removeImageElement(loadedImageId) {
     adjustForRemovedId(loadedImageId);
 
     loadedImageCounter--;
+    if (loadedImageCounter === 0) {
+        checkedComparisonId = null;
+    }
 }
 
 /**
@@ -264,6 +272,7 @@ function updateLoadedImageStripeCanvases() {
         ctx.lineTo(canvas.width, y);
         ctx.stroke();
     }
+    needToRecalculateMaxima = true;
     //TODO The width is not correct, position *should* be correct
 }
 
@@ -290,6 +299,18 @@ function updateLoadedImageStripeData(imageId) {
     }
 
     comparisonGraph[imageId-1] = [pixels, pixelWidth, minValue, calculateMaxValue(pixels) - MAX_Y_VALUE_PADDING];
+}
+
+function getCheckedComparisonImageData() {
+    console.log(comparisonGraph);
+    if (checkedComparisonId === null) {
+        return null;
+    }
+    return comparisonGraph[checkedComparisonId];
+}
+
+function getCheckedComparisonId() {
+    return checkedComparisonId;
 }
 
 //Temporary

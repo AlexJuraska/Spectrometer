@@ -36,7 +36,6 @@ let lineCtx;
 let gradientOpacity = 0.7;
 
 let lowerPeakBound = 1;
-let upperPeakBound = 255;
 
 /**
  * Plots the RGB line graph from the camera or image element, deals with resizing, event listeners and drawing
@@ -106,15 +105,21 @@ function drawGraph() {
 
 
     if (needToRecalculateMaxima && document.getElementById('togglePeaksCheckbox').checked) {
-        maxima = findPeaks(pixels, pixelWidth, minValue);
-        if (toggleR) {
-            maximaR = findPeaks(pixels, pixelWidth, minValue, 0);
+        if (getCheckedComparisonId() !== null) {
+            const [comparisonDataPixels, comparisonDataPixelWidth] = getCheckedComparisonImageData();
+            maxima = findPeaks(comparisonDataPixels, comparisonDataPixelWidth, minValue);
         }
-        if (toggleG) {
-            maximaG = findPeaks(pixels, pixelWidth, minValue, 1);
-        }
-        if (toggleB) {
-            maximaB = findPeaks(pixels, pixelWidth, minValue, 2);
+        else {
+            maxima = findPeaks(pixels, pixelWidth, minValue);
+            if (toggleR) {
+                maximaR = findPeaks(pixels, pixelWidth, minValue, 0);
+            }
+            if (toggleG) {
+                maximaG = findPeaks(pixels, pixelWidth, minValue, 1);
+            }
+            if (toggleB) {
+                maximaB = findPeaks(pixels, pixelWidth, minValue, 2);
+            }
         }
         needToRecalculateMaxima = false;
     }
@@ -150,13 +155,26 @@ function drawGraph() {
                     tempPixels = tempPixels.slice(zoomStart * 4, zoomEnd * 4);
                     tempPixelWidth = zoomEnd - zoomStart;
                 }
-                drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue);
+                if (i === getCheckedComparisonId()) {
+                    drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue, true);
+                }
+                else {
+                    drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue);
+                }
             }
         }
+        const comparisonGraphPeakColor = comparisonColors[getCheckedComparisonId()];
+        drawPeaks(maxima, maxValue, comparisonGraphPeakColor);
     }
-
-    if (fillArea && (toggleCombined || toggleR || toggleG || toggleB)) {
-        drawGradient(graphCtx, pixels, pixelWidth, maxValue);
+    const isComparisonChecked = getCheckedComparisonId() !== null;
+    if (fillArea && (toggleCombined || toggleR || toggleG || toggleB || isComparisonChecked)) {
+        if (isComparisonChecked) {
+            const [tempPixels, tempPixelWidth] = getCheckedComparisonImageData();
+            drawGradient(graphCtx, tempPixels, tempPixelWidth, maxValue);
+        }
+        else {
+            drawGradient(graphCtx, pixels, pixelWidth, maxValue);
+        }
     }
     // console.log(fillArea);
     // console.log(toggleCombined);
@@ -164,28 +182,29 @@ function drawGraph() {
     // console.log(toggleG);
     // console.log(toggleB);
     let peaksToggled = document.getElementById('togglePeaksCheckbox').checked;
+    const shouldHighlightCameraLine = getCheckedComparisonId() === null && comparisonGraph.length !== 0;
 
     if (toggleCombined) {
-        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue);
-        if (peaksToggled && maxima.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, shouldHighlightCameraLine);
+        if (peaksToggled && maxima.length > 0 && shouldHighlightCameraLine) {
             drawPeaks(maxima, maxValue, 'black');
         }
     }
     if (toggleR) {
-        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue);
-        if (peaksToggled && maximaR.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, shouldHighlightCameraLine);
+        if (peaksToggled && maximaR.length > 0 && shouldHighlightCameraLine) {
             drawPeaks(maximaR, maxValue, 'red');
         }
     }
     if (toggleG) {
-        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue);
-        if (peaksToggled && maximaG.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, shouldHighlightCameraLine);
+        if (peaksToggled && maximaG.length > 0 && shouldHighlightCameraLine) {
             drawPeaks(maximaG, maxValue, 'green');
         }
     }
     if (toggleB) {
-        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue);
-        if (peaksToggled && maximaB.length > 0) {
+        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, shouldHighlightCameraLine);
+        if (peaksToggled && maximaB.length > 0 && shouldHighlightCameraLine) {
             drawPeaks(maximaB, maxValue, 'blue');
         }
     }
@@ -254,7 +273,7 @@ function averagePixels(pixels, pixelWidth) {
 /**
  * Finds the peaks of the graph
  */
-function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minProminence = 10) {
+function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1) {
     function getValue(x) {
         return colorOffset === -1
             ? calculateMaxColor(pixels, x)
@@ -586,6 +605,17 @@ function redrawGraphIfLoadedImage(invalidatePeaks = false) {
     }
 }
 
+//TODO dokoncit to, som unaveny for this
+function updateZoomLeftBorderMax() {
+    const zoomLeftBorder = document.getElementById('zoomLeftBorder');
+    const elementWidth = getElementWidth(videoElement);
+    const max = parseInt(zoomLeftBorder.value, 10) + elementWidth;
+    zoomLeftBorder.max = max;
+    if (parseInt(zoomLeftBorder.value, 10) > max) {
+        zoomLeftBorder.value = max;
+    }
+}
+
 /**
  * Updates the zoom range in the zoom list
  */
@@ -707,7 +737,7 @@ function generateSpectrumList(pixelWidth) {
 /**
  * Draws a line based on the spectrum list
  */
-function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
+function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, isSelectedComparison = false) {
     const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
     const zoomRange = zoomEnd - zoomStart;
     const width = graphCtx.canvas.width;
@@ -728,6 +758,9 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue) {
     }
     graphCtx.strokeStyle = color;
     graphCtx.lineWidth = 1;
+    if (isSelectedComparison === true) {
+        graphCtx.lineWidth = 2;
+    }
     graphCtx.stroke();
 }
 

@@ -35,6 +35,8 @@
   "capture-button": "Capture",
   "checkbox-comb": "Combined",
   "load-image": "Load Image",
+  "compare-multiple-images-button": "Compare Images",
+  "stop-comparison-button": "Stop comparison",
   "stripe-place": "Stripe Place",
   "resume-camera": "Resume Camera",
   "screenshot-camera": "Screenshot Camera",
@@ -108,6 +110,8 @@
   "step4choice10": "<strong>\"Minimum value\"</strong> – Sets the minimum signal value on the graph.",
   "step4choice11": "<strong>\"Set exposure\"</strong> – Allows manual adjustment of the camera exposure.",
 
+  "imageFromCamera": "Image from the camera",
+
   "acknowledge": "I understand",
   "noNmNeedToCalibrate" : "To show graph in nm, please first calibrate.",
   "exposureUnsupportedBrowser" : "Exposure control is not supported by your browser or your camera, this setting will not be available",
@@ -132,6 +136,8 @@
   "pause-button-tooltip": "Pause the recording",
   "play-button-tooltip": "Resume the recording",
   "load-image-tooltip": "Load an image from your device instead of using the camera",
+  "compare-multiple-images-button-tooltip": "Load up to 5 images which will be shown in the graph for comparison",
+  "stop-comparison-button-tooltip": "Stop comparison of multiple images",
   "stripe-width-minus-tooltip": "Decrease the selection stripe width by 1 pixel",
   "stripe-width-plus-tooltip": "Increase the selection stripe width by 1 pixel",
   "stripe-width-range-tooltip": "Adjust the selection stripe width using the slider"

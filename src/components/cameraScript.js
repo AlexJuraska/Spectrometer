@@ -247,46 +247,6 @@ function getBackToCameraStream(){
 }
 
 /**
- * Loads an image from the user's computer into the camera window
- */
-function loadImageIntoCamera() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-
-    // Add an event listener to handle the file selection
-    input.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const stream = videoElement.srcObject;
-                if (stream) {
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    videoElement.srcObject = null;
-                }
-
-                videoElement.style.display = 'none';
-                document.getElementById("pauseVideoButton").style.visibility = "hidden";
-                document.getElementById("playVideoButton").style.visibility = "visible";
-                videoElement = document.getElementById('cameraImage');
-                videoElement.src = e.target.result;
-                videoElement.style.display = 'block';
-                videoElement.onload = () => {
-                    syncCanvasToVideo();
-                    needToRecalculateMaxima = true;
-                    plotRGBLineFromCamera();
-                };
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    input.click();
-}
-
-/**
  * Returns the width of the element (video or image)
  * @param element
  * @returns {number}

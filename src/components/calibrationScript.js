@@ -14,11 +14,17 @@ let nmCalPoints = [];
 let nMAxis = []
 let divergencePoints = [];
 
+let calLineColor = '#0000ff';
+let calPointsColor = '#ff0000';
+let calPointsHoverColor = '#bc0000';
+
 let graphCanvasCalibration;
 let graphCtxCalibration;
 
 let graphCanvasDivergence;
 let graphCtxDivergence;
+
+let hoveredCalPoint = null;
 
 /**
  * Creates the initial minimum number of calibration input pairs
@@ -61,13 +67,6 @@ function addInputPair() {
     const div = document.createElement("div");
     div.classList.add("input-pair")
 
-    // "Point n"
-    const pointLabel = document.createElement("label");
-    const spanLabel = document.createElement("span");
-    spanLabel.setAttribute("data-translate", "point");
-    pointLabel.appendChild(spanLabel);
-    pointLabel.append(` ${inputBoxCounter}:`);
-
     // Px input
     const inputPx = document.createElement("input");
     inputPx.id = `point${inputBoxCounter}px`;
@@ -91,7 +90,6 @@ function addInputPair() {
     const id = inputBoxCounter;
     deleteButton.onclick = function () { removeInputPair(id); };
 
-    div.appendChild(pointLabel);
     div.appendChild(inputPx);
     div.appendChild(inputNm);
     div.appendChild(deleteButton);
@@ -526,7 +524,7 @@ function drawCalibrationLine() {
         }
     }
 
-    graphCtxCalibration.strokeStyle = 'blue';
+    graphCtxCalibration.strokeStyle = calLineColor;
     graphCtxCalibration.lineWidth = 1.5;
     graphCtxCalibration.stroke();
 }
@@ -535,27 +533,35 @@ function drawCalibrationLine() {
  * Draws the points represented by nmCalPoints and pixelCalPoints
  */
 function drawCalibrationPoints() {
-    const width = graphCanvasCalibration.getBoundingClientRect().width;
-    const height = graphCanvasCalibration.getBoundingClientRect().height;
+    const width = graphCanvasCalibration.width;
+    const height = graphCanvasCalibration.height;
     const padding = 30;
 
-    const rangeBeginX = 0;
-    const rangeEndX = 1280;
-    const rangeBeginY = 350;
-    const rangeEndY = 1000;
-
     for (let i = 0; i < nmCalPoints.length; i++) {
-        const x = padding + ((pixelCalPoints[i] - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
-        const y = height - padding - ((nmCalPoints[i] - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+        const px = pixelCalPoints[i];
+        const nm = nmCalPoints[i];
 
-        graphCtxCalibration.fillStyle = 'red';
-        graphCtxCalibration.strokeStyle = 'red';
+        const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
+        const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+
+        if (hoveredCalPoint && px === hoveredCalPoint.px && nm === hoveredCalPoint.nm) {
+            graphCtxCalibration.fillStyle = calPointsHoverColor;
+            graphCtxCalibration.strokeStyle = calPointsHoverColor;
+            graphCtxCalibration.beginPath();
+            graphCtxCalibration.arc(x, y, 6, 0, 2 * Math.PI);
+            graphCtxCalibration.fill();
+            graphCtxCalibration.stroke();
+        }
+
+        graphCtxCalibration.fillStyle = calPointsColor;
+        graphCtxCalibration.strokeStyle = calPointsColor;
         graphCtxCalibration.beginPath();
         graphCtxCalibration.arc(x, y, 4, 0, 2 * Math.PI);
         graphCtxCalibration.fill();
         graphCtxCalibration.stroke();
     }
 }
+
 
 /**
  * Draws up the graph representing the distance from calibration points to the created calibration function.
@@ -655,7 +661,7 @@ function drawZeroLineDivergence() {
     const xEnd = width - padding;
 
     graphCtxDivergence.beginPath();
-    graphCtxDivergence.strokeStyle = 'blue';
+    graphCtxDivergence.strokeStyle = calLineColor;
     graphCtxDivergence.lineWidth = 1.5;
     graphCtxDivergence.moveTo(xStart, yZero);
     graphCtxDivergence.lineTo(xEnd, yZero);
@@ -734,11 +740,21 @@ function drawDivergencePoints() {
     const yMax = maxAbs * 1.25;
     const yMin = -yMax;
 
-    for (const point of divergencePoints) {
+    for (let i = 0; i < divergencePoints.length; i++) {
+        const point = divergencePoints[i];
         const x = padding + ((point.px - xMin) / (xMax - xMin)) * (width - 2 * padding);
         const y = height - padding - ((point.delta - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
-        graphCtxDivergence.fillStyle = 'red';
+        if (hoveredCalPoint && point.px === hoveredCalPoint.px && point.realNm === hoveredCalPoint.nm) {
+            graphCtxDivergence.fillStyle = calPointsHoverColor;
+            graphCtxDivergence.strokeStyle = calPointsHoverColor;
+            graphCtxDivergence.beginPath();
+            graphCtxDivergence.arc(x, y, 4, 0, 2 * Math.PI);
+            graphCtxDivergence.fill();
+            graphCtxDivergence.stroke();
+        }
+
+        graphCtxDivergence.fillStyle = calPointsColor;
         graphCtxDivergence.beginPath();
         graphCtxDivergence.arc(x, y, 3, 0, 2 * Math.PI);
         graphCtxDivergence.fill();
@@ -766,6 +782,119 @@ function computeDivergence() {
     divergencePoints.sort((a, b) => a.px - b.px);
 }
 
+/**
+ * Implements functionality for the selection of a calibration point within the calibration graph by clicking it
+ */
+function checkForPointSelectionClick(event) {
+    if (!isCalibrated() || !hoveredCalPoint) {
+        return;
+    }
+
+    const rect = graphCanvasCalibration.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    const radius = 6;
+
+    for (let i = 0; i < pixelCalPoints.length; i++) {
+        const px = pixelCalPoints[i];
+        const nm = nmCalPoints[i];
+
+        const padding = 30;
+        const width = graphCanvasCalibration.getBoundingClientRect().width;
+        const height = graphCanvasCalibration.getBoundingClientRect().height;
+
+        const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
+        const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+
+        const distance = Math.sqrt((clickX - x) ** 2 + (clickY - y) ** 2);
+
+        if (distance <= radius) {
+            highlightInputPair(px, nm);
+            return;
+        }
+    }
+}
+
+/**
+ * Highlights a specific input pair based on its values
+ */
+function highlightInputPair(px, nm) {
+    if (!isCalibrated()) { return; }
+
+    const inputPairs = document.querySelectorAll(".input-pair");
+
+    for (const pair of inputPairs) {
+        const inputs = pair.querySelectorAll("input[type='number']");
+        if (inputs.length < 2) continue;
+
+        const pxVal = parseFloat(inputs[0].value.trim());
+        const nmVal = parseFloat(inputs[1].value.trim());
+
+        if (pxVal === px && nmVal === nm) {
+            pair.classList.add('highlight');
+
+            setTimeout(() => {
+                pair.classList.remove('highlight');
+            }, 1300);
+
+            break;
+        }
+    }
+}
+
+/**
+ * Implements functionality for the highlighting of a calibration point within the calibration graph by hovering over it
+ */
+function checkForPointSelectionHover(event) {
+    if (!isCalibrated()) { return; }
+
+    const rect = graphCanvasCalibration.getBoundingClientRect();
+    const scaleX = graphCanvasCalibration.width / rect.width;
+    const scaleY = graphCanvasCalibration.height / rect.height;
+    const mouseX = (event.clientX - rect.left) * scaleX;
+    const mouseY = (event.clientY - rect.top) * scaleY;
+
+    const padding = 30;
+    const width = graphCanvasCalibration.width;
+    const height = graphCanvasCalibration.height;
+    const radius = 6;
+
+    let foundPoint = null;
+
+    for (let i = 0; i < pixelCalPoints.length; i++) {
+        const px = pixelCalPoints[i];
+        const nm = nmCalPoints[i];
+
+        const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
+        const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+
+        const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
+        if (distance <= radius) {
+            foundPoint = { px, nm };
+            break;
+        }
+    }
+
+    const isSamePoint = (
+        hoveredCalPoint &&
+        foundPoint &&
+        hoveredCalPoint.px === foundPoint.px &&
+        hoveredCalPoint.nm === foundPoint.nm
+    );
+
+    if (!isSamePoint) {
+        hoveredCalPoint = foundPoint;
+        drawGridCalibration();
+        drawCalibrationLine();
+        drawCalibrationPoints();
+
+        drawGridDivergence();
+        drawDivergenceLine();
+        drawDivergencePoints();
+    }
+}
+
 window.addEventListener("resize", () => {
     resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
     resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
@@ -775,3 +904,6 @@ window.addEventListener("resize", () => {
 initializeCalibration();
 drawGridCalibration();
 drawGridDivergence();
+
+graphCanvasCalibration.addEventListener("click", checkForPointSelectionClick);
+graphCanvasCalibration.addEventListener("mousemove", checkForPointSelectionHover);

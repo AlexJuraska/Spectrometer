@@ -16,6 +16,7 @@
   <script src="../components/languageScript.js"></script>
   <script src="../components/dataSavingScript.js"></script>
   <script src="../components/referenceGraphScript.js"></script>
+  <script src="../components/imageLoadingScript.js"></script>
 
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>-->
 
@@ -71,6 +72,21 @@
                     onclick="loadImageIntoCamera()"
                     data-translate="load-image"
                     data-translate-title="load-image-tooltip">Load Image</button>
+
+            <div style="position: relative; width: 140px; height: 30px;">
+              <button id="loadMultipleImagesButton"
+                      class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
+                      onclick="loadMultipleImages()"
+                      data-translate="compare-multiple-images-button"
+                      data-translate-title="compare-multiple-images-button-tooltip">Compare images</button>
+
+              <button id="removeMultipleImagesButton"
+                      class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"
+                      style="visibility: hidden;"
+                      onclick="removeLoadedImages()"
+                      data-translate="stop-comparison-button"
+                      data-translate-title="stop-comparison-button-tooltip">Stop comparison</button>
+            </div>
           </div>
 
           <!-- Stripe Width -->
@@ -164,26 +180,11 @@
         </div>
 
         <div class="input-header">
-          <div></div>
           <div>px</div>
           <div>nm</div>
         </div>
 
-        <!-- Input list -->
         <div id="input-container">
-<!--          <div class="input-pair">-->
-<!--            <label><span data-translate="point"></span> 1:</label>-->
-<!--            <input id="point1px" type="number" class="form-control form-control-sm"/>-->
-<!--            <input id="point1nm" type="number" class="form-control form-control-sm"/>-->
-<!--            <button id="deleteButton1" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(1)" disabled>&times;</button>-->
-<!--          </div>-->
-
-<!--          <div class="input-pair">-->
-<!--            <label><span data-translate="point"></span> 2:</label>-->
-<!--            <input id="point2px" type="number" class="form-control form-control-sm"/>-->
-<!--            <input id="point2nm" type="number" class="form-control form-control-sm"/>-->
-<!--            <button id="deleteButton2" class="btn btn-sm btn-danger btn-secondary pb-0.5" onclick="removeInputPair(2)" disabled>&times;</button>-->
-<!--          </div>-->
 
         </div>
       </div>
@@ -330,7 +331,16 @@
 
     </div>
 
-    <div id="sidebar-right" class="sidebar bg-sidebar hidden"></div>
+    <div id="sidebar-right" class="sidebar bg-sidebar hidden">
+      <div class="image-loaded-wrapper small-camera-image-entry">
+        <div class="image-controls">
+          <input type="radio" id="imageRadio0" onclick="checkRadio(0)" checked/>
+        </div>
+        <div class="camera-image-text">
+          <span data-translate="imageFromCamera">Camera image</span>
+        </div>
+      </div>
+    </div>
 
     <div id="sidebarHoverZoneRight"></div>
     <div id="sidebarToggleHandleRight" class="sidebar-handle btn-spectraGreen" onclick="changeDisplayScreen('imgSelect')">

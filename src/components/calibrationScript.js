@@ -138,11 +138,6 @@ function removeInputPair(inputBoxNumber) {
     }
 
     removeLastInputPair();
-
-    if (inputBoxCounter === minInputBoxNumber) {
-        disablePairRemoveButtons();
-        return;
-    }
 }
 
 /**
@@ -159,6 +154,8 @@ function removeLastInputPair() {
     if (inputBoxCounter === minInputBoxNumber) {
         disablePairRemoveButtons();
     }
+
+    setCalibrationPoints();
 }
 
 /**

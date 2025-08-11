@@ -431,8 +431,9 @@ function drawGridCalibration() {
 
     resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "None");
 
-    const width = graphCanvasCalibration.getBoundingClientRect().width;
-    const height = graphCanvasCalibration.getBoundingClientRect().height;
+    const rect = graphCanvasCalibration.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     const yMin = rangeBeginY;
@@ -497,8 +498,9 @@ function drawGridCalibration() {
  * Draws the function created from the pixelCalPoints and nmCalPoints arrays
  */
 function drawCalibrationLine() {
-    const width = graphCanvasCalibration.getBoundingClientRect().width;
-    const height = graphCanvasCalibration.getBoundingClientRect().height;
+    const rect = graphCanvasCalibration.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     nMAxis = convertPxAxisIntoNm();
@@ -531,8 +533,9 @@ function drawCalibrationLine() {
  * Draws the points represented by nmCalPoints and pixelCalPoints
  */
 function drawCalibrationPoints() {
-    const width = graphCanvasCalibration.getBoundingClientRect().width;
-    const height = graphCanvasCalibration.getBoundingClientRect().height;
+    const rect = graphCanvasCalibration.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     for (let i = 0; i < nmCalPoints.length; i++) {
@@ -574,8 +577,9 @@ function drawGridDivergence() {
 
     computeDivergence();
 
-    const width = graphCanvasDivergence.getBoundingClientRect().width;
-    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const rect = graphCanvasDivergence.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     const xMin = rangeBeginX;
@@ -639,8 +643,9 @@ function drawGridDivergence() {
 function drawZeroLineDivergence() {
     if (!graphCtxDivergence || !graphCanvasDivergence) return;
 
-    const width = graphCanvasDivergence.getBoundingClientRect().width;
-    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const rect = graphCanvasDivergence.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     const deltas = divergencePoints.map(p => p.delta);
@@ -672,8 +677,9 @@ function drawZeroLineDivergence() {
 function drawDivergenceLine() {
     if (divergencePoints.length < 2) return;
 
-    const width = graphCanvasDivergence.getBoundingClientRect().width;
-    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const rect = graphCanvasDivergence.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     const xMin = rangeBeginX;
@@ -721,8 +727,9 @@ function drawDivergenceLine() {
  * the created calibration function
  */
 function drawDivergencePoints() {
-    const width = graphCanvasDivergence.getBoundingClientRect().width;
-    const height = graphCanvasDivergence.getBoundingClientRect().height;
+    const rect = graphCanvasDivergence.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
     const padding = 30;
 
     const xMin = rangeBeginX;
@@ -793,8 +800,8 @@ function checkForPointSelectionClick(event) {
     const mouseY = (event.clientY - rect.top);
 
     const padding = 30;
-    const width = graphCanvasCalibration.getBoundingClientRect().width;
-    const height = graphCanvasCalibration.getBoundingClientRect().height;
+    const width = rect.width;
+    const height = rect.height;
     const radius = 6;
 
     for (let i = 0; i < pixelCalPoints.length; i++) {
@@ -851,8 +858,8 @@ function checkForPointSelectionHover(event) {
     const mouseY = (event.clientY - rect.top);
 
     const padding = 30;
-    const width = graphCanvasCalibration.getBoundingClientRect().width;
-    const height = graphCanvasCalibration.getBoundingClientRect().height;
+    const width = rect.width;
+    const height = rect.height;
     const radius = 6;
 
     let foundPoint = null;

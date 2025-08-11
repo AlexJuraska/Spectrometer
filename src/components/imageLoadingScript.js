@@ -26,7 +26,7 @@ function loadImageIntoCamera() {
                     videoElement.srcObject = null;
                 }
 
-                switchLoadedImageFilename(file.name);
+                switchLoadedImageSettings(file.name);
 
                 videoElement.style.display = 'none';
                 document.getElementById("pauseVideoButton").style.visibility = "hidden";
@@ -47,13 +47,20 @@ function loadImageIntoCamera() {
     input.click();
 }
 
-function switchLoadedImageFilename(filename = null) {
+/**
+ * Shows settings based on if they're needed with a loaded/unloaded image
+ * @param filename - name of the loaded file, if none is set the function reverts settings to camera mode
+ */
+function switchLoadedImageSettings(filename = null) {
     const display = document.getElementById('loadedImageFilename');
     display.innerText = filename;
     display.style.display = filename === null ? 'none' : 'block';
 
     const select = document.getElementById('cameraSelect');
     select.style.display = filename === null ? 'block' : 'none';
+
+    const exposureSettings = document.getElementById('cameraExposure');
+    exposureSettings.style.display = filename === null ? 'block' : 'none';
 }
 
 /**

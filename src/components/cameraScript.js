@@ -225,7 +225,7 @@ async function pauseVideo(){
  */
 async function playVideo(){
     if (videoElement instanceof HTMLImageElement) {
-        switchLoadedImageFilename();
+        switchLoadedImageSettings();
         getBackToCameraStream();
     } else {
         videoElement.play();

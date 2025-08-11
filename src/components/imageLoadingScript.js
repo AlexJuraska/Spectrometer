@@ -26,6 +26,8 @@ function loadImageIntoCamera() {
                     videoElement.srcObject = null;
                 }
 
+                switchLoadedImageFilename(file.name);
+
                 videoElement.style.display = 'none';
                 document.getElementById("pauseVideoButton").style.visibility = "hidden";
                 document.getElementById("playVideoButton").style.visibility = "visible";
@@ -43,6 +45,15 @@ function loadImageIntoCamera() {
     });
 
     input.click();
+}
+
+function switchLoadedImageFilename(filename = null) {
+    const display = document.getElementById('loadedImageFilename');
+    display.innerText = filename;
+    display.style.display = filename === null ? 'none' : 'block';
+
+    const select = document.getElementById('cameraSelect');
+    select.style.display = filename === null ? 'block' : 'none';
 }
 
 /**

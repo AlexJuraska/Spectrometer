@@ -28,10 +28,25 @@ html, body {
     text-align: center;
 }
 
+#loadedImageFilename {
+    background-image: none !important;
+    text-align: center;
+    pointer-events: none;
+    display: block;
+    width: 100%;
+    padding: .25rem 2.25rem .25rem .5rem;
+    font-size:.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+
 #input-container {
     display: flex;
     flex-direction: column;
-    /*gap: 0.3rem;*/
 }
 
 .input-pair {
@@ -264,7 +279,7 @@ html, body {
     transform: translateY(100%);
 }
 
- /*##### Main Graph ##### */
+/*##### Main Graph ##### */
 #graphCanvasWindow {
     width: 100%;
     display: flex;

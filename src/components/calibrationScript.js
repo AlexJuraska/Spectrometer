@@ -757,14 +757,14 @@ function drawDivergencePoints() {
             graphCtxDivergence.fillStyle = calPointsHoverColor;
             graphCtxDivergence.strokeStyle = calPointsHoverColor;
             graphCtxDivergence.beginPath();
-            graphCtxDivergence.arc(x, y, 4, 0, 2 * Math.PI);
+            graphCtxDivergence.arc(x, y, 5, 0, 2 * Math.PI);
             graphCtxDivergence.fill();
             graphCtxDivergence.stroke();
         }
 
         graphCtxDivergence.fillStyle = calPointsColor;
         graphCtxDivergence.beginPath();
-        graphCtxDivergence.arc(x, y, 3, 0, 2 * Math.PI);
+        graphCtxDivergence.arc(x, y, 4, 0, 2 * Math.PI);
         graphCtxDivergence.fill();
     }
 }
@@ -791,33 +791,61 @@ function computeDivergence() {
 }
 
 /**
- * Implements functionality for the selection of a calibration point within the calibration graph by clicking it
+ * Implements functionality for the selection of a calibration point within the calibration or divergence graph
+ * by clicking it
+ * @param type - "calibration" or "divergence", depending on which one we're working with
  */
-function checkForPointSelectionClick(event) {
+function checkForPointSelectionClick(event, type) {
     if (!isCalibrated() || !hoveredCalPoint) {
         return;
     }
 
-    const rect = graphCanvasCalibration.getBoundingClientRect();
-    const mouseX = (event.clientX - rect.left);
-    const mouseY = (event.clientY - rect.top);
+    let canvas, points, xMin, xMax, yMin, yMax, padding = 30, radius = 6;
+    let rect, mouseX, mouseY, width, height;
 
-    const padding = 30;
-    const width = rect.width;
-    const height = rect.height;
-    const radius = 6;
+    if (type === "calibration") {
+        canvas = graphCanvasCalibration;
+        points = pixelCalPoints.map((px, i) => ({ px, nm: nmCalPoints[i] }));
+        xMin = rangeBeginX;
+        xMax = rangeEndX;
+        yMin = rangeBeginY;
+        yMax = rangeEndY;
+    } else if (type === "divergence") {
+        canvas = graphCanvasDivergence;
+        points = divergencePoints;
+        xMin = rangeBeginX;
+        xMax = rangeEndX;
 
-    for (let i = 0; i < pixelCalPoints.length; i++) {
-        const px = pixelCalPoints[i];
-        const nm = nmCalPoints[i];
+        const deltas = divergencePoints.map(p => p.delta);
+        let maxAbs = Math.max(...deltas.map(Math.abs));
+        if (maxAbs < 0.001) maxAbs = 0.001;
 
-        const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
-        const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+        yMax = maxAbs * 1.25;
+        yMin = -yMax;
+    } else {
+        return;
+    }
+
+    rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+    width = rect.width;
+    height = rect.height;
+
+    for (const point of points) {
+        const px = point.px;
+        const yVal = type === "calibration" ? point.nm : point.delta;
+
+        const x = padding + ((px - xMin) / (xMax - xMin)) * (width - 2 * padding);
+        const y = height - padding - ((yVal - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
         const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
-
         if (distance <= radius) {
-            highlightInputPair(px, nm);
+            if (type === "calibration") {
+                highlightInputPair(px, point.nm);
+            } else {
+                highlightInputPair(px, point.realNm);
+            }
             return;
         }
     }
@@ -851,32 +879,59 @@ function highlightInputPair(px, nm) {
 }
 
 /**
- * Implements functionality for the highlighting of a calibration point within the calibration graph by hovering over it
+ * Implements functionality for the highlighting of a calibration point within the calibration or divergence graph
+ * by hovering over it
+ * @param type - "calibration" or "divergence", depending on which one we're working with
  */
-function checkForPointSelectionHover(event) {
+function checkForPointSelectionHover(event, type) {
     if (!isCalibrated()) { return; }
 
-    const rect = graphCanvasCalibration.getBoundingClientRect();
-    const mouseX = (event.clientX - rect.left);
-    const mouseY = (event.clientY - rect.top);
+    let canvas, points, xMin, xMax, yMin, yMax, padding = 30, radius = 6;
+    let rect, mouseX, mouseY, width, height, foundPoint = null;
 
-    const padding = 30;
-    const width = rect.width;
-    const height = rect.height;
-    const radius = 6;
+    if (type === "calibration") {
+        canvas = graphCanvasCalibration;
+        points = pixelCalPoints.map((px, i) => ({ px, nm: nmCalPoints[i] }));
+        xMin = rangeBeginX;
+        xMax = rangeEndX;
+        yMin = rangeBeginY;
+        yMax = rangeEndY;
+    } else if (type === "divergence") {
+        canvas = graphCanvasDivergence;
+        points = divergencePoints;
+        xMin = rangeBeginX;
+        xMax = rangeEndX;
 
-    let foundPoint = null;
+        const deltas = divergencePoints.map(p => p.delta);
+        let maxAbs = Math.max(...deltas.map(Math.abs));
+        if (maxAbs < 0.001) maxAbs = 0.001;
 
-    for (let i = 0; i < pixelCalPoints.length; i++) {
-        const px = pixelCalPoints[i];
-        const nm = nmCalPoints[i];
+        yMax = maxAbs * 1.25;
+        yMin = -yMax;
+    } else {
+        return;
+    }
 
-        const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
-        const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+    rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+    width = rect.width;
+    height = rect.height;
+
+    for (const point of points) {
+        const px = point.px;
+        const yVal = type === "calibration" ? point.nm : point.delta;
+
+        const x = padding + ((px - xMin) / (xMax - xMin)) * (width - 2 * padding);
+        const y = height - padding - ((yVal - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
         const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
         if (distance <= radius) {
-            foundPoint = { px, nm };
+            if (type === "calibration") {
+                foundPoint = { px, nm: point.nm };
+            } else {
+                foundPoint = { px, nm: point.realNm };
+            }
             break;
         }
     }
@@ -910,5 +965,16 @@ initializeCalibration();
 drawGridCalibration();
 drawGridDivergence();
 
-graphCanvasCalibration.addEventListener("click", checkForPointSelectionClick);
-graphCanvasCalibration.addEventListener("mousemove", checkForPointSelectionHover);
+graphCanvasCalibration.addEventListener("click", (e) => {
+    checkForPointSelectionClick(e, "calibration")
+});
+graphCanvasCalibration.addEventListener("mousemove", (e) => {
+    checkForPointSelectionHover(e,"calibration");
+});
+
+graphCanvasDivergence.addEventListener("click", (e) => {
+    checkForPointSelectionClick(e,"divergence");
+})
+graphCanvasDivergence.addEventListener("mousemove", (e) => {
+    checkForPointSelectionHover(e,"divergence");
+});

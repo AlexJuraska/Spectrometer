@@ -26,6 +26,7 @@ function changeSettingsScreen(changeTo) {
         show('videoMainWindow');
         show('changeToCalibrationButton');
         show('changeToLongExpoButton');
+        show('saveGraphDataButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
@@ -35,6 +36,8 @@ function changeSettingsScreen(changeTo) {
         show('calibrationSettings', 'flex');
         show('changeFromCalibrationButton');
         show('changeToLongExpoButton');
+
+        hide('saveGraphDataButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
@@ -47,6 +50,7 @@ function changeSettingsScreen(changeTo) {
         show('cameraExposureWindow');
         show('changeToCalibrationButton');
         show('changeFromLongExpoButton');
+        show('saveGraphDataButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');

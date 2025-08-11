@@ -531,8 +531,8 @@ function drawCalibrationLine() {
  * Draws the points represented by nmCalPoints and pixelCalPoints
  */
 function drawCalibrationPoints() {
-    const width = graphCanvasCalibration.width;
-    const height = graphCanvasCalibration.height;
+    const width = graphCanvasCalibration.getBoundingClientRect().width;
+    const height = graphCanvasCalibration.getBoundingClientRect().height;
     const padding = 30;
 
     for (let i = 0; i < nmCalPoints.length; i++) {
@@ -789,23 +789,22 @@ function checkForPointSelectionClick(event) {
     }
 
     const rect = graphCanvasCalibration.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+    const mouseX = (event.clientX - rect.left);
+    const mouseY = (event.clientY - rect.top);
 
+    const padding = 30;
+    const width = graphCanvasCalibration.getBoundingClientRect().width;
+    const height = graphCanvasCalibration.getBoundingClientRect().height;
     const radius = 6;
 
     for (let i = 0; i < pixelCalPoints.length; i++) {
         const px = pixelCalPoints[i];
         const nm = nmCalPoints[i];
 
-        const padding = 30;
-        const width = graphCanvasCalibration.getBoundingClientRect().width;
-        const height = graphCanvasCalibration.getBoundingClientRect().height;
-
         const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
 
-        const distance = Math.sqrt((clickX - x) ** 2 + (clickY - y) ** 2);
+        const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
 
         if (distance <= radius) {
             highlightInputPair(px, nm);
@@ -848,14 +847,12 @@ function checkForPointSelectionHover(event) {
     if (!isCalibrated()) { return; }
 
     const rect = graphCanvasCalibration.getBoundingClientRect();
-    const scaleX = graphCanvasCalibration.width / rect.width;
-    const scaleY = graphCanvasCalibration.height / rect.height;
-    const mouseX = (event.clientX - rect.left) * scaleX;
-    const mouseY = (event.clientY - rect.top) * scaleY;
+    const mouseX = (event.clientX - rect.left);
+    const mouseY = (event.clientY - rect.top);
 
     const padding = 30;
-    const width = graphCanvasCalibration.width;
-    const height = graphCanvasCalibration.height;
+    const width = graphCanvasCalibration.getBoundingClientRect().width;
+    const height = graphCanvasCalibration.getBoundingClientRect().height;
     const radius = 6;
 
     let foundPoint = null;

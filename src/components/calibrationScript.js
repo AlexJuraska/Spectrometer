@@ -504,20 +504,26 @@ function drawCalibrationLine() {
 
     graphCtxCalibration.beginPath();
 
-    let firstPoint = true;
+    let drawing = false;
 
     for (let i = 0; i < nMAxis.length; i++) {
         const px = i + 1;
         const nm = nMAxis[i];
 
+        // const inRange = nm >= rangeBeginY && nm <= rangeEndY; // Also removes the overhang on top and bottom
+        const inRange = px >= rangeBeginX && px <= rangeEndX;
         const xScaled = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const yScaled = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
 
-        if (firstPoint) {
-            graphCtxCalibration.moveTo(xScaled, yScaled);
-            firstPoint = false;
+        if (inRange) {
+            if (!drawing) {
+                graphCtxCalibration.moveTo(xScaled, yScaled);
+                drawing = true;
+            } else {
+                graphCtxCalibration.lineTo(xScaled, yScaled);
+            }
         } else {
-            graphCtxCalibration.lineTo(xScaled, yScaled);
+            drawing = false;
         }
     }
 

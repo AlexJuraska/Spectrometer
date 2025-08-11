@@ -52,6 +52,14 @@ function updateTextContent() {
                     element.setAttribute('title', value);
                 }
             });
+
+            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                const value = translations[key];
+                if (value) {
+                    element.setAttribute('placeholder', value);
+                }
+            })
         }).catch(error => console.error("Error loading language file:", error));
 }
 

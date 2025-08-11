@@ -15,7 +15,8 @@
   "calibrate-button": "Calibrate",
   "calibrateOff-button": "Record",
   "reset-button": "Reset",
-  "export-button": "Export calibration settings",
+  "calibrationExportFilenamePlaceholder" : "Calibration file name",
+  "export-button": "Export",
   "point": "Point",
 
   "recording-title": "Recording",

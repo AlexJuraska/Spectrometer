@@ -15,7 +15,8 @@
   "calibrate-button": "Kalibrovať",
   "calibrateOff-button": "Nahrávať",
   "reset-button": "Resetovať",
-  "export-button": "Exportovať nastavenia kalibrácie",
+  "calibrationExportFilenamePlaceholder" : "Názov kalibračného súboru",
+  "export-button": "Exportovať",
   "point": "Bod",
 
   "recording-title": "Nahrávanie",

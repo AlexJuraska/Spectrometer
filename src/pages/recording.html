@@ -43,7 +43,7 @@
 
         <div id="cameraWindowControlsOnSetUp" class="p-2 w-100">
           <select id="cameraSelect" class="form-select form-select-sm" data-translate-title="camera-select-tooltip"></select> <!-- class="cameraWindowControlsOnSetUpButtons cameraButton" -->
-          <div id="loadedImageFilename" style="display: none"></div>
+          <div id="loadedImageFilename" data-translate-title="loaded-image-filename-tooltip" style="display: none"></div>
         </div>
 
         <div id="cameraWindowControlsOnMeasure">
@@ -118,10 +118,16 @@
               <span data-translate="stripe-place">Stripe Place</span>
             </label>
             <div class="d-flex align-items-center flex-nowrap gap-1 w-100">
-              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2" onclick="changeStripePlacement(-1)">-</button>
+              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2"
+                      onclick="changeStripePlacement(-1)"
+                      data-translate-title="stripe-place-minus-tooltip">-</button>
               <input type="range" class="form-range flex-grow-1" id="stripePlacementRange" min="1"
-                     onchange="changeStripePlacement(0)" oninput="changeStripePlacementLabel(this.value)">
-              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2" onclick="changeStripePlacement(1)">+</button>
+                     onchange="changeStripePlacement(0)"
+                     oninput="changeStripePlacementLabel(this.value)"
+                     data-translate-title="stripe-place-range-tooltip">
+              <button class="btn btn-sm btn-spectraGreen btn-secondary px-2"
+                      onclick="changeStripePlacement(1)"
+                      data-translate-title="stripe-place-plus-tooltip">+</button>
             </div>
             <div class="text-center">
               <span id="stripePlacementValue">1</span> px
@@ -131,7 +137,9 @@
           <!-- Exposure -->
           <div id="cameraExposure" class="mb-2 mx-2 small">
             <label for="exposure" class="form-label m-0 text-center w-100" data-translate="adjust-exposure">Adjust Exposure:</label>
-            <input id="exposure" type="range" class="form-range" oninput="updateExposureValue(this.value)">
+            <input id="exposure" type="range" class="form-range"
+                   oninput="updateExposureValue(this.value)"
+                   data-translate-title="exposure-range-tooltip">
             <div class="text-center">
               <span id="exposureValue">0</span>
             </div>
@@ -139,7 +147,7 @@
 
           <div id="referenceGraph" class="p-2">
             <div class="form-check mb-2">
-              <input type="checkbox" class="form-check-input" id="referenceGraphCheckbox">
+              <input type="checkbox" data-translate-title="reference-graph-checkbox-tooltip" class="form-check-input" id="referenceGraphCheckbox">
               <label class="form-check-label" for="referenceGraphCheckbox" data-translate="reference-graph">
                 Reference Graph
               </label>
@@ -147,16 +155,25 @@
 
             <div id="referenceGraphControl" style="display: none;">
               <div class="d-flex flex-wrap gap-2 mb-2">
-                <button class="btn btn-secondary btn-sm" data-translate="add-reference" onclick="addReferenceLine()">
+                <button class="btn btn-secondary btn-sm"
+                        data-translate="add-reference"
+                        data-translate-title="reference-graph-add-tooltip"
+                        onclick="addReferenceLine()">
                   Add Reference
                 </button>
-                <button class="btn btn-secondary btn-sm" data-translate="reference-from-file" onclick="addReferenceLineFromExcel()">
+                <button class="btn btn-secondary btn-sm"
+                        data-translate="reference-from-file"
+                        data-translate-title="reference-graph-add-excel-tooltip"
+                        onclick="addReferenceLineFromExcel()">
                   Add Reference from File
                 </button>
+                <button class="btn btn-secondary btn-sm"
+                        data-translate="reset-references"
+                        data-translate-title="reference-graph-reset-tooltip"
+                        onclick="removeReferenceLinesAndAddNewReferenceLine()">
+                  Reset References
+                </button>
               </div>
-              <button class="btn btn-secondary btn-sm" data-translate="reset-references" onclick="removeReferenceLinesAndAddNewReferenceLine()">
-                Reset References
-              </button>
             </div>
           </div>
 
@@ -168,18 +185,36 @@
 
         <div class="d-flex flex-column gap-2 margin-left-15px" style="max-width: 100%;">
           <div class="d-flex flex-wrap gap-2 justify-content-between">
-            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="addCalPoints-button" id="addPoints" onclick="addInputPair()">Add</button>
-<!--            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="removeCalPoints-button" id="removePoints" onclick="removeLastInputPair(this)">Remove</button>-->
+            <button class="btn btn-sm btn-secondary flex-fill p-1"
+                    data-translate="addCalPoints-button"
+                    data-translate-title="addCalPoints-button-tooltip"
+                    id="addPoints"
+                    onclick="addInputPair()">Add</button>
           </div>
           <div class="d-flex flex-wrap gap-2 justify-content-between">
-<!--            <button class="btn btn-sm btn-spectraGreen btn-secondary flex-fill p-1" data-translate="calibrate-button" id="calibrateButton" onclick="setCalibrationPoints()">Calibrate</button>-->
-            <button class="btn btn-sm btn-secondary flex-fill p-1" data-translate="reset-button" id="resetCalibrationPoints" onclick="resetCalibrationPoints()">Reset</button>
+            <button class="btn btn-sm btn-secondary flex-fill p-1"
+                    data-translate="reset-button"
+                    data-translate-tooltip="reset-button-tooltip"
+                    id="resetCalibrationPoints"
+                    onclick="resetCalibrationPoints()">Reset</button>
           </div>
           <div class="d-flex gap-2">
-            <input type="text" class="form-control form-control-sm" data-translate-placeholder="calibrationExportFilenamePlaceholder" id="exportCalibrationNameInput"  placeholder="Enter filename">
-            <button class="btn btn-sm text-light bg-secondary flex-fill" data-translate="export-button" id="exportCalibrationSettings" onclick="exportCalibrationFile()">Export calibration settings</button>
+            <input type="text" class="form-control form-control-sm"
+                   data-translate-placeholder="calibration-export-filename-placeholder"
+                   data-translate-title="calibration-export-filename-tooltip"
+                   id="exportCalibrationNameInput"
+                   placeholder="Enter filename">
+            <button class="btn btn-sm text-light bg-secondary flex-fill"
+                    data-translate="export-button"
+                    data-translate-title="export-button-tooltip"
+                    id="exportCalibrationSettings"
+                    onclick="exportCalibrationFile()">Export calibration settings</button>
           </div>
-          <input type="file" name="my_file" id="my-file" accept=".txt" class="form-control form-control-sm" onclick="this.value=null" onchange="importCalibrationFile()">
+          <input type="file" name="my_file" id="my-file" accept=".txt"
+                 class="form-control form-control-sm"
+                 data-translate-title="import-calibration-file-tooltip"
+                 onclick="this.value=null"
+                 onchange="importCalibrationFile()">
         </div>
 
         <div class="input-header">
@@ -219,11 +254,31 @@
       </div>
 
       <div class="p-0 m-3 d-flex flex-row flex-wrap justify-content-center gap-3 mt-auto">
-        <button class="btn btn-md btn-secondary p-1" data-translate="save-data" id="saveGraphDataButton" onclick="saveRecordingData()">Save data</button>
-        <button class="btn btn-md btn-secondary p-1" data-translate="calibrate-button" id="changeToCalibrationButton" onclick="changeSettingsScreen('Calibration')">Calibrate</button>
-        <button class="btn btn-md btn-secondary p-1" data-translate="camera-button" id="changeFromCalibrationButton" onclick="changeSettingsScreen('Graph')" style="display: none">Record</button>
-        <button class="btn btn-md btn-secondary p-1" data-translate="FLR-button" id="changeToLongExpoButton" onclick="changeSettingsScreen('LongExpo')">Camera Exposure</button>
-        <button class="btn btn-md btn-secondary p-1" data-translate="camera-button" id="changeFromLongExpoButton" onclick="changeSettingsScreen('Graph')" style="display: none">Record</button>
+        <button class="btn btn-md btn-secondary p-1"
+                data-translate="save-data"
+                data-translate-title="save-data-tooltip"
+                id="saveGraphDataButton"
+                onclick="saveRecordingData()">Save data</button>
+        <button class="btn btn-md btn-secondary p-1"
+                data-translate="calibrate-button"
+                data-translate-title="calibrate-button-tooltip"
+                id="changeToCalibrationButton"
+                onclick="changeSettingsScreen('Calibration')">Calibrate</button>
+        <button class="btn btn-md btn-secondary p-1"
+                data-translate="camera-button"
+                data-translate-title="camera-button-tooltip"
+                id="changeFromCalibrationButton"
+                onclick="changeSettingsScreen('Graph')" style="display: none">Record</button>
+        <button class="btn btn-md btn-secondary p-1"
+                data-translate="FLR-button"
+                data-translate-title="FLR-button-tooltip"
+                id="changeToLongExpoButton"
+                onclick="changeSettingsScreen('LongExpo')">Camera Exposure</button>
+        <button class="btn btn-md btn-secondary p-1"
+                data-translate="camera-button"
+                data-translate-title="camera-button-tooltip"
+                id="changeFromLongExpoButton"
+                onclick="changeSettingsScreen('Graph')" style="display: none">Camera</button>
       </div>
 
     </div>
@@ -332,7 +387,9 @@
             </div>
           </div>
           <div class="graph-nav position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2 z-3">
-            <a href="index.html" class="btn btn-secondary btn-md" data-translate="home-button">Home</a>
+            <a href="index.html" class="btn btn-secondary btn-md"
+               data-translate="home-button"
+               data-translate-title="home-button-tooltip">Home</a>
           </div>
       </div>
 

@@ -73,6 +73,7 @@ function addInputPair() {
     inputPx.type = "number";
     inputPx.classList.add("form-control");
     inputPx.classList.add("form-control-sm");
+    inputPx.dataset.translateTitle = "calPointPair-px-input-tooltip";
 
     // Nm input
     const inputNm = document.createElement("input");
@@ -80,12 +81,14 @@ function addInputPair() {
     inputNm.type = "number";
     inputNm.classList.add("form-control");
     inputNm.classList.add("form-control-sm");
+    inputNm.dataset.translateTitle = "calPointPair-nm-input-tooltip";
 
     // Point delete button
     const deleteButton = document.createElement("button");
     deleteButton.id = `deleteButton${inputBoxCounter}`;
     deleteButton.innerHTML = '&times;';
     deleteButton.classList.add("btn", "btn-sm", "btn-danger", "btn-secondary", "pb-0.5");
+    deleteButton.dataset.translateTitle = "calPointPair-remove-tooltip";
 
     const id = inputBoxCounter;
     deleteButton.onclick = function () { removeInputPair(id); };

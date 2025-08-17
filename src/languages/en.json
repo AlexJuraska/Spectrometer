@@ -3,8 +3,15 @@
   "start-button": "Start",
   "tutorial-button": "How To",
 
+  "language-select-tooltip": "Lets you select a preferred language for the application",
+  "start-button-tooltip": "Starts the recording",
+  "tutorial-button-tooltip": "Opens a page explaining how to use the application",
+
+
+
   "recording-title": "Recording",
   "camera-button": "Camera",
+  "calibrate-button": "Calibrate",
   "FLR-button": "Frame limited recording",
   "save-data": "Save Data",
   "home-button": "Home",
@@ -40,7 +47,7 @@
 
   "addCalPoints-button": "Add calibration points",
   "reset-button": "Reset",
-  "calibrationExportFilenamePlaceholder" : "Calibration file name",
+  "calibration-export-filename-placeholder" : "Calibration file name",
   "export-button": "Export",
 
   "numOfCap": "Number of Captures",
@@ -73,16 +80,44 @@
   "maxNumberOfCalibrationPointsError" : "Maximum number of calibration points is 15!",
   "duplicateCalPointsError" : "Duplicate calibration points detected! Please ensure all points are unique.",
 
+  "camera-button-tooltip": "Opens controls for the camera, stripe and reference graph",
+  "calibrate-button-tooltip": "Opens controls for the calibration",
+  "FLR-button-tooltip": "Opens controls for Frame limited recording",
+  "save-data-tooltip": "Saves an image from the camera, of the graph as well as an excel file containing specific values of the graph",
+  "home-button-tooltip": "Opens the introductory page",
+
   "camera-select-tooltip": "Open a dropdown menu to select a camera",
+  "loaded-image-filename-tooltip": "Name of the loaded image file",
   "refresh-button-tooltip": "Refresh the list of available cameras",
   "pause-button-tooltip": "Pause the recording",
   "play-button-tooltip": "Resume the recording",
   "load-image-tooltip": "Load an image from your device instead of using the camera",
   "compare-multiple-images-button-tooltip": "Load up to 5 images which will be shown in the graph for comparison",
   "stop-comparison-button-tooltip": "Stop comparison of multiple images",
+
   "stripe-width-minus-tooltip": "Decrease the selection stripe width by 1 pixel",
   "stripe-width-plus-tooltip": "Increase the selection stripe width by 1 pixel",
   "stripe-width-range-tooltip": "Adjust the selection stripe width using the slider",
+
+  "stripe-place-minus-tooltip": "Move the selection stripe up by 1 pixel",
+  "stripe-place-plus-tooltip": "Move the selection stripe down by 1 pixel",
+  "stripe-place-range-tooltip": "Adjust the position of the selection stripe using the slider",
+
+  "exposure-range-tooltip": "Adjust the exposure value using the slider",
+
+  "reference-graph-checkbox-tooltip": "Activates the reference graph functionality and opens controls for it",
+  "reference-graph-add-tooltip": "Adds a reference graph based on the current combined graph from the camera",
+  "reference-graph-add-excel-tooltip": "Adds a reference with data from an excel file, the file format must be the same as the one saved by \"Save Data\"",
+  "reference-graph-reset-tooltip": "Removes all current reference graphs and adds the current graph as a reference",
+
+  "addCalPoints-button-tooltip": "Adds a pair of inputs to define a calibration point",
+  "reset-button-tooltip": "Resets the calibration pairs to the default amount and empties them",
+  "calibration-export-filename-tooltip": "Enter the name you want the exported calibration file to have, if none is entered a default name will be given",
+  "export-button-tooltip": "Exports the calibration values into a .txt file",
+  "import-calibration-file-tooltip": "Lets you select a .txt file with calibration values, which will be input into the application, must have the same format as the exported file above",
+  "calPointPair-px-input-tooltip": "Enter the pixel value for this calibration point pair",
+  "calPointPair-nm-input-tooltip": "Enter the nanometer value for this calibration point pair",
+  "calPointPair-remove-tooltip": "Removes this calibration point pair",
 
   "step1": "Step 1: Enabling and selecting the camera",
   "allowingAccessToCam": "1. Allow camera access",

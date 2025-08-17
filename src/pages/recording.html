@@ -230,27 +230,36 @@
       <div id="cameraExposureWindow" class="p-3" style="display: none; max-width: 400px;">
         <div class="mb-3">
           <label for="NumOfSamples" class="form-label">
-            <span data-translate="numOfCap">Number of Captures</span>
+            <span data-translate="FLR-captures-count">Number of Captures</span>
           </label>
-          <input type="number" class="form-control form-control-sm" id="NumOfSamples" name="NumOfSamples" min="1" value="5">
+          <input type="number" class="form-control form-control-sm"
+                 id="NumOfSamples" name="NumOfSamples" min="1" value="5"
+                 data-translate-title="FLR-captures-count-input-tooltip">
         </div>
 
         <div class="mb-3">
           <label for="timeOfPause" class="form-label">
-            <span data-translate="pauseBetCap">Pause in between captures</span>
+            <span data-translate="FLR-captures-pause">Pause in between captures</span>
           </label>
           <div class="input-group input-group-sm">
-            <input type="number" class="form-control" id="timeOfPause" name="timeOfPause" min="200" value="300">
+            <input type="number" class="form-control"
+                   id="timeOfPause" name="timeOfPause" min="200" value="300"
+                   data-translate-title="FLR-captures-pause-input-tooltip">
             <span class="input-group-text" data-translate="in-ms">(in ms.)</span>
           </div>
         </div>
 
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="screenshotOfGraph" name="screenshotOfGraph">
-          <label class="form-check-label" for="screenshotOfGraph" data-translate="screenshot-graph">Screenshot Graph</label>
+          <input type="checkbox" class="form-check-input"
+                 id="screenshotOfGraph" name="screenshotOfGraph"
+                 data-translate-title="FLR-screenshot-graph-tooltip">
+          <label class="form-check-label" for="screenshotOfGraph" data-translate="FLR-screenshot-graph">Screenshot Graph</label>
         </div>
 
-        <button class="btn btn-secondary btn-sm" data-translate="capture-button" onclick="startCameraCapture()">Capture</button>
+        <button class="btn btn-secondary btn-sm"
+                data-translate="FLR-capture-button"
+                data-translate-title="FLR-capture-button-tooltip"
+                onclick="startCameraCapture()">Capture</button>
       </div>
 
       <div class="p-0 m-3 d-flex flex-row flex-wrap justify-content-center gap-3 mt-auto">
@@ -316,25 +325,40 @@
       <div id="graphSettingsDrawer" class="graph-drawer">
 
           <div class="d-flex flex-wrap gap-2 align-items-center p-2">
-            <button class="btn btn-secondary btn-sm" data-translate="reset-zoom" id="resetZoomButton">Reset Zoom</button>
-            <button class="btn btn-secondary btn-sm" id="stepBackButton" data-translate="zoom-step-back">Step Back</button>
+            <button class="btn btn-secondary btn-sm"
+                    data-translate="reset-zoom"
+                    data-translate-title="reset-zoom-tooltip"
+                    id="resetZoomButton">Reset Zoom</button>
+            <button class="btn btn-secondary btn-sm"
+                    id="stepBackButton"
+                    data-translate="zoom-step-back"
+                    data-translate-title="zoom-step-back-tooltip">Step Back</button>
 
             <div class="form-check form-check-inline mb-0">
-              <input class="form-check-input" type="radio" id="toggleXLabelsPx" name="toggleXLabels" value="px" checked>
+              <input class="form-check-input" type="radio"
+                     id="toggleXLabelsPx" name="toggleXLabels"
+                     value="px" checked
+                     data-translate-title="X-px-tooltip">
               <label class="form-check-label" for="toggleXLabelsPx">
                 <span data-translate="X-px">X-axis Labels (px)</span>
               </label>
             </div>
 
             <div class="form-check form-check-inline mb-0">
-              <input class="form-check-input" type="radio" id="toggleXLabelsNm" name="toggleXLabels" value="nm">
+              <input class="form-check-input" type="radio"
+                     id="toggleXLabelsNm" name="toggleXLabels" value="nm"
+                     data-translate-title="X-nm-tooltip">
               <label class="form-check-label" for="toggleXLabelsNm">
                 <span data-translate="X-nm">X-axis Labels (nm)</span>
               </label>
             </div>
             <div class="d-flex align-items-center gap-2 ms-2">
               <label for="zoomLeftBorder" class="form-label mb-0">Zoom left border</label>
-              <input type="number" id="zoomLeftBorder" name="zoomLeftBorder" min="0" max="1280" step="1" value="0" class="form-control form-control-sm" style="width: 100px;">
+              <input type="number" id="zoomLeftBorder"
+                     name="zoomLeftBorder" min="0" max="1280" step="1" value="0"
+                     class="form-control form-control-sm"
+                     data-translate-title="zoom-left-border-tooltip"
+                     style="width: 100px;">
             </div>
           </div>
 
@@ -344,19 +368,24 @@
             <!-- Combined/R/G/B stacked -->
             <div class="d-flex flex-column gap-1">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="toggleCombined" checked>
-                <label class="form-check-label" data-translate="combined" for="toggleCombined">Combined</label>
+                <input class="form-check-input" type="checkbox"
+                       id="toggleCombined" checked
+                       data-translate-title="combined-graph-tooltip">
+                <label class="form-check-label" data-translate="combined-graph" for="toggleCombined">Combined</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="toggleR">
+                <input class="form-check-input" type="checkbox" id="toggleR"
+                       data-translate-title="Red-graph-tooltip">
                 <label class="form-check-label" for="toggleR">R</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="toggleG">
+                <input class="form-check-input" type="checkbox" id="toggleG"
+                       data-translate-title="Green-graph-tooltip">
                 <label class="form-check-label" for="toggleG">G</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="toggleB">
+                <input class="form-check-input" type="checkbox" id="toggleB"
+                       data-translate-title="Blue-graph-tooltip">
                 <label class="form-check-label" for="toggleB">B</label>
               </div>
             </div>
@@ -364,12 +393,15 @@
             <!-- Color Graph + Opacity -->
             <div class="d-flex flex-column gap-2 align-self-center">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="colorGraph">
+                <input class="form-check-input" data-translate-title="fill-graph-tooltip" type="checkbox" id="colorGraph">
                 <label class="form-check-label" data-translate="fill-graph" for="colorGraph">Color the Graph</label>
               </div>
               <div id="gradientOpacitySliderContainer" style="display: none;" class="d-flex align-items-center gap-2">
                 <label for="gradientOpacitySlider" data-translate="fill-opacity" class="form-label mb-0">Color Opacity</label>
-                <input type="range" class="form-range darker-slider w-auto" style="width: 150px;" id="gradientOpacitySlider" min="0.1" max="1" step="0.1" value="0.7">
+                <input type="range" class="form-range darker-slider w-auto"
+                       style="width: 150px;" id="gradientOpacitySlider"
+                       min="0.1" max="1" step="0.1" value="0.7"
+                       data-translate-title="fill-opacity-tooltip">
                 <span id="gradientOpacityValue">0.7</span>
               </div>
             </div>
@@ -377,12 +409,14 @@
             <!-- Toggle Peaks + Min Value -->
             <div class="d-flex flex-column gap-2 align-self-center">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="togglePeaksCheckbox">
+                <input class="form-check-input" data-translate-title="toggle-peaks-tooltip" type="checkbox" id="togglePeaksCheckbox">
                 <label class="form-check-label" data-translate="toggle-peaks" for="togglePeaksCheckbox">Toggle Peaks</label>
               </div>
               <div class="d-flex align-items-center gap-2">
                 <label for="peakSizeLower" class="form-label mb-0" data-translate="lower-bound">Lower bound</label>
-                <input type="number" id="peakSizeLower" value="1" min="1" max="255" style="width:60px;">
+                <input type="number" id="peakSizeLower"
+                       value="1" min="1" max="255" style="width:60px;"
+                       data-translate-title="lower-bound-tooltip">
               </div>
             </div>
           </div>
@@ -398,10 +432,12 @@
     <div id="sidebar-right" class="sidebar bg-sidebar hidden">
       <div class="image-loaded-wrapper small-camera-image-entry">
         <div class="image-controls">
-          <input type="radio" id="imageRadio0" onclick="checkRadio(0)" checked/>
+          <input type="radio" id="imageRadio0"
+                 data-translate-title="image-from-camera-tooltip"
+                 onclick="checkRadio(0)" checked/>
         </div>
         <div class="camera-image-text">
-          <span data-translate="imageFromCamera">Camera image</span>
+          <span data-translate="image-from-Camera">Camera image</span>
         </div>
       </div>
     </div>
@@ -416,7 +452,10 @@
     <div id="cameraRecordingIsOn" class="recording-toast">
       <div id="cameraRecordingIsOnWindows" class="container-sm bg-dark text-white rounded px-4 py-2 shadow">
         <span data-translate="recording-screenshots" class="mt-1">Recording screenshots...</span>
-        <button class="btn btn-sm btn-light ms-3" data-translate="cancel" onclick="stopOngoingRecording()">Cancel</button>
+        <button class="btn btn-sm btn-light ms-3"
+                data-translate="FLR-cancel-button"
+                data-translate-title="FLR-cancel-button-tooltip"
+                onclick="stopOngoingRecording()">Cancel</button>
       </div>
     </div>
 

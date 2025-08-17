@@ -141,14 +141,17 @@ function addImageElement(imageSrc, filename) {
     const radioButton = document.createElement("input");
     radioButton.id = `imageRadio${id}`;
     radioButton.type = "radio";
+    radioButton.dataset.translateTitle = "compare-loaded-image-tooltip";
     radioButton.onclick = function () {
         checkRadio(id);
     };
+
 
     const deleteButton = document.createElement("button");
     deleteButton.id = `imageDeleteButton${id}`;
     deleteButton.innerHTML = '&times;';
     deleteButton.classList.add("btn", "btn-sm", "btn-danger", "btn-secondary", "pb-0.5");
+    deleteButton.dataset.translateTitle = "remove-loaded-image-tooltip";
     deleteButton.onclick = function () {
         removeImageElement(id);
     };
@@ -189,6 +192,7 @@ function addImageElement(imageSrc, filename) {
     parent.appendChild(wrapper);
 
     updateLoadedImageStripeCanvases();
+    updateTextContent();
 }
 
 /**

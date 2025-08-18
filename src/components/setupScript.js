@@ -1,43 +1,37 @@
 /**
- * Changes the active settings screen on the sidebar
+ * Changes the active settings screen on the left sidebar
  */
 function changeSettingsScreen(changeTo) {
     const show = (id, display = 'block') => document.getElementById(id).style.display = display;
     const hide = (id) => show(id, 'none');
 
     const hideAll = () => {
+        hide('cameraMainWindow');
+
+        hide('cameraSettings')
         hide('graphWindowContainer');
-        hide('calibrationWindowContainer');
+
         hide('calibrationSettings');
-        hide('cameraSettingsWindow');
-        hide('videoMainWindow');
+        hide('calibrationWindowContainer');
+
         hide('cameraExposureWindow');
-        hide('changeToCalibrationButton');
-        hide('changeFromCalibrationButton');
-        hide('changeToLongExpoButton');
-        hide('changeFromLongExpoButton');
     };
 
     hideAll();
 
     if (changeTo === "Graph") {
+        show('cameraMainWindow');
+        show('cameraSettings', 'flex')
         show('graphWindowContainer');
-        show('cameraSettingsWindow');
-        show('videoMainWindow');
-        show('changeToCalibrationButton');
-        show('changeToLongExpoButton');
-        show('saveGraphDataButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
         changeDisplayScreen('graph');
-    } else if (changeTo === "Calibration") {
-        show('calibrationWindowContainer');
-        show('calibrationSettings', 'flex');
-        show('changeFromCalibrationButton');
-        show('changeToLongExpoButton');
 
-        hide('saveGraphDataButton');
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+    } else if (changeTo === "Calibration") {
+        show('calibrationSettings', 'flex');
+        show('calibrationWindowContainer');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
@@ -45,12 +39,9 @@ function changeSettingsScreen(changeTo) {
         resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
         resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
     } else if (changeTo === "LongExpo") {
+        show('cameraMainWindow');
+        show('cameraExposureWindow', 'flex');
         show('graphWindowContainer');
-        show('videoMainWindow');
-        show('cameraExposureWindow');
-        show('changeToCalibrationButton');
-        show('changeFromLongExpoButton');
-        show('saveGraphDataButton');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');

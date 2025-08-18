@@ -86,7 +86,7 @@
   "save-data-tooltip": "",
   "home-button-tooltip": "",
 
-  "camera-select-tooltip": "Otvoríte zoznam dostupných kamier",
+  "measuring-select-tooltip": "Otvoríte zoznam dostupných kamier",
   "loaded-image-filename-tooltip": "",
   "refresh-button-tooltip": "Obnovíte zoznam dostupných kamier",
   "pause-button-tooltip": "Pozastavíte nahrávanie kamery",

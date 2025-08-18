@@ -47,7 +47,7 @@
 
   "addCalPoints-button": "Pridať kalibračné body",
   "reset-button": "Resetovať",
-  "calibrationExportFilenamePlaceholder" : "Názov kalibračného súboru",
+  "calibration-export-filename-placeholder" : "Názov kalibračného súboru",
   "export-button": "Exportovať",
 
   "FLR-captures-count": "Počet snímok",

@@ -72,6 +72,7 @@ html, body {
 #cameraExposureWindow {
     flex-grow: 1;
     min-height: 0;
+    display: flex;
     flex-direction: column;
 }
 

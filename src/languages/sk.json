@@ -10,7 +10,7 @@
 
 
   "recording-title": "Nahrávanie",
-  "camera-button": "Kamera",
+  "measuring-button": "Meranie",
   "calibrate-button": "Kalibrovať",
   "FLR-button": "Snímkovo obmedzené nahrávanie",
   "save-data": "Uložiť dáta",
@@ -25,7 +25,7 @@
   "stop-comparison-button": "Skončiť porovnanie",
 
   "stripe-width": "Šírka pásika",
-  "stripe-place": "Miesto pruhu",
+  "stripe-place": "Miesto výberu",
   "adjust-exposure": "Nastaviť expozíciu",
 
   "reference-graph": "Referenčný graf",

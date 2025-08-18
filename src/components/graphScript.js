@@ -83,10 +83,12 @@ function draw() {
 function drawGraph() {
     const stripeWidth = getStripeWidth();
     const toggleStates = getToggleStates();
+
     toggleCombined = toggleStates.toggleCombined;
     toggleR = toggleStates.toggleR;
     toggleG = toggleStates.toggleG;
     toggleB = toggleStates.toggleB;
+
     fillArea = document.getElementById("colorGraph").checked;
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
     lineCtx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
@@ -186,25 +188,25 @@ function drawGraph() {
 
     if (toggleCombined) {
         drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, shouldHighlightCameraLine);
-        if (peaksToggled && maxima.length > 0 && shouldHighlightCameraLine) {
+        if (peaksToggled && maxima.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maxima, maxValue, 'black');
         }
     }
     if (toggleR) {
         drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, shouldHighlightCameraLine);
-        if (peaksToggled && maximaR.length > 0 && shouldHighlightCameraLine) {
+        if (peaksToggled && maximaR.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maximaR, maxValue, 'red');
         }
     }
     if (toggleG) {
         drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, shouldHighlightCameraLine);
-        if (peaksToggled && maximaG.length > 0 && shouldHighlightCameraLine) {
+        if (peaksToggled && maximaG.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maximaG, maxValue, 'green');
         }
     }
     if (toggleB) {
         drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, shouldHighlightCameraLine);
-        if (peaksToggled && maximaB.length > 0 && shouldHighlightCameraLine) {
+        if (peaksToggled && maximaB.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maximaB, maxValue, 'blue');
         }
     }
@@ -352,7 +354,6 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1) {
             maxima.push({ x: lastX, value: lastValue });
         }
     }
-
     return maxima;
 }
 
@@ -774,32 +775,52 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
     const width = graphCtx.canvas.width;
     const height = graphCtx.canvas.height;
 
-    const onlyR = toggleR && !toggleG && !toggleB;
-    const onlyG = !toggleR && toggleG && !toggleB;
-    const onlyB = !toggleR && !toggleG && toggleB;
+    if (toggleCombined) {
+        for (let x = 0; x < zoomRange; x++) {
+            const pxIndex = x * 4;
+            const r = pixels[pxIndex];
+            const g = pixels[pxIndex + 1];
+            const b = pixels[pxIndex + 2];
+            const maxVal = Math.max(r, g, b);
+            if (maxVal === 0) continue;
+
+            const leftX = Math.round(calculateXPosition(x, zoomRange, width));
+            const rightX = Math.round(
+                x < zoomRange - 1
+                    ? calculateXPosition(x + 1, zoomRange, width)
+                    : width - padding
+            );
+            const rectWidth = rightX - leftX;
+
+            const yLower = calculateYPosition(0, height, maxValue);
+            const yUpper = calculateYPosition(maxVal, height, maxValue);
+
+            graphCtx.fillStyle = `rgba(${r},${g},${b},${gradientOpacity})`;
+            graphCtx.fillRect(leftX, Math.floor(yUpper), rectWidth, Math.ceil(yLower - yUpper));
+        }
+        return;
+    }
 
     for (let x = 0; x < zoomRange; x++) {
         const pxIndex = x * 4;
-        let r = pixels[pxIndex];
-        let g = pixels[pxIndex + 1];
-        let b = pixels[pxIndex + 2];
+        const r = toggleR ? pixels[pxIndex] : 0;
+        const g = toggleG ? pixels[pxIndex + 1] : 0;
+        const b = toggleB ? pixels[pxIndex + 2] : 0;
 
-        let value, fillColor;
-        if (onlyR) {
-            value = r;
+        let maxVal = 0, fillColor = null;
+        if (toggleR && r >= g && r >= b) {
+            maxVal = r;
             fillColor = `rgba(${r},0,0,${gradientOpacity})`;
-        } else if (onlyG) {
-            value = g;
+        } else if (toggleG && g >= r && g >= b) {
+            maxVal = g;
             fillColor = `rgba(0,${g},0,${gradientOpacity})`;
-        } else if (onlyB) {
-            value = b;
+        } else if (toggleB && b >= r && b >= g) {
+            maxVal = b;
             fillColor = `rgba(0,0,${b},${gradientOpacity})`;
-        } else {
-            value = calculateGradient(pixels, x);
-            fillColor = `rgba(${r},${g},${b},${gradientOpacity})`;
         }
 
-        const y = calculateYPosition(value, height, maxValue);
+        if (maxVal === 0 || !fillColor) continue;
+
         const leftX = Math.round(calculateXPosition(x, zoomRange, width));
         const rightX = Math.round(
             x < zoomRange - 1
@@ -808,8 +829,11 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
         );
         const rectWidth = rightX - leftX;
 
+        const yLower = calculateYPosition(0, height, maxValue);
+        const yUpper = calculateYPosition(maxVal, height, maxValue);
+
         graphCtx.fillStyle = fillColor;
-        graphCtx.fillRect(leftX, Math.floor(y), rectWidth, Math.ceil(height - padding - y));
+        graphCtx.fillRect(leftX, Math.floor(yUpper), rectWidth, Math.ceil(yLower - yUpper));
     }
 }
 

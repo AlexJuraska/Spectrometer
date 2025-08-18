@@ -60,7 +60,9 @@ function switchLoadedImageSettings(filename = null) {
     select.style.display = filename === null ? 'block' : 'none';
 
     const exposureSettings = document.getElementById('cameraExposure');
-    exposureSettings.style.display = filename === null ? 'block' : 'none';
+    if (exposureSettings !== null) {
+        exposureSettings.style.display = filename === null ? 'block' : 'none';
+    }
 }
 
 /**

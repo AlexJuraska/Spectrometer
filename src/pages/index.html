@@ -14,11 +14,9 @@
 <div class="container-fluid min-vh-100 d-flex flex-column position-relative">
 
   <div class="position-absolute top-0 end-0 m-3"> <!-- id="languageContainer" -->
-    <select id="language" class="form-select form-select-md w-auto">
+    <select id="language" data-translate-title="language-select-tooltip" class="form-select form-select-md w-auto">
       <option value="en">English</option>
-<!--      <option value="es">Español</option>-->
       <option value="sk">Slovak</option>
-<!--      <option value="pt">Portugeese</option>-->
     </select>
     <script src="../components/languageScript.js"></script>
   </div>
@@ -27,8 +25,8 @@
   <div class="d-flex flex-column justify-content-center align-items-center flex-grow-1 text-center"> <!-- class="title-container" -->
     <h1 data-translate="index-title" class="fw-bold mb-4 display-3">SPECTROMETER</h1> <!-- class="title" -->
     <div class="d-flex gap-3">
-      <a data-translate="setup-button" href="recording.html?lang=en" class="btn btn-spectraGreen btn-primary btn-lg px-4.5 py-2.5">Start</a>
-      <a data-translate="tutorial-button" href="tutorial.html?lang=en" class="btn btn-spectraGreen btn-primary btn-lg px-4.5 py-2.5">How To</a>
+      <a data-translate="start-button" data-translate-title="start-button-tooltip" href="recording.html?lang=en" class="btn btn-spectraGreen btn-primary btn-lg px-4.5 py-2.5">Start</a>
+      <a data-translate="tutorial-button" data-translate-title="tutorial-button-tooltip" href="tutorial.html?lang=en" class="btn btn-spectraGreen btn-primary btn-lg px-4.5 py-2.5">How To</a>
     </div>
   </div>
 

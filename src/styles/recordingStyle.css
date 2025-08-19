@@ -24,6 +24,13 @@ html, body {
     display: block;
 }
 
+#cameraSettingsWindow {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
 #cameraSelect {
     text-align: center;
 }
@@ -44,7 +51,59 @@ html, body {
     border-radius: .25rem;
 }
 
+#miscMeasuringSettings {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+    margin: 0.5rem 0;   /* vertical spacing */
+    padding: 0.5rem;    /* optional inner padding */
+}
+
+#miscMeasuringSettings.scrollable {
+    background-color: rgba(0,0,0,0.05); /* slightly darker */
+    border-radius: 6px;                 /* optional, for visual separation */
+}
+
+#cameraSettingsNavButtons {
+    flex-shrink: 0;
+}
+
+#cameraSettings,
+#cameraExposureWindow {
+    flex-grow: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#input-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+#input-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.3rem;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+#input-header div {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
 #input-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -86,22 +145,6 @@ html, body {
     line-height: 1;
 }
 
-.input-header {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.3rem;
-    margin-bottom: 0.3rem;
-    width: calc(100% - 1.5rem - 0.3rem); /* Subtract button width + gap */
-    box-sizing: border-box;
-    padding-left: 0.2rem; /* Match input-pair padding if needed */
-}
-
-.input-header div {
-    text-align: center;
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
 /* ##### Sidebar sliding ##### */
 #appContainer {
     display: flex;
@@ -112,6 +155,9 @@ html, body {
 }
 
 #sidebar-left {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     width: 22vw;
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
     flex-shrink: 0;

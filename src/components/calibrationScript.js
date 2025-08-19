@@ -513,7 +513,6 @@ function drawCalibrationLine() {
         const px = i + 1;
         const nm = nMAxis[i];
 
-        // const inRange = nm >= rangeBeginY && nm <= rangeEndY; // Also removes the overhang on top and bottom
         const inRange = px >= rangeBeginX && px <= rangeEndX;
         const xScaled = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const yScaled = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);

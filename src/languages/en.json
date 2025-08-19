@@ -10,7 +10,7 @@
 
 
   "recording-title": "Recording",
-  "camera-button": "Camera",
+  "measuring-button": "Measuring",
   "calibrate-button": "Calibrate",
   "FLR-button": "Frame limited recording",
   "save-data": "Save Data",
@@ -80,7 +80,7 @@
   "maxNumberOfCalibrationPointsError" : "Maximum number of calibration points is 15!",
   "duplicateCalPointsError" : "Duplicate calibration points detected! Please ensure all points are unique.",
 
-  "camera-button-tooltip": "Opens controls for the camera, stripe and reference graph",
+  "measuring-button-tooltip": "Opens controls for the camera, stripe and reference graph",
   "calibrate-button-tooltip": "Opens controls for the calibration",
   "FLR-button-tooltip": "Opens controls for Frame limited recording",
   "save-data-tooltip": "Saves an image from the camera, of the graph as well as an excel file containing specific values of the graph",

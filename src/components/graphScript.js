@@ -64,7 +64,7 @@ function plotRGBLineFromCamera() {
         graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
         redrawGraphIfLoadedImage()
         matchGraphHeightWithDrawer();
-        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "None");
     });
 
     initializeZoomList();
@@ -955,7 +955,7 @@ document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
 /**
  * Resizes the canvas to fit the current window size
  */
-function resizeCanvasToDisplaySize(ctx, canvas, type) {
+function resizeCanvasToDisplaySize(ctx, canvas, redraw) {
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
 
@@ -967,13 +967,15 @@ function resizeCanvasToDisplaySize(ctx, canvas, type) {
 
     clearGraph(ctx, canvas);
 
-    if (type === "Calibration") {
+    if (redraw === "Calibration") {
         drawGridCalibration();
         drawCalibrationLine();
         drawCalibrationPoints();
-    } else if (type === "Divergence") {
+    } else if (redraw === "Divergence") {
         drawGridDivergence();
         drawDivergenceLine();
         drawDivergencePoints();
+    } else if (redraw === "Normal") {
+        draw();
     }
 }

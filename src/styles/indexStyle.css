@@ -47,3 +47,12 @@ body, html {
     top: 20px;
     right: 20px;
 }
+#version {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 1000;
+    color: rgba(87, 85, 85);
+}

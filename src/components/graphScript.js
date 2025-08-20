@@ -51,16 +51,20 @@ function plotRGBLineFromCamera() {
     lineCtx = lineCanvas.getContext('2d', { willReadFrequently: true });
     graphCanvas = document.getElementById('graphCanvas');
 
-    graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
-    graphCanvas.height = document.getElementById("graphWindowContainer").getBoundingClientRect().height;
+    const elementRect = document.getElementById("graphWindowContainer").getBoundingClientRect();
+
+    graphCanvas.width = elementRect.width;
+    graphCanvas.height = elementRect.height;
 
     graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
 
     const resizeObserver = new ResizeObserver(() => {
-        graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
-        graphCanvas.height = document.getElementById("graphWindowContainer").getBoundingClientRect().height;
+        graphCanvas.width = elementRect.width;
+        graphCanvas.height = elementRect.height;
         graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
         redrawGraphIfLoadedImage()
+        matchGraphHeightWithDrawer();
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
     });
 
     initializeZoomList();
@@ -223,7 +227,7 @@ function drawGraph() {
         const rectX = Math.min(dragStartX, dragEndX);
         const rectWidth = Math.abs(dragStartX - dragEndX);
         graphCtx.fillStyle = 'rgba(0, 0, 255, 0.2)';
-        graphCtx.fillRect(rectX, 30, rectWidth, graphCanvas.height - 60);
+        graphCtx.fillRect(rectX, 30, rectWidth, graphCanvas.getBoundingClientRect().height - 60);
     }
 }
 
@@ -411,11 +415,11 @@ function drawDottedLine(x, yStart, yEnd, color) {
  */
 function drawPeaks(maxima, maxValue, color) {
     const padding = 30;
-    const height = graphCanvas.height;
+    const height = graphCanvas.getBoundingClientRect().height;
     const [zoomStart, zoomEnd] = getZoomRange(getElementWidth(videoElement));
     maxima.forEach(max => {
         if (max.x >= zoomStart && max.x <= zoomEnd) {
-            const x = calculateXPosition(max.x - zoomStart, zoomEnd - zoomStart, graphCanvas.width);
+            const x = calculateXPosition(max.x - zoomStart, zoomEnd - zoomStart, graphCanvas.getBoundingClientRect().width);
             const y = calculateYPosition(max.value, height, maxValue);
             drawDottedLine(x, height - padding, y, color);
             drawPeakLabel(x, y, max.x);
@@ -510,7 +514,7 @@ function setupEventListeners() {
     addEventListener(graphCanvas, 'mousedown', (event) => {
         isDragging = true;
         const rect = graphCanvas.getBoundingClientRect();
-        dragStartX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.width - 30));
+        dragStartX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.getBoundingClientRect().width - 30));
         dragEndX = dragStartX;
         redrawGraphIfLoadedImage()
     });
@@ -519,10 +523,10 @@ function setupEventListeners() {
         const rect = graphCanvas.getBoundingClientRect();
 
         if (isDragging) {
-            dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.width - 30));
+            dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.getBoundingClientRect().width - 30));
 
             if (zoomList.length !== 0) {
-                dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.width - 30));
+                dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.getBoundingClientRect().width - 30));
             }
         }
         redrawGraphIfLoadedImage(true);
@@ -610,7 +614,7 @@ function redrawGraphIfLoadedImage(invalidatePeaks = false) {
     }
     if (videoElement instanceof HTMLImageElement) {
         generateSpectrumList(getElementWidth(videoElement));
-        draw();
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
     }
 }
 
@@ -638,9 +642,9 @@ function updateZoomRange(newZoomStart, newZoomEnd) {
  * Clears the graph canvas
  */
 function clearGraph(graphCtx, graphCanvas) {
-    graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+    graphCtx.clearRect(0, 0, graphCanvas.getBoundingClientRect().width, graphCanvas.getBoundingClientRect().height);
     graphCtx.fillStyle = 'white';
-    graphCtx.fillRect(0, 0, graphCanvas.width, graphCanvas.height);
+    graphCtx.fillRect(0, 0, graphCanvas.getBoundingClientRect().width, graphCanvas.getBoundingClientRect().height);
 }
 
 /**
@@ -670,8 +674,8 @@ function niceStep(range, maxLabels) {
  * Draws the grid on the graph canvas
  */
 function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
-    const width = graphCanvas.width;
-    const height = graphCanvas.height;
+    const width = graphCanvas.getBoundingClientRect().width;
+    const height = graphCanvas.getBoundingClientRect().height;
     const padding = 30;
 
     let maxValue = calculateMaxValue(pixels);
@@ -682,7 +686,7 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
     graphCtx.beginPath();
     graphCtx.strokeStyle = '#e0e0e0';
     graphCtx.lineWidth = 0.5;
-    graphCtx.font = '14px Arial';
+    graphCtx.font = '12px Arial';
     graphCtx.fillStyle = 'black';
 
     for (let yValue = 0; yValue <= maxValue; yValue += yStep) {
@@ -749,8 +753,8 @@ function generateSpectrumList(pixelWidth) {
 function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, isSelectedComparison = false) {
     const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
     const zoomRange = zoomEnd - zoomStart;
-    const width = graphCtx.canvas.width;
-    const height = graphCtx.canvas.height;
+    const width = graphCanvas.getBoundingClientRect().width;
+    const height = graphCanvas.getBoundingClientRect().height;
 
     graphCtx.beginPath();
     for (let x = 0; x < zoomRange; x++) {
@@ -780,8 +784,8 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
     const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
     const zoomRange = zoomEnd - zoomStart;
     const padding = 30;
-    const width = graphCtx.canvas.width;
-    const height = graphCtx.canvas.height;
+    const width = graphCanvas.getBoundingClientRect().width;
+    const height = graphCanvas.getBoundingClientRect().height;
 
     if (toggleCombined) {
         for (let x = 0; x < zoomRange; x++) {
@@ -971,7 +975,5 @@ function resizeCanvasToDisplaySize(ctx, canvas, type) {
         drawGridDivergence();
         drawDivergenceLine();
         drawDivergencePoints();
-    } else if (type === "Normal") {
-        plotRGBLineFromCamera();
     }
 }

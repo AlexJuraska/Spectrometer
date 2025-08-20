@@ -51,16 +51,14 @@ function plotRGBLineFromCamera() {
     lineCtx = lineCanvas.getContext('2d', { willReadFrequently: true });
     graphCanvas = document.getElementById('graphCanvas');
 
-    const elementRect = document.getElementById("graphWindowContainer").getBoundingClientRect();
-
-    graphCanvas.width = elementRect.width;
-    graphCanvas.height = elementRect.height;
+    graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
+    graphCanvas.height = document.getElementById("graphWindowContainer").getBoundingClientRect().height;
 
     graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
 
     const resizeObserver = new ResizeObserver(() => {
-        graphCanvas.width = elementRect.width;
-        graphCanvas.height = elementRect.height;
+        graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
+        graphCanvas.height = document.getElementById("graphWindowContainer").getBoundingClientRect().height;
         graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
         redrawGraphIfLoadedImage()
         matchGraphHeightWithDrawer();

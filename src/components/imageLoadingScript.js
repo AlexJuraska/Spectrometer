@@ -34,6 +34,7 @@ function loadImageIntoCamera() {
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;
                 videoElement.style.display = 'block';
+                redrawGraphIfLoadedImage(true);
                 videoElement.onload = () => {
                     syncCanvasToVideo();
                     needToRecalculateMaxima = true;
@@ -292,6 +293,7 @@ function updateLoadedImageStripeCanvases() {
         ctx.stroke();
     }
     needToRecalculateMaxima = true;
+    redrawGraphIfLoadedImage(true);
     //TODO The width is not correct, position *should* be correct
 }
 

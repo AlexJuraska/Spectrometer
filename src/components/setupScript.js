@@ -27,17 +27,12 @@ function changeSettingsScreen(changeTo) {
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
         changeDisplayScreen('graph');
-
-        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
     } else if (changeTo === "Calibration") {
         show('calibrationSettings', 'flex');
         show('calibrationWindowContainer');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
-
-        resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
-        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
     } else if (changeTo === "LongExpo") {
         show('cameraMainWindow');
         show('cameraExposureWindow', 'flex');
@@ -47,6 +42,12 @@ function changeSettingsScreen(changeTo) {
         changeDisplayScreen('settings');
         changeDisplayScreen('graph');
     }
+
+    setTimeout(() => {
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+        resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
+    }, 300);
 }
 
 /**

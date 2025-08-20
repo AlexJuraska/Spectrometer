@@ -27,17 +27,12 @@ function changeSettingsScreen(changeTo) {
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
         changeDisplayScreen('graph');
-
-        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
     } else if (changeTo === "Calibration") {
         show('calibrationSettings', 'flex');
         show('calibrationWindowContainer');
 
         changeDisplayScreen('main');
         changeDisplayScreen('settings');
-
-        resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
-        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
     } else if (changeTo === "LongExpo") {
         show('cameraMainWindow');
         show('cameraExposureWindow', 'flex');
@@ -47,6 +42,12 @@ function changeSettingsScreen(changeTo) {
         changeDisplayScreen('settings');
         changeDisplayScreen('graph');
     }
+
+    setTimeout(() => {
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+        resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
+    }, 300);
 }
 
 /**
@@ -99,7 +100,7 @@ function changeDisplayScreen(action) {
         bottomDrawer.classList.toggle('hidden');
     }
 
-    matchGraphHeightWithDrawer();
+    setTimeout(matchGraphHeightWithDrawer, 300);
     document.activeElement.blur();
 }
 
@@ -253,4 +254,14 @@ hoverZoneRight.addEventListener('mouseleave', () => {
 handleRight.addEventListener('mouseleave', () => {
     handleRight.style.opacity = '0';
     handleRight.style.pointerEvents = 'none';
+});
+
+window.addEventListener("resize", () => {
+    setTimeout(() => {
+        resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+        resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
+        resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
+        changeStripeWidth(0);
+        matchGraphHeightWithDrawer();
+    }, 300);
 });

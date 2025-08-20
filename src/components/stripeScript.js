@@ -73,14 +73,17 @@ function convertCanvasToActualValue(value) {
  * Updates the width of the stripe based on the value
  */
 function updateStripeWidth() {
-    var y = yPercentage * stripeGraphCanvas.height;
+
+    const rect = stripeGraphCanvas.getBoundingClientRect();
+
+    let y = yPercentage * rect.height;
     if (y < stripeWidth/2){
         y = stripeWidth/2;
-        yPercentage = y / stripeGraphCanvas.height;
+        yPercentage = y / rect.height;
     }
-    else if (y + stripeWidth/2 > stripeGraphCanvas.height){
-        y = stripeGraphCanvas.height - stripeWidth/2;
-        yPercentage = y / stripeGraphCanvas.height;
+    else if (y + stripeWidth/2 > rect.height){
+        y = rect.height - stripeWidth/2;
+        yPercentage = y / rect.height;
     }
     drawSelectionLine();
     updateLoadedImageStripeCanvases();
@@ -176,11 +179,11 @@ function changeStripeLabels(value) {
  * // Draws the yellow selection line knows as Stripe
  */
 function drawSelectionLine() {
-    stripeGraphCtx.clearRect(0, 0, stripeGraphCanvas.width, stripeGraphCanvas.height); // Clear the canvas
-    stripeGraphCtx.beginPath(); // Start a new path to avoid connecting lines
-    stripeGraphCtx.strokeStyle = "rgba(255, 255, 0, 0.5)"; // Set line color to yellow
+    stripeGraphCtx.clearRect(0, 0, stripeGraphCanvas.width, stripeGraphCanvas.height);
+    stripeGraphCtx.beginPath();
+    stripeGraphCtx.strokeStyle = "rgba(255, 255, 0, 0.5)";
     stripeGraphCtx.lineWidth = getStripeWidth();
-    var y = yPercentage * stripeGraphCanvas.height; // Calculate Y-coordinate based on percentage
+    var y = yPercentage * stripeGraphCanvas.height;
     stripeGraphCtx.moveTo(0, y);
     stripeGraphCtx.lineTo(stripeGraphCanvas.width, y);
     stripeGraphCtx.stroke();
@@ -202,20 +205,18 @@ function syncCanvasToVideo() {
 }
 
 
-// Canvas for the camera window
 var stripeGraphCanvas = document.getElementById("cameraWindowCanvasRecording");
 
-// Unless the Canvas is present, nothing will be done with it
 var stripeGraphCtx = stripeGraphCanvas.getContext("2d", { willReadFrequently: true });
 var yPercentage = 0.5; // Global variable representing Y position as a percentage (default to 50%)
 var stripeWidth = 1;
 var videoWindow = document.getElementById("videoMainWindow");
 
-// Event listener for mouse clicks on the canvas
 stripeGraphCanvas.addEventListener("click", function (event) {
-    // stripeGraphCanvas.height = parseInt(getComputedStyle(videoWindow).height,10);
-    var rect = stripeGraphCanvas.getBoundingClientRect(); // Get canvas position
-    var y = event.clientY - rect.top; // Calculate Y within canvas
+    var rect = stripeGraphCanvas.getBoundingClientRect();
+
+    const scaleY = stripeGraphCanvas.height / rect.height;
+    var y = (event.clientY - rect.top) * scaleY;
 
     if (y < getStripeWidth()/2){
         y = getStripeWidth()/2;
@@ -224,7 +225,7 @@ stripeGraphCanvas.addEventListener("click", function (event) {
         y = stripeGraphCanvas.height - getStripeWidth()/2;
     }
 
-    yPercentage = y / stripeGraphCanvas.height; // Update global variable as percentage
+    yPercentage = y / stripeGraphCanvas.height;
 
     const stripePlacementSlider = document.getElementById("stripePlacementRange");
     const stripePlacementValue = document.getElementById("stripePlacementValue");
@@ -232,7 +233,7 @@ stripeGraphCanvas.addEventListener("click", function (event) {
     stripePlacementSlider.value = convertCanvasToActualValue(y);
     stripePlacementValue.textContent = getStripePositionRangeText();
 
-    drawSelectionLine(); // Redraw line at the new position
+    drawSelectionLine();
     updateLoadedImageStripeCanvases();
     if (videoElement) {
         redrawGraphIfLoadedImage(true);
@@ -243,5 +244,4 @@ window.addEventListener("load", syncCanvasToVideo);
 window.addEventListener("resize", syncCanvasToVideo);
 videoElement.addEventListener("loadedmetadata", syncCanvasToVideo);
 
-// Initial draw of the line at the default percentage
 drawSelectionLine();

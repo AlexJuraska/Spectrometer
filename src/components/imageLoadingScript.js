@@ -34,6 +34,7 @@ function loadImageIntoCamera() {
                 videoElement = document.getElementById('cameraImage');
                 videoElement.src = e.target.result;
                 videoElement.style.display = 'block';
+                redrawGraphIfLoadedImage(true);
                 videoElement.onload = () => {
                     syncCanvasToVideo();
                     needToRecalculateMaxima = true;
@@ -77,18 +78,9 @@ function loadMultipleImages() {
 
     input.addEventListener('change', function(event) {
         const files = Array.from(event.target.files);
+        const index = Math.min(maxLoadableImages, files.length);
 
-        const uniqueMap = new Map();
-
-        for (const file of files) {
-            const uniqueKey = file.name;
-            if (!uniqueMap.has(uniqueKey)) {
-                uniqueMap.set(uniqueKey, file);
-                if (uniqueMap.size === maxLoadableImages+1) break;
-            }
-        }
-
-        const uniqueFiles = Array.from(uniqueMap.values());
+        const uniqueFiles = files.slice(0,index);
 
         for (const file of uniqueFiles) {
             const fileReader = new FileReader();
@@ -181,6 +173,9 @@ function addImageElement(imageSrc, filename) {
     image.id = `loadedImage${id}`
     image.classList.add("loaded-image");
     image.src = imageSrc;
+    image.onload = () => {
+        updateLoadedImageStripeCanvases();
+    };
 
     const stripeCanvas = document.createElement("canvas");
     stripeCanvas.id = `loadedImageStripeCanvas${id}`;
@@ -238,6 +233,7 @@ function removeImageElement(loadedImageId) {
     loadedImageCounter--;
     if (loadedImageCounter === 0) {
         checkedComparisonId = null;
+        removeLoadedImages();
     }
 }
 
@@ -297,6 +293,7 @@ function updateLoadedImageStripeCanvases() {
         ctx.stroke();
     }
     needToRecalculateMaxima = true;
+    redrawGraphIfLoadedImage(true);
     //TODO The width is not correct, position *should* be correct
 }
 
@@ -309,10 +306,10 @@ function updateLoadedImageStripeData(imageId) {
 
     const image = document.getElementById(`loadedImage${imageId}`);
 
-    const tempCanvas = document.createElement('canvas');
+    const tempCanvas = createLineCanvas();
     const tempCtx = tempCanvas.getContext('2d');
 
-    const startY = getElementWidth(image) * yPercentage - stripeWidth / 2;
+    const startY = getElementHeight(image) * yPercentage - stripeWidth / 2;
     tempCtx.drawImage(image, 0, startY, getElementWidth(image), stripeWidth, 0, 0, getElementWidth(image), stripeWidth);
 
     let pixels = tempCtx.getImageData(0, 0, getElementWidth(image), stripeWidth).data;

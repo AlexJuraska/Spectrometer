@@ -957,11 +957,6 @@ function checkForPointSelectionHover(event, type) {
     }
 }
 
-window.addEventListener("resize", () => {
-    resizeCanvasToDisplaySize(graphCtxCalibration, graphCanvasCalibration, "Calibration");
-    resizeCanvasToDisplaySize(graphCtxDivergence, graphCanvasDivergence, "Divergence");
-    changeStripeWidth(0);
-});
 
 initializeCalibration();
 drawGridCalibration();

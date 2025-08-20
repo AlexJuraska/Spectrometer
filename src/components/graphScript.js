@@ -25,6 +25,7 @@ let toggleR = false;
 let toggleG = false;
 let toggleB = false;
 let fillArea = false;
+let lineCanvas;
 
 let graphCanvas = document.getElementById('graphCanvas');
 let graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
@@ -46,7 +47,7 @@ function plotRGBLineFromCamera() {
         animationId = null;
     }
 
-    let lineCanvas = createLineCanvas();
+    lineCanvas = createLineCanvas();
     lineCtx = lineCanvas.getContext('2d', { willReadFrequently: true });
     graphCanvas = document.getElementById('graphCanvas');
 
@@ -91,13 +92,20 @@ function drawGraph() {
 
     fillArea = document.getElementById("colorGraph").checked;
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
-    lineCtx.drawImage(videoElement, 0, startY, getElementWidth(videoElement), stripeWidth, 0, 0, getElementWidth(videoElement), stripeWidth);
-
-    let pixels = lineCtx.getImageData(0, 0, getElementWidth(videoElement), stripeWidth).data;
     let pixelWidth = getElementWidth(videoElement);
+
+
+    lineCanvas.width = pixelWidth;
+    lineCanvas.height = stripeWidth;
+
+    lineCtx.drawImage(videoElement, 0, startY, pixelWidth, stripeWidth, 0, 0, pixelWidth, stripeWidth);
+    let imageData = lineCtx.getImageData(0, 0, pixelWidth, stripeWidth);
+    let pixels = imageData.data;
 
     if (stripeWidth > 1) {
         pixels = averagePixels(pixels, pixelWidth);
+    }
+    else {
     }
 
     if (captureReferenceGraph) {

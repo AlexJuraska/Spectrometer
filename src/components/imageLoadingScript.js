@@ -172,6 +172,9 @@ function addImageElement(imageSrc, filename) {
     image.id = `loadedImage${id}`
     image.classList.add("loaded-image");
     image.src = imageSrc;
+    image.onload = () => {
+        updateLoadedImageStripeCanvases();
+    };
 
     const stripeCanvas = document.createElement("canvas");
     stripeCanvas.id = `loadedImageStripeCanvas${id}`;
@@ -229,6 +232,7 @@ function removeImageElement(loadedImageId) {
     loadedImageCounter--;
     if (loadedImageCounter === 0) {
         checkedComparisonId = null;
+        removeLoadedImages();
     }
 }
 

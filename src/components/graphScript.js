@@ -561,7 +561,7 @@ function setupEventListeners() {
 
         const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
         const zoomRange = zoomEnd - zoomStart;
-        const step = Math.ceil(zoomRange / 25); // original behavior
+        const step = Math.ceil(zoomRange / 25);
 
         if (event.key === 'ArrowLeft') {
             moveZoom(-step);
@@ -777,7 +777,7 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
         const maxNm = Math.floor(getWaveLengthByPx(zoomEnd - 1));
         const nmRange = maxNm - minNm;
         const maxLabels = 15;
-        const nmStep = Math.max(1, Math.round(niceStep(nmRange, maxLabels))); // Ensure integer step
+        const nmStep = Math.max(1, Math.round(niceStep(nmRange, maxLabels)));
 
         for (let nm = Math.ceil(minNm / nmStep) * nmStep; nm <= maxNm; nm += nmStep) {
             const px = getPxByWaveLengthBisection(nm);
@@ -785,7 +785,7 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
                 const x = calculateXPosition(px - zoomStart, zoomEnd - zoomStart, width);
                 graphCtx.moveTo(x, padding);
                 graphCtx.lineTo(x, height - padding);
-                graphCtx.fillText(Math.round(nm).toString(), x - 10, height - 5); // Round label
+                graphCtx.fillText(Math.round(nm).toString(), x - 10, height - 5);
             }
         }
     } else {

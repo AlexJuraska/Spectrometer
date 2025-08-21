@@ -67,7 +67,6 @@ function addInputPair() {
     const div = document.createElement("div");
     div.classList.add("input-pair")
 
-    // Px input
     const inputPx = document.createElement("input");
     inputPx.id = `point${inputBoxCounter}px`;
     inputPx.type = "number";
@@ -75,7 +74,6 @@ function addInputPair() {
     inputPx.classList.add("form-control-sm");
     inputPx.dataset.translateTitle = "calPointPair-px-input-tooltip";
 
-    // Nm input
     const inputNm = document.createElement("input");
     inputNm.id = `point${inputBoxCounter}nm`;
     inputNm.type = "number";
@@ -83,7 +81,6 @@ function addInputPair() {
     inputNm.classList.add("form-control-sm");
     inputNm.dataset.translateTitle = "calPointPair-nm-input-tooltip";
 
-    // Point delete button
     const deleteButton = document.createElement("button");
     deleteButton.id = `deleteButton${inputBoxCounter}`;
     deleteButton.innerHTML = '&times;';
@@ -101,7 +98,6 @@ function addInputPair() {
 
     addInputPairListener(div);
 
-    // Sets the labels for the new pair
     updateTextContent();
 
     if (inputBoxCounter > minInputBoxNumber) {
@@ -299,7 +295,6 @@ function getPxByWaveLengthBisection(targetNm) {
         return getWaveLengthByPx(px) - targetNm;
     }
 
-    // Ensure the function changes sign in the interval
     if (f(left) * f(right) > 0) return null;
 
     for (let i = 0; i < maxIter; i++) {

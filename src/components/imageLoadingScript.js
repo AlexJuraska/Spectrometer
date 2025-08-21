@@ -24,6 +24,7 @@ function loadImageIntoCamera() {
                     const tracks = stream.getTracks();
                     tracks.forEach(track => track.stop());
                     videoElement.srcObject = null;
+                    console.log('Camera stream stopped');
                 }
 
                 switchLoadedImageSettings(file.name);
@@ -32,14 +33,13 @@ function loadImageIntoCamera() {
                 document.getElementById("pauseVideoButton").style.visibility = "hidden";
                 document.getElementById("playVideoButton").style.visibility = "visible";
                 videoElement = document.getElementById('cameraImage');
+                videoElement.onload = () => {
+                    console.log('Loaded image into camera window');
+                    initializeZoomList();
+                    redrawGraphIfLoadedImage(true);
+                };
                 videoElement.src = e.target.result;
                 videoElement.style.display = 'block';
-                redrawGraphIfLoadedImage(true);
-                videoElement.onload = () => {
-                    syncCanvasToVideo();
-                    needToRecalculateMaxima = true;
-                    plotRGBLineFromCamera();
-                };
             };
             reader.readAsDataURL(file);
         }
@@ -109,6 +109,9 @@ function removeLoadedImages() {
 
     document.getElementById("loadMultipleImagesButton").style.visibility = "visible";
     document.getElementById("removeMultipleImagesButton").style.visibility = "hidden";
+    comparisonGraph = [];
+    checkedComparisonId = null;
+    needToRecalculateMaxima = true;
 }
 
 /**
@@ -210,7 +213,7 @@ function checkRadio(radioId) {
         }
     }
     needToRecalculateMaxima = true;
-    redrawGraphIfLoadedImage();
+    redrawGraphIfLoadedImage(true);
     // TODO Functionality for radioId - select the image as videoElement
 }
 
@@ -226,7 +229,7 @@ function removeImageElement(loadedImageId) {
     const element = document.getElementById(`loadedImageWrapper${loadedImageId}`);
 
     parent.removeChild(element);
-    delete comparisonGraph[loadedImageId-1];
+    comparisonGraph.splice(loadedImageId-1, 1);
 
     adjustForRemovedId(loadedImageId);
 
@@ -254,6 +257,9 @@ function adjustForRemovedId(removedId) {
         let wrapper = document.getElementById(`loadedImageWrapper${i}`);
         wrapper.id = `loadedImageWrapper${i-1}`;
 
+        wrapper = document.getElementById(`loadedImageWrapper${i-1}`);
+        wrapper.style.borderColor = comparisonColors[i-2];
+
         let deleteButton = document.getElementById(`imageDeleteButton${i}`);
         deleteButton.id = `imageDeleteButton${i-1}`;
         deleteButton.onclick = function () { removeImageElement(i-1); };
@@ -268,7 +274,6 @@ function adjustForRemovedId(removedId) {
         let stripeCanvas = document.getElementById(`loadedImageStripeCanvas${i}`);
         stripeCanvas.id = `loadedImageStripeCanvas${i-1}`;
 
-        comparisonGraph[i-1] = comparisonGraph[i];  // Shifts the graphs to account for the removed one, has a color problem
     }
 }
 

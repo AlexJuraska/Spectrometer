@@ -287,6 +287,36 @@ function getWaveLengthByPx(pixel) {
     return waveLength;
 }
 
+function getPxByWaveLengthBisection(targetNm) {
+    if (polyFitCoefficientsArray.length === 0) return null;
+
+    let left = rangeBeginX;
+    let right = rangeEndX;
+    let tol = 1e-4;
+    let maxIter = 50;
+
+    function f(px) {
+        return getWaveLengthByPx(px) - targetNm;
+    }
+
+    // Ensure the function changes sign in the interval
+    if (f(left) * f(right) > 0) return null;
+
+    for (let i = 0; i < maxIter; i++) {
+        let mid = (left + right) / 2;
+        let fMid = f(mid);
+
+        if (Math.abs(fMid) < tol) return Math.round(mid);
+
+        if (f(left) * fMid < 0) {
+            right = mid;
+        } else {
+            left = mid;
+        }
+    }
+    return Math.round((left + right) / 2);
+}
+
 /**
  * Deletes the content of polyFitCoefficientsArray, calibrationData, pixelCalPoints, nmCalPoints before saving new values
  */

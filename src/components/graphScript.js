@@ -60,9 +60,9 @@ function plotRGBLineFromCamera() {
         graphCanvas.width = document.getElementById("graphWindowContainer").getBoundingClientRect().width;
         graphCanvas.height = document.getElementById("graphWindowContainer").getBoundingClientRect().height;
         graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
-        redrawGraphIfLoadedImage()
         matchGraphHeightWithDrawer();
         resizeCanvasToDisplaySize(graphCtx, graphCanvas, "None");
+        redrawGraphIfLoadedImage();
     });
 
     initializeZoomList();
@@ -95,7 +95,6 @@ function drawGraph() {
     fillArea = document.getElementById("colorGraph").checked;
     const startY = getElementHeight(videoElement) * getYPercentage() - stripeWidth / 2;
     let pixelWidth = getElementWidth(videoElement);
-
 
     lineCanvas.width = pixelWidth;
     lineCanvas.height = stripeWidth;
@@ -139,7 +138,6 @@ function drawGraph() {
     let [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
 
     if (zoomList.length !== 0 && (zoomEnd - zoomStart) >= 2) {
-        pixels = pixels.slice(zoomStart * 4, zoomEnd * 4);
         pixelWidth = zoomEnd - zoomStart;
     }
 
@@ -152,10 +150,9 @@ function drawGraph() {
         for (let i = 0; i < referenceGraph.length; i++) {
             let [tempPixels, tempPixelWidth] = referenceGraph[i];
             if (zoomList.length !== 0) {
-                tempPixels = tempPixels.slice(zoomStart * 4, zoomEnd * 4);
                 tempPixelWidth = zoomEnd - zoomStart;
             }
-            drawLine(graphCtx, tempPixels, tempPixelWidth, referenceColors[i % referenceColors.length], -1, maxValue);
+            drawLine(graphCtx, tempPixels, tempPixelWidth, referenceColors[i % referenceColors.length], -1, maxValue, false, zoomStart, zoomEnd);
         }
     }
 
@@ -164,15 +161,9 @@ function drawGraph() {
             if (comparisonGraph[i]) {
                 let [tempPixels, tempPixelWidth] = comparisonGraph[i];
                 if (zoomList.length !== 0) {
-                    tempPixels = tempPixels.slice(zoomStart * 4, zoomEnd * 4);
                     tempPixelWidth = zoomEnd - zoomStart;
                 }
-                if (i === getCheckedComparisonId()) {
-                    drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue, true);
-                }
-                else {
-                    drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue);
-                }
+                drawLine(graphCtx, tempPixels, tempPixelWidth, comparisonColors[i % comparisonColors.length], -1, maxValue, i === getCheckedComparisonId(), zoomStart, zoomEnd);
             }
         }
         const comparisonGraphPeakColor = comparisonColors[getCheckedComparisonId()];
@@ -188,34 +179,29 @@ function drawGraph() {
             drawGradient(graphCtx, pixels, pixelWidth, maxValue);
         }
     }
-    // console.log(fillArea);
-    // console.log(toggleCombined);
-    // console.log(toggleR);
-    // console.log(toggleG);
-    // console.log(toggleB);
     let peaksToggled = document.getElementById('togglePeaksCheckbox').checked;
     const shouldHighlightCameraLine = getCheckedComparisonId() === null && comparisonGraph.length !== 0;
 
     if (toggleCombined) {
-        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, shouldHighlightCameraLine);
+        drawLine(graphCtx, pixels, pixelWidth, 'black', -1, maxValue, shouldHighlightCameraLine, zoomStart, zoomEnd);
         if (peaksToggled && maxima.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maxima, maxValue, 'black');
         }
     }
     if (toggleR) {
-        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, shouldHighlightCameraLine);
+        drawLine(graphCtx, pixels, pixelWidth, 'red', 0, maxValue, shouldHighlightCameraLine, zoomStart, zoomEnd);
         if (peaksToggled && maximaR.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maximaR, maxValue, 'red');
         }
     }
     if (toggleG) {
-        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, shouldHighlightCameraLine);
+        drawLine(graphCtx, pixels, pixelWidth, 'green', 1, maxValue, shouldHighlightCameraLine, zoomStart, zoomEnd);
         if (peaksToggled && maximaG.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maximaG, maxValue, 'green');
         }
     }
     if (toggleB) {
-        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, shouldHighlightCameraLine);
+        drawLine(graphCtx, pixels, pixelWidth, 'blue', 2, maxValue, shouldHighlightCameraLine, zoomStart, zoomEnd);
         if (peaksToggled && maximaB.length > 0 && (shouldHighlightCameraLine || !isComparisonChecked)) {
             drawPeaks(maximaB, maxValue, 'blue');
         }
@@ -476,6 +462,12 @@ function setupEventListeners() {
     }
 
     addEventListener(document.getElementById('togglePeaksCheckbox'), 'change', () => {
+        if (!document.getElementById('togglePeaksCheckbox').checked) {
+            maxima = [];
+            maximaR = [];
+            maximaG = [];
+            maximaB = [];
+        }
         redrawGraphIfLoadedImage(true);
     });
 
@@ -544,26 +536,6 @@ function setupEventListeners() {
         });
     });
 
-    document.addEventListener('keydown', (event) => {
-        if (zoomList.length === 0) return;
-
-        const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
-        const elementWidth = getElementWidth(videoElement);
-        const zoomRange = zoomEnd - zoomStart;
-        const step = Math.ceil(zoomRange / 25);
-        console.log(zoomRange, step)
-
-        if (event.key === 'ArrowLeft') {
-            const newZoomStart = Math.max(0, zoomStart - step);
-            const newZoomEnd = Math.min(elementWidth, newZoomStart + zoomRange);
-            updateZoomRange(newZoomStart, newZoomEnd);
-        } else if (event.key === 'ArrowRight') {
-            const newZoomEnd = Math.min(elementWidth, zoomEnd + step);
-            const newZoomStart = Math.max(0, newZoomEnd - zoomRange);
-            updateZoomRange(newZoomStart, newZoomEnd);
-        }
-    });
-
     document.getElementById('colorGraph').addEventListener('change', function () {
         const sliderContainer = document.getElementById('gradientOpacitySliderContainer');
         sliderContainer.style.display = this.checked ? 'block' : 'none';
@@ -579,6 +551,31 @@ function setupEventListeners() {
     document.getElementById('peakSizeLower').addEventListener("input", () => {
         setPeakBounds();
         redrawGraphIfLoadedImage(true);
+    });
+
+    document.getElementById('stepLeftButton').addEventListener('click', () => moveZoom(-1));
+    document.getElementById('stepRightButton').addEventListener('click', () => moveZoom(1));
+
+    document.addEventListener('keydown', (event) => {
+        if (zoomList.length === 0) return;
+
+        const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
+        const zoomRange = zoomEnd - zoomStart;
+        const step = Math.ceil(zoomRange / 25);
+
+        if (event.key === 'ArrowLeft') {
+            moveZoom(-step);
+        } else if (event.key === 'ArrowRight') {
+            moveZoom(step);
+        }
+    });
+
+    document.getElementById('zoomScroller').addEventListener('input', (e) => {
+        if (zoomList.length === 0) return;
+        const zoomRange = zoomList[zoomList.length - 1][1] - zoomList[zoomList.length - 1][0];
+        const newStart = Number(e.target.value);
+        const newEnd = newStart + zoomRange;
+        updateZoomRange(newStart, newEnd);
     });
 }
 
@@ -613,18 +610,76 @@ function redrawGraphIfLoadedImage(invalidatePeaks = false) {
     if (videoElement instanceof HTMLImageElement) {
         generateSpectrumList(getElementWidth(videoElement));
         resizeCanvasToDisplaySize(graphCtx, graphCanvas, "Normal");
+        stripeGraphCanvas.height = videoElement.naturalHeight;
+        stripeGraphCanvas.width = videoElement.naturalWidth;
+        drawSelectionLine();
     }
 }
 
-//TODO dokoncit to, som unaveny for this
-function updateZoomLeftBorderMax() {
-    const zoomLeftBorder = document.getElementById('zoomLeftBorder');
+function moveZoom(step) {
+    if (zoomList.length === 0) return;
+
+    let [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
+    const zoomRange = zoomEnd - zoomStart;
     const elementWidth = getElementWidth(videoElement);
-    const max = parseInt(zoomLeftBorder.value, 10) + elementWidth;
-    zoomLeftBorder.max = max;
-    if (parseInt(zoomLeftBorder.value, 10) > max) {
-        zoomLeftBorder.value = max;
+    let newZoomStart = Math.max(0, zoomStart + step);
+    let newZoomEnd = Math.min(elementWidth, zoomEnd + step);
+
+    if (newZoomEnd - newZoomStart !== zoomRange) {
+        newZoomEnd = newZoomStart + zoomRange;
+        if (newZoomEnd > elementWidth) {
+            newZoomEnd = elementWidth;
+            newZoomStart = elementWidth - zoomRange;
+        }
+        if (newZoomStart < 0) {
+            newZoomStart = 0;
+            newZoomEnd = zoomRange;
+        }
     }
+    updateZoomRange(newZoomStart, newZoomEnd);
+}
+
+function updateArrowButtons() {
+    const leftBtn = document.getElementById('stepLeftButton');
+    const rightBtn = document.getElementById('stepRightButton');
+    const elementWidth = getElementWidth(videoElement);
+
+    if (zoomList.length === 0) {
+        leftBtn.disabled = true;
+        rightBtn.disabled = true;
+        return;
+    }
+
+    const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
+    const zoomRange = zoomEnd - zoomStart;
+
+    if (zoomRange === 0 || zoomRange === elementWidth) {
+        leftBtn.disabled = true;
+        rightBtn.disabled = true;
+        return;
+    }
+
+    leftBtn.disabled = zoomStart <= 0;
+    rightBtn.disabled = zoomEnd >= elementWidth;
+}
+
+function updateZoomScroller() {
+    const scroller = document.getElementById('zoomScroller');
+    if (zoomList.length === 0) {
+        scroller.disabled = true;
+        return;
+    }
+    const elementWidth = getElementWidth(videoElement);
+    const [zoomStart, zoomEnd] = zoomList[zoomList.length - 1];
+    const zoomRange = zoomEnd - zoomStart;
+    if (zoomRange === 0 || zoomRange === elementWidth) {
+        scroller.disabled = true;
+        return;
+    }
+    scroller.min = 0;
+    scroller.max = elementWidth - zoomRange;
+    scroller.value = zoomStart;
+    scroller.disabled = false;
 }
 
 /**
@@ -633,6 +688,8 @@ function updateZoomLeftBorderMax() {
 function updateZoomRange(newZoomStart, newZoomEnd) {
     zoomList[zoomList.length - 1] = [newZoomStart, newZoomEnd];
     redrawGraphIfLoadedImage();
+    updateArrowButtons();
+    updateZoomScroller();
     console.log(zoomList);
 }
 
@@ -715,17 +772,29 @@ function drawGrid(graphCtx, graphCanvas, zoomStart, zoomEnd, pixels) {
         showNm = false;
     }
 
-    for (let i = Math.ceil(zoomStart / xStep) * xStep; i <= zoomEnd; i += xStep) {
-        const x = calculateXPosition(i - zoomStart, zoomRange, width);
-        graphCtx.moveTo(x, padding);
-        graphCtx.lineTo(x, height - padding);
-        let label;
-        if (showNm) {
-            label = getWaveLengthByPx(i).toFixed(1);
-        } else {
-            label = Math.round(i).toString();
+    if (showNm) {
+        const minNm = Math.ceil(getWaveLengthByPx(zoomStart));
+        const maxNm = Math.floor(getWaveLengthByPx(zoomEnd - 1));
+        const nmRange = maxNm - minNm;
+        const maxLabels = 15;
+        const nmStep = Math.max(1, Math.round(niceStep(nmRange, maxLabels)));
+
+        for (let nm = Math.ceil(minNm / nmStep) * nmStep; nm <= maxNm; nm += nmStep) {
+            const px = getPxByWaveLengthBisection(nm);
+            if (px !== null && px >= zoomStart && px < zoomEnd) {
+                const x = calculateXPosition(px - zoomStart, zoomEnd - zoomStart, width);
+                graphCtx.moveTo(x, padding);
+                graphCtx.lineTo(x, height - padding);
+                graphCtx.fillText(Math.round(nm).toString(), x - 10, height - 5);
+            }
         }
-        graphCtx.fillText(label, x - 10, height - 5);
+    } else {
+        for (let i = Math.ceil(zoomStart / xStep) * xStep; i <= zoomEnd; i += xStep) {
+            const x = calculateXPosition(i - zoomStart, zoomRange, width);
+            graphCtx.moveTo(x, padding);
+            graphCtx.lineTo(x, height - padding);
+            graphCtx.fillText(Math.round(i).toString(), x - 10, height - 5);
+        }
     }
 
     graphCtx.stroke();
@@ -748,18 +817,17 @@ function generateSpectrumList(pixelWidth) {
 /**
  * Draws a line based on the spectrum list
  */
-function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, isSelectedComparison = false) {
-    const [zoomStart, zoomEnd] = getZoomRange(pixelWidth);
+function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, isSelectedComparison = false, zoomStart = 0, zoomEnd = pixelWidth) {
     const zoomRange = zoomEnd - zoomStart;
     const width = graphCanvas.getBoundingClientRect().width;
     const height = graphCanvas.getBoundingClientRect().height;
 
     graphCtx.beginPath();
-    for (let x = 0; x < zoomRange; x++) {
+    for (let x = zoomStart; x < zoomEnd; x++) {
         let value = colorOffset === -1 ? calculateMaxColor(pixels, x) : pixels[x * 4 + colorOffset];
         const y = calculateYPosition(value, height, maxValue);
-        const scaledX = calculateXPosition(x, zoomRange, width);
-        if (x === 0) {
+        const scaledX = calculateXPosition(x - zoomStart, zoomRange, width);
+        if (x === zoomStart) {
             graphCtx.moveTo(scaledX, y);
         } else {
             graphCtx.lineTo(scaledX, graphCtx.currentY || y);
@@ -768,10 +836,7 @@ function drawLine(graphCtx, pixels, pixelWidth, color, colorOffset, maxValue, is
         graphCtx.currentY = y;
     }
     graphCtx.strokeStyle = color;
-    graphCtx.lineWidth = 1;
-    if (isSelectedComparison === true) {
-        graphCtx.lineWidth = 2;
-    }
+    graphCtx.lineWidth = isSelectedComparison ? 2 : 1;
     graphCtx.stroke();
 }
 
@@ -787,7 +852,7 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
 
     if (toggleCombined) {
         for (let x = 0; x < zoomRange; x++) {
-            const pxIndex = x * 4;
+            const pxIndex = (zoomStart + x) * 4;
             const r = pixels[pxIndex];
             const g = pixels[pxIndex + 1];
             const b = pixels[pxIndex + 2];
@@ -812,7 +877,7 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
     }
 
     for (let x = 0; x < zoomRange; x++) {
-        const pxIndex = x * 4;
+        const pxIndex = (zoomStart + x) * 4;
         const r = toggleR ? pixels[pxIndex] : 0;
         const g = toggleG ? pixels[pxIndex + 1] : 0;
         const b = toggleB ? pixels[pxIndex + 2] : 0;
@@ -924,10 +989,14 @@ function addZoomRange(startX, endX) {
 
     zoomList.push(newZoom);
     console.log(zoomList);
+    updateArrowButtons();
+    updateZoomScroller();
 }
 
 function resetZoom() {
     zoomList = [[0, getElementWidth(videoElement)]];
+    updateArrowButtons();
+    updateZoomScroller();
 }
 
 /**
@@ -936,7 +1005,9 @@ function resetZoom() {
 function stepBackZoom() {
     if (zoomList.length > 1) {
         zoomList.pop();
-        redrawGraphIfLoadedImage()
+        redrawGraphIfLoadedImage();
+        updateArrowButtons();
+        updateZoomScroller();
     } else {
         console.log('No previous zoom level to step back to.');
     }

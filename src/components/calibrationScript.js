@@ -67,7 +67,6 @@ function addInputPair() {
     const div = document.createElement("div");
     div.classList.add("input-pair")
 
-    // Px input
     const inputPx = document.createElement("input");
     inputPx.id = `point${inputBoxCounter}px`;
     inputPx.type = "number";
@@ -75,7 +74,6 @@ function addInputPair() {
     inputPx.classList.add("form-control-sm");
     inputPx.dataset.translateTitle = "calPointPair-px-input-tooltip";
 
-    // Nm input
     const inputNm = document.createElement("input");
     inputNm.id = `point${inputBoxCounter}nm`;
     inputNm.type = "number";
@@ -83,7 +81,6 @@ function addInputPair() {
     inputNm.classList.add("form-control-sm");
     inputNm.dataset.translateTitle = "calPointPair-nm-input-tooltip";
 
-    // Point delete button
     const deleteButton = document.createElement("button");
     deleteButton.id = `deleteButton${inputBoxCounter}`;
     deleteButton.innerHTML = '&times;';
@@ -101,7 +98,6 @@ function addInputPair() {
 
     addInputPairListener(div);
 
-    // Sets the labels for the new pair
     updateTextContent();
 
     if (inputBoxCounter > minInputBoxNumber) {
@@ -285,6 +281,35 @@ function getWaveLengthByPx(pixel) {
         }
     }
     return waveLength;
+}
+
+function getPxByWaveLengthBisection(targetNm) {
+    if (polyFitCoefficientsArray.length === 0) return null;
+
+    let left = rangeBeginX;
+    let right = rangeEndX;
+    let tol = 1e-4;
+    let maxIter = 50;
+
+    function f(px) {
+        return getWaveLengthByPx(px) - targetNm;
+    }
+
+    if (f(left) * f(right) > 0) return null;
+
+    for (let i = 0; i < maxIter; i++) {
+        let mid = (left + right) / 2;
+        let fMid = f(mid);
+
+        if (Math.abs(fMid) < tol) return Math.round(mid);
+
+        if (f(left) * fMid < 0) {
+            right = mid;
+        } else {
+            left = mid;
+        }
+    }
+    return Math.round((left + right) / 2);
 }
 
 /**

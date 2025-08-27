@@ -25,6 +25,7 @@ let graphCanvasDivergence;
 let graphCtxDivergence;
 
 let hoveredCalPoint = null;
+let permanentCalPoint = null;
 
 /**
  * Creates the initial minimum number of calibration input pairs
@@ -818,17 +819,10 @@ function computeDivergence() {
 }
 
 /**
- * Implements functionality for the selection of a calibration point within the calibration or divergence graph
- * by clicking it
- * @param type - "calibration" or "divergence", depending on which one we're working with
+ * Returns several parameters needed for the functionality of controlling calibration points using the mouse
  */
-function checkForPointSelectionClick(event, type) {
-    if (!isCalibrated() || !hoveredCalPoint) {
-        return;
-    }
-
-    let canvas, points, xMin, xMax, yMin, yMax, padding = 30, radius = 6;
-    let rect, mouseX, mouseY, width, height;
+function getGraphParamsPointSelection(type) {
+    let canvas, points, xMin, xMax, yMin, yMax;
 
     if (type === "calibration") {
         canvas = graphCanvasCalibration;
@@ -849,15 +843,34 @@ function checkForPointSelectionClick(event, type) {
 
         yMax = maxAbs * 1.25;
         yMin = -yMax;
-    } else {
+    }
+
+    return { canvas, points, xMin, xMax, yMin, yMax };
+}
+
+/**
+ * Implements functionality for the selection of a calibration point within the calibration or divergence graph
+ * by clicking it
+ * @param type - "calibration" or "divergence", depending on which one we're working with
+ */
+function checkForPointSelectionClick(event, type) {
+    if (!isCalibrated()) {
         return;
     }
 
-    rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
-    width = rect.width;
-    height = rect.height;
+    const { canvas, points, xMin, xMax, yMin, yMax } = getGraphParamsPointSelection(type);
+
+    if (canvas === null) { return; }
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const padding = 30
+    const radius = 6;
+    const width = rect.width;
+    const height = rect.height;
+
+    let foundPoint = null;
 
     for (const point of points) {
         const px = point.px;
@@ -869,40 +882,69 @@ function checkForPointSelectionClick(event, type) {
         const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
         if (distance <= radius) {
             if (type === "calibration") {
-                highlightInputPair(px, point.nm);
+                foundPoint = { px: px, nm: point.nm };
             } else {
-                highlightInputPair(px, point.realNm);
+                foundPoint = { px: px, nm: point.realNm };
             }
-            return;
+            break;
         }
     }
+
+    if (!foundPoint) {
+        removeHighlightInputPair(true);
+    }
+
+    const isSamePoint = (
+        permanentCalPoint &&
+        foundPoint &&
+        permanentCalPoint.px === foundPoint.px &&
+        permanentCalPoint.nm === foundPoint.nm
+    );
+
+    if (!isSamePoint) {
+        removeHighlightInputPair(true);
+        permanentCalPoint = foundPoint;
+        highlightInputPair(permanentCalPoint.px, permanentCalPoint.nm, true);
+    }
+
 }
 
 /**
  * Highlights a specific input pair based on its values
  */
-function highlightInputPair(px, nm) {
+function highlightInputPair(px, nm, isPermanent = false) {
     if (!isCalibrated()) { return; }
 
     const inputPairs = document.querySelectorAll(".input-pair");
-
     for (const pair of inputPairs) {
         const inputs = pair.querySelectorAll("input[type='number']");
-        if (inputs.length < 2) continue;
+        if (inputs.length < 2) { continue };
 
         const pxVal = parseFloat(inputs[0].value.trim());
         const nmVal = parseFloat(inputs[1].value.trim());
 
         if (pxVal === px && nmVal === nm) {
-            pair.classList.add('highlight');
-
-            setTimeout(() => {
-                pair.classList.remove('highlight');
-            }, 1300);
-
+            pair.classList.add(isPermanent ? 'highlight-permanent' : 'highlight-hover');
             break;
         }
     }
+}
+
+function removeHighlightInputPair(removePermanent = false) {
+    if (!isCalibrated()) { return; }
+
+    const inputPairs = document.querySelectorAll(".input-pair");
+    for (const pair of inputPairs) {
+        pair.classList.remove('highlight-hover');
+        if (removePermanent) {
+            pair.classList.remove('highlight-permanent');
+        }
+    }
+
+    if (removePermanent) {
+        permanentCalPoint = null;
+    }
+    hoveredCalPoint = null;
 }
 
 /**
@@ -913,37 +955,19 @@ function highlightInputPair(px, nm) {
 function checkForPointSelectionHover(event, type) {
     if (!isCalibrated()) { return; }
 
-    let canvas, points, xMin, xMax, yMin, yMax, padding = 30, radius = 6;
-    let rect, mouseX, mouseY, width, height, foundPoint = null;
+    const { canvas, points, xMin, xMax, yMin, yMax } = getGraphParamsPointSelection(type);
 
-    if (type === "calibration") {
-        canvas = graphCanvasCalibration;
-        points = pixelCalPoints.map((px, i) => ({ px, nm: nmCalPoints[i] }));
-        xMin = rangeBeginX;
-        xMax = rangeEndX;
-        yMin = rangeBeginY;
-        yMax = rangeEndY;
-    } else if (type === "divergence") {
-        canvas = graphCanvasDivergence;
-        points = divergencePoints;
-        xMin = rangeBeginX;
-        xMax = rangeEndX;
+    if (canvas === null) { return; }
 
-        const deltas = divergencePoints.map(p => p.delta);
-        let maxAbs = Math.max(...deltas.map(Math.abs));
-        if (maxAbs < 0.001) maxAbs = 0.001;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const padding = 30
+    const radius = 6;
+    const width = rect.width;
+    const height = rect.height;
 
-        yMax = maxAbs * 1.25;
-        yMin = -yMax;
-    } else {
-        return;
-    }
-
-    rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
-    width = rect.width;
-    height = rect.height;
+    let foundPoint = null;
 
     for (const point of points) {
         const px = point.px;
@@ -955,12 +979,18 @@ function checkForPointSelectionHover(event, type) {
         const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
         if (distance <= radius) {
             if (type === "calibration") {
-                foundPoint = { px, nm: point.nm };
+                foundPoint = { px: px, nm: point.nm };
+                highlightInputPair(px, point.nm);
             } else {
-                foundPoint = { px, nm: point.realNm };
+                foundPoint = {px: px, nm: point.realNm };
+                highlightInputPair(px, point.realNm);
             }
             break;
         }
+    }
+
+    if (!foundPoint) {
+        removeHighlightInputPair();
     }
 
     const isSamePoint = (

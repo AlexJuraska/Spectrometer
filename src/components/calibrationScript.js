@@ -17,6 +17,7 @@ let divergencePoints = [];
 let calLineColor = '#0000ff';
 let calPointsColor = '#ff0000';
 let calPointsHoverColor = '#bc0000';
+let calPointsPermanentColor = '#7c0000';
 
 let graphCanvasCalibration;
 let graphCtxCalibration;
@@ -576,6 +577,15 @@ function drawCalibrationPoints() {
         const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
 
+        if (permanentCalPoint && px === permanentCalPoint.px && nm === permanentCalPoint.nm) {
+            graphCtxCalibration.fillStyle = calPointsPermanentColor;
+            graphCtxCalibration.strokeStyle = calPointsPermanentColor;
+            graphCtxCalibration.beginPath();
+            graphCtxCalibration.arc(x, y, 6, 0, 2 * Math.PI);
+            graphCtxCalibration.fill();
+            graphCtxCalibration.stroke();
+        }
+
         if (hoveredCalPoint && px === hoveredCalPoint.px && nm === hoveredCalPoint.nm) {
             graphCtxCalibration.fillStyle = calPointsHoverColor;
             graphCtxCalibration.strokeStyle = calPointsHoverColor;
@@ -781,6 +791,15 @@ function drawDivergencePoints() {
         const x = padding + ((point.px - xMin) / (xMax - xMin)) * (width - 2 * padding);
         const y = height - padding - ((point.delta - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
+        if (permanentCalPoint && point.px === permanentCalPoint.px && point.realNm === permanentCalPoint.nm) {
+            graphCtxDivergence.fillStyle = calPointsPermanentColor;
+            graphCtxDivergence.strokeStyle = calPointsPermanentColor;
+            graphCtxDivergence.beginPath();
+            graphCtxDivergence.arc(x, y, 5, 0, 2 * Math.PI);
+            graphCtxDivergence.fill();
+            graphCtxDivergence.stroke();
+        }
+
         if (hoveredCalPoint && point.px === hoveredCalPoint.px && point.realNm === hoveredCalPoint.nm) {
             graphCtxDivergence.fillStyle = calPointsHoverColor;
             graphCtxDivergence.strokeStyle = calPointsHoverColor;
@@ -892,6 +911,7 @@ function checkForPointSelectionClick(event, type) {
 
     if (!foundPoint) {
         removeHighlightInputPair(true);
+        return;
     }
 
     const isSamePoint = (
@@ -901,12 +921,23 @@ function checkForPointSelectionClick(event, type) {
         permanentCalPoint.nm === foundPoint.nm
     );
 
-    if (!isSamePoint) {
+    if (isSamePoint) {
         removeHighlightInputPair(true);
-        permanentCalPoint = foundPoint;
-        highlightInputPair(permanentCalPoint.px, permanentCalPoint.nm, true);
+
+        drawGridCalibration();
+        drawCalibrationLine();
+        drawCalibrationPoints();
+
+        drawGridDivergence();
+        drawDivergenceLine();
+        drawDivergencePoints();
+
+        return;
     }
 
+    removeHighlightInputPair(true);
+    permanentCalPoint = foundPoint;
+    highlightInputPair(permanentCalPoint.px, permanentCalPoint.nm, true);
 }
 
 /**

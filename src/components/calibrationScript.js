@@ -206,22 +206,33 @@ function enablePairRemoveButtons() {
  * Sorts the input pair values by the px value in ascending order
  */
 function sortCalibrationInputPairs() {
-    const container = document.getElementById("input-container");
+    const pairs = [];
 
-    const pairs = Array.from(container.querySelectorAll(".input-pair"));
+    for (let i = 1; i <= inputBoxCounter; i++) {
+        const pxInput = document.getElementById(`point${i}px`);
+        const nmInput = document.getElementById(`point${i}nm`);
 
-    const data = pairs.map((pair, index) => {
-        const inputs = pair.querySelectorAll("input[type='number']");
-        return {
-            px: parseFloat(inputs[0].value.trim()) || 0,
-            nm: parseFloat(inputs[1].value.trim()) || 0,
-            element: pair
-        };
-    });
+        if (pxInput && nmInput) {
+            const px = parseFloat(pxInput.value.trim());
+            const nm = parseFloat(nmInput.value.trim());
 
-    data.sort((a, b) => a.px - b.px);
+            if (!isNaN(px) && !isNaN(nm)) {
+                pairs.push({ px, nm });
+            }
+        }
+    }
 
-    data.forEach(item => container.appendChild(item.element));
+    pairs.sort((a, b) => a.px - b.px);
+
+    for (let i = 0; i < pairs.length; i++) {
+        const pxInput = document.getElementById(`point${i + 1}px`);
+        const nmInput = document.getElementById(`point${i + 1}nm`);
+
+        if (pxInput && nmInput) {
+            pxInput.value = pairs[i].px;
+            nmInput.value = pairs[i].nm;
+        }
+    }
 }
 
 /**

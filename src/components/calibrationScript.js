@@ -207,6 +207,7 @@ function enablePairRemoveButtons() {
  */
 function sortCalibrationInputPairs() {
     const pairs = [];
+    let permanentMatch = null;
 
     for (let i = 1; i <= inputBoxCounter; i++) {
         const pxInput = document.getElementById(`point${i}px`);
@@ -217,7 +218,16 @@ function sortCalibrationInputPairs() {
             const nm = parseFloat(nmInput.value.trim());
 
             if (!isNaN(px) && !isNaN(nm)) {
-                pairs.push({ px, nm });
+                const pair = { px, nm };
+                pairs.push(pair);
+
+                if (
+                    permanentCalPoint &&
+                    permanentCalPoint.px === px &&
+                    permanentCalPoint.nm === nm
+                ) {
+                    permanentMatch = pair;
+                }
             }
         }
     }
@@ -233,6 +243,14 @@ function sortCalibrationInputPairs() {
             nmInput.value = pairs[i].nm;
         }
     }
+
+    if (permanentMatch) {
+        removeHighlightInputPair(true);
+        permanentCalPoint = { px: permanentMatch.px, nm: permanentMatch.nm };
+        highlightInputPair(permanentCalPoint.px, permanentCalPoint.nm, true);
+    }
+
+    redrawCalibrationGraphs();
 }
 
 /**
@@ -264,13 +282,7 @@ function setCalibrationPoints() {
     }
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
 
-    drawGridCalibration();
-    drawCalibrationLine();
-    drawCalibrationPoints();
-
-    drawGridDivergence();
-    drawDivergenceLine();
-    drawDivergencePoints();
+    redrawCalibrationGraphs();
 }
 
 /**
@@ -479,6 +491,19 @@ function resetCalibrationPoints() {
 function resetInputBoxes() {
     deleteAllAdditionalInputPairs();
     clearInputBoxes();
+}
+
+/**
+ * Redraws both the calibration and divergence graphs
+ */
+function redrawCalibrationGraphs() {
+    drawGridCalibration();
+    drawCalibrationLine();
+    drawCalibrationPoints();
+
+    drawGridDivergence();
+    drawDivergenceLine();
+    drawDivergencePoints();
 }
 
 /**
@@ -956,15 +981,7 @@ function checkForPointSelectionClick(event, type) {
 
     if (isSamePoint) {
         removeHighlightInputPair(true);
-
-        drawGridCalibration();
-        drawCalibrationLine();
-        drawCalibrationPoints();
-
-        drawGridDivergence();
-        drawDivergenceLine();
-        drawDivergencePoints();
-
+        redrawCalibrationGraphs()
         return;
     }
 
@@ -1066,13 +1083,7 @@ function checkForPointSelectionHover(event, type) {
 
     if (!isSamePoint) {
         hoveredCalPoint = foundPoint;
-        drawGridCalibration();
-        drawCalibrationLine();
-        drawCalibrationPoints();
-
-        drawGridDivergence();
-        drawDivergenceLine();
-        drawDivergencePoints();
+        redrawCalibrationGraphs();
     }
 }
 

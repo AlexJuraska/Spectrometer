@@ -55,6 +55,7 @@ function changeSettingsScreen(changeTo) {
  */
 function changeDisplayScreen(action) {
     const bottomDrawer = document.getElementById('graphSettingsDrawer');
+    const bottomHandle = document.getElementById('drawerCollapseButton');
 
     const settings = document.getElementById('sidebar-left');
     const leftHandle = document.getElementById('sidebarToggleHandleLeft');
@@ -80,7 +81,7 @@ function changeDisplayScreen(action) {
         graphCanvas.classList.remove("withDrawer");
     } else if (action === "settings") {
         const isHidden = settings.classList.toggle('hidden');
-        leftHandle.innerHTML = isHidden ? '↪' : '↩';
+        leftHandle.innerHTML = isHidden ? '▷' : '◁';
 
         leftHandle.classList.toggle('moved');
         leftDetectionArea.classList.toggle('moved');
@@ -91,16 +92,18 @@ function changeDisplayScreen(action) {
         }
     } else if (action === "imgSelect") {
         const isHidden = imageSelection.classList.toggle('hidden');
-        rightHandle.innerHTML = isHidden ? '↩' : '↪';
+        rightHandle.innerHTML = isHidden ? '◁' : '▷';
 
         rightHandle.classList.toggle('moved');
         rightDetectionArea.classList.toggle('moved');
-    } else if (action === "graph") {
+    } else if (action === "drawer") {
+        const isHidden = bottomDrawer.classList.toggle('hidden');
+        bottomHandle.innerHTML = isHidden ? '△' : '▽';
+
         graphCanvas.classList.toggle("withDrawer");
-        bottomDrawer.classList.toggle('hidden');
     }
 
-    setTimeout(matchGraphHeightWithDrawer, 300);
+    setTimeout(matchGraphHeightWithDrawer, 100);
     document.activeElement.blur();
 }
 
@@ -114,8 +117,8 @@ function matchGraphHeightWithDrawer() {
     const fixedOffset = 50 + 16; // pixels (16px ~= 1rem)
 
     if (canvas.classList.contains('withDrawer')) {
-        const drawerHeight = drawer.offsetHeight;
-        const adjustedHeight = document.documentElement.clientHeight - drawerHeight - fixedOffset;
+        const drawerHeight = drawer.getBoundingClientRect().height;
+        const adjustedHeight = document.body.getBoundingClientRect().height - drawerHeight - fixedOffset;
         canvas.style.maxHeight = `${adjustedHeight}px`;
     } else {
         canvas.style.maxHeight = `calc(100vh - ${fixedOffset}px)`;

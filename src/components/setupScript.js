@@ -96,10 +96,13 @@ function changeDisplayScreen(action) {
 
         rightHandle.classList.toggle('moved');
         rightDetectionArea.classList.toggle('moved');
-    } else if (action === "drawer") {
-        const isHidden = bottomDrawer.classList.toggle('hidden');
-        bottomHandle.innerHTML = isHidden ? '△' : '▽';
+    } else if (action === "graph" || action === "drawer") {
+        if (action === "drawer") {
+            const isHidden = bottomDrawer.classList.contains('hidden');
+            bottomHandle.innerHTML = isHidden ? '△' : '▽';
+        }
 
+        bottomDrawer.classList.toggle('hidden')
         graphCanvas.classList.toggle("withDrawer");
     }
 

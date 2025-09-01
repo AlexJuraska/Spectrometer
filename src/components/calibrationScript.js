@@ -203,6 +203,28 @@ function enablePairRemoveButtons() {
 }
 
 /**
+ * Sorts the input pair values by the px value in ascending order
+ */
+function sortCalibrationInputPairs() {
+    const container = document.getElementById("input-container");
+
+    const pairs = Array.from(container.querySelectorAll(".input-pair"));
+
+    const data = pairs.map((pair, index) => {
+        const inputs = pair.querySelectorAll("input[type='number']");
+        return {
+            px: parseFloat(inputs[0].value.trim()) || 0,
+            nm: parseFloat(inputs[1].value.trim()) || 0,
+            element: pair
+        };
+    });
+
+    data.sort((a, b) => a.px - b.px);
+
+    data.forEach(item => container.appendChild(item.element));
+}
+
+/**
  * Saves the calibration points from the input boxes
  */
 function setCalibrationPoints() {

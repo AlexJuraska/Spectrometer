@@ -47,6 +47,7 @@
 
   "addCalPoints-button": "Pridať kalibračné body",
   "reset-button": "Resetovať",
+  "sortCalPoints-button": "Zoradiť",
   "calibration-export-filename-placeholder" : "Názov kalibračného súboru",
   "export-button": "Exportovať",
 
@@ -112,6 +113,7 @@
 
   "addCalPoints-button-tooltip": "Pridá dvojicu vstupov na definovanie kalibračného bodu",
   "reset-button-tooltip": "Resetuje kalibračné dvojice na predvolený počet a vyprázdni ich",
+  "sortCalPoints-button-tooltip": "Zoradí dvojice vstupov podľa px hodnoty vzostupne",
   "calibration-export-filename-tooltip": "Zadajte názov, ktorý má mať exportovaný kalibračný súbor, ak nezadáte žiadny, bude pridelený predvolený názov",
   "export-button-tooltip": "Exportuje kalibračné hodnoty do súboru .txt",
   "import-calibration-file-tooltip": "Umožní vybrať súbor .txt s kalibračnými hodnotami, ktoré budú vložené do aplikácie, musí mať rovnaký formát ako exportovaný súbor vyššie",

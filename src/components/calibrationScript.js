@@ -428,7 +428,7 @@ function importCalibrationFile() {
         return;
     }
 
-    resetCalibrationPoints();
+    resetInputBoxes();
 
     const reader = new FileReader();
 
@@ -500,6 +500,7 @@ function resetCalibrationPoints() {
     drawGridCalibration();
     drawGridDivergence();
     removeHighlightInputPair(true);
+    document.getElementById("my-file").value = null;
 }
 
 /**

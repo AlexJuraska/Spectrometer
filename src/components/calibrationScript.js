@@ -969,6 +969,7 @@ function checkForPointSelectionClick(event, type) {
 
     if (!foundPoint) {
         removeHighlightInputPair(true);
+        redrawCalibrationGraphs()
         return;
     }
 

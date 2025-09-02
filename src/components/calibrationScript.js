@@ -274,6 +274,7 @@ function sortCalibrationInputPairs() {
  */
 function setCalibrationPoints() {
     resetCalValues();
+    removeHighlightInputPair(true);
     for (let i = 1; i < inputBoxCounter + 1; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);

@@ -17,6 +17,7 @@ let divergencePoints = [];
 let calLineColor = '#0000ff';
 let calPointsColor = '#ff0000';
 let calPointsHoverColor = '#bc0000';
+let calPointsPermanentColor = '#7c0000';
 
 let graphCanvasCalibration;
 let graphCtxCalibration;
@@ -25,6 +26,7 @@ let graphCanvasDivergence;
 let graphCtxDivergence;
 
 let hoveredCalPoint = null;
+let permanentCalPoint = null;
 
 /**
  * Creates the initial minimum number of calibration input pairs
@@ -125,6 +127,15 @@ function removeInputPair(inputBoxNumber) {
 
     let currPx = document.getElementById(`point${inputBoxNumber}px`);
     let currNm = document.getElementById(`point${inputBoxNumber}nm`);
+
+    const currPxVal = parseFloat(currPx.value.trim());
+    const currNmVal = parseFloat(currNm.value.trim());
+    if (permanentCalPoint &&
+        permanentCalPoint.px === currPxVal &&
+        permanentCalPoint.nm === currNmVal) {
+        removeHighlightInputPair(true);
+    }
+
     for (let i = inputBoxNumber+1; i <= inputBoxCounter; i++) {
         let nextPx = document.getElementById(`point${i}px`);
         let nextNm = document.getElementById(`point${i}nm`);
@@ -137,6 +148,13 @@ function removeInputPair(inputBoxNumber) {
     }
 
     removeLastInputPair();
+
+    if (permanentCalPoint) {
+        const perPx = permanentCalPoint.px, perNm = permanentCalPoint.nm;
+        removeHighlightInputPair(true);
+        permanentCalPoint = { px: perPx, nm: perNm };
+        highlightInputPair(perPx, perNm, true);
+    }
 }
 
 /**
@@ -201,10 +219,62 @@ function enablePairRemoveButtons() {
 }
 
 /**
+ * Sorts the input pair values by the px value in ascending order
+ */
+function sortCalibrationInputPairs() {
+    const pairs = [];
+    let permanentMatch = null;
+
+    for (let i = 1; i <= inputBoxCounter; i++) {
+        const pxInput = document.getElementById(`point${i}px`);
+        const nmInput = document.getElementById(`point${i}nm`);
+
+        if (pxInput && nmInput) {
+            const px = parseFloat(pxInput.value.trim());
+            const nm = parseFloat(nmInput.value.trim());
+
+            if (!isNaN(px) && !isNaN(nm)) {
+                const pair = { px, nm };
+                pairs.push(pair);
+
+                if (
+                    permanentCalPoint &&
+                    permanentCalPoint.px === px &&
+                    permanentCalPoint.nm === nm
+                ) {
+                    permanentMatch = pair;
+                }
+            }
+        }
+    }
+
+    pairs.sort((a, b) => a.px - b.px);
+
+    for (let i = 0; i < pairs.length; i++) {
+        const pxInput = document.getElementById(`point${i + 1}px`);
+        const nmInput = document.getElementById(`point${i + 1}nm`);
+
+        if (pxInput && nmInput) {
+            pxInput.value = pairs[i].px;
+            nmInput.value = pairs[i].nm;
+        }
+    }
+
+    if (permanentMatch) {
+        removeHighlightInputPair(true);
+        permanentCalPoint = { px: permanentMatch.px, nm: permanentMatch.nm };
+        highlightInputPair(permanentCalPoint.px, permanentCalPoint.nm, true);
+    }
+
+    redrawCalibrationGraphs();
+}
+
+/**
  * Saves the calibration points from the input boxes
  */
 function setCalibrationPoints() {
     resetCalValues();
+    removeHighlightInputPair(true);
     for (let i = 1; i < inputBoxCounter + 1; i++) {
         const pxInput = document.getElementById(`point${i}px`);
         const nmInput = document.getElementById(`point${i}nm`);
@@ -229,13 +299,7 @@ function setCalibrationPoints() {
     }
     clearGraph(graphCtxCalibration, graphCanvasCalibration);
 
-    drawGridCalibration();
-    drawCalibrationLine();
-    drawCalibrationPoints();
-
-    drawGridDivergence();
-    drawDivergenceLine();
-    drawDivergencePoints();
+    redrawCalibrationGraphs();
 }
 
 /**
@@ -436,6 +500,8 @@ function resetCalibrationPoints() {
     inputBoxCounter = minInputBoxNumber;
     drawGridCalibration();
     drawGridDivergence();
+    removeHighlightInputPair(true);
+    document.getElementById("my-file").value = null;
 }
 
 /**
@@ -444,6 +510,19 @@ function resetCalibrationPoints() {
 function resetInputBoxes() {
     deleteAllAdditionalInputPairs();
     clearInputBoxes();
+}
+
+/**
+ * Redraws both the calibration and divergence graphs
+ */
+function redrawCalibrationGraphs() {
+    drawGridCalibration();
+    drawCalibrationLine();
+    drawCalibrationPoints();
+
+    drawGridDivergence();
+    drawDivergenceLine();
+    drawDivergencePoints();
 }
 
 /**
@@ -574,6 +653,15 @@ function drawCalibrationPoints() {
 
         const x = padding + ((px - rangeBeginX) / (rangeEndX - rangeBeginX)) * (width - 2 * padding);
         const y = height - padding - ((nm - rangeBeginY) / (rangeEndY - rangeBeginY)) * (height - 2 * padding);
+
+        if (permanentCalPoint && px === permanentCalPoint.px && nm === permanentCalPoint.nm) {
+            graphCtxCalibration.fillStyle = calPointsPermanentColor;
+            graphCtxCalibration.strokeStyle = calPointsPermanentColor;
+            graphCtxCalibration.beginPath();
+            graphCtxCalibration.arc(x, y, 6, 0, 2 * Math.PI);
+            graphCtxCalibration.fill();
+            graphCtxCalibration.stroke();
+        }
 
         if (hoveredCalPoint && px === hoveredCalPoint.px && nm === hoveredCalPoint.nm) {
             graphCtxCalibration.fillStyle = calPointsHoverColor;
@@ -780,6 +868,15 @@ function drawDivergencePoints() {
         const x = padding + ((point.px - xMin) / (xMax - xMin)) * (width - 2 * padding);
         const y = height - padding - ((point.delta - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
+        if (permanentCalPoint && point.px === permanentCalPoint.px && point.realNm === permanentCalPoint.nm) {
+            graphCtxDivergence.fillStyle = calPointsPermanentColor;
+            graphCtxDivergence.strokeStyle = calPointsPermanentColor;
+            graphCtxDivergence.beginPath();
+            graphCtxDivergence.arc(x, y, 5, 0, 2 * Math.PI);
+            graphCtxDivergence.fill();
+            graphCtxDivergence.stroke();
+        }
+
         if (hoveredCalPoint && point.px === hoveredCalPoint.px && point.realNm === hoveredCalPoint.nm) {
             graphCtxDivergence.fillStyle = calPointsHoverColor;
             graphCtxDivergence.strokeStyle = calPointsHoverColor;
@@ -818,17 +915,10 @@ function computeDivergence() {
 }
 
 /**
- * Implements functionality for the selection of a calibration point within the calibration or divergence graph
- * by clicking it
- * @param type - "calibration" or "divergence", depending on which one we're working with
+ * Returns several parameters needed for the functionality of controlling calibration points using the mouse
  */
-function checkForPointSelectionClick(event, type) {
-    if (!isCalibrated() || !hoveredCalPoint) {
-        return;
-    }
-
-    let canvas, points, xMin, xMax, yMin, yMax, padding = 30, radius = 6;
-    let rect, mouseX, mouseY, width, height;
+function getGraphParamsPointSelection(type) {
+    let canvas, points, xMin, xMax, yMin, yMax;
 
     if (type === "calibration") {
         canvas = graphCanvasCalibration;
@@ -849,15 +939,34 @@ function checkForPointSelectionClick(event, type) {
 
         yMax = maxAbs * 1.25;
         yMin = -yMax;
-    } else {
+    }
+
+    return { canvas, points, xMin, xMax, yMin, yMax };
+}
+
+/**
+ * Implements functionality for the selection of a calibration point within the calibration or divergence graph
+ * by clicking it
+ * @param type - "calibration" or "divergence", depending on which one we're working with
+ */
+function checkForPointSelectionClick(event, type) {
+    if (!isCalibrated()) {
         return;
     }
 
-    rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
-    width = rect.width;
-    height = rect.height;
+    const { canvas, points, xMin, xMax, yMin, yMax } = getGraphParamsPointSelection(type);
+
+    if (canvas === null) { return; }
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const padding = 30
+    const radius = 6;
+    const width = rect.width;
+    const height = rect.height;
+
+    let foundPoint = null;
 
     for (const point of points) {
         const px = point.px;
@@ -869,40 +978,72 @@ function checkForPointSelectionClick(event, type) {
         const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
         if (distance <= radius) {
             if (type === "calibration") {
-                highlightInputPair(px, point.nm);
+                foundPoint = { px: px, nm: point.nm };
             } else {
-                highlightInputPair(px, point.realNm);
+                foundPoint = { px: px, nm: point.realNm };
             }
-            return;
+            break;
         }
     }
+
+    if (!foundPoint) {
+        removeHighlightInputPair(true);
+        redrawCalibrationGraphs()
+        return;
+    }
+
+    const isSamePoint = (
+        permanentCalPoint &&
+        foundPoint &&
+        permanentCalPoint.px === foundPoint.px &&
+        permanentCalPoint.nm === foundPoint.nm
+    );
+
+    if (isSamePoint) {
+        removeHighlightInputPair(true);
+        redrawCalibrationGraphs()
+        return;
+    }
+
+    removeHighlightInputPair(true);
+    permanentCalPoint = foundPoint;
+    highlightInputPair(permanentCalPoint.px, permanentCalPoint.nm, true);
 }
 
 /**
  * Highlights a specific input pair based on its values
  */
-function highlightInputPair(px, nm) {
+function highlightInputPair(px, nm, isPermanent = false) {
     if (!isCalibrated()) { return; }
 
     const inputPairs = document.querySelectorAll(".input-pair");
-
     for (const pair of inputPairs) {
         const inputs = pair.querySelectorAll("input[type='number']");
-        if (inputs.length < 2) continue;
+        if (inputs.length < 2) { continue };
 
         const pxVal = parseFloat(inputs[0].value.trim());
         const nmVal = parseFloat(inputs[1].value.trim());
 
         if (pxVal === px && nmVal === nm) {
-            pair.classList.add('highlight');
-
-            setTimeout(() => {
-                pair.classList.remove('highlight');
-            }, 1300);
-
+            pair.classList.add(isPermanent ? 'highlight-permanent' : 'highlight-hover');
             break;
         }
     }
+}
+
+function removeHighlightInputPair(removePermanent = false) {
+    const inputPairs = document.querySelectorAll(".input-pair");
+    for (const pair of inputPairs) {
+        pair.classList.remove('highlight-hover');
+        if (removePermanent) {
+            pair.classList.remove('highlight-permanent');
+        }
+    }
+
+    if (removePermanent) {
+        permanentCalPoint = null;
+    }
+    hoveredCalPoint = null;
 }
 
 /**
@@ -913,37 +1054,19 @@ function highlightInputPair(px, nm) {
 function checkForPointSelectionHover(event, type) {
     if (!isCalibrated()) { return; }
 
-    let canvas, points, xMin, xMax, yMin, yMax, padding = 30, radius = 6;
-    let rect, mouseX, mouseY, width, height, foundPoint = null;
+    const { canvas, points, xMin, xMax, yMin, yMax } = getGraphParamsPointSelection(type);
 
-    if (type === "calibration") {
-        canvas = graphCanvasCalibration;
-        points = pixelCalPoints.map((px, i) => ({ px, nm: nmCalPoints[i] }));
-        xMin = rangeBeginX;
-        xMax = rangeEndX;
-        yMin = rangeBeginY;
-        yMax = rangeEndY;
-    } else if (type === "divergence") {
-        canvas = graphCanvasDivergence;
-        points = divergencePoints;
-        xMin = rangeBeginX;
-        xMax = rangeEndX;
+    if (canvas === null) { return; }
 
-        const deltas = divergencePoints.map(p => p.delta);
-        let maxAbs = Math.max(...deltas.map(Math.abs));
-        if (maxAbs < 0.001) maxAbs = 0.001;
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    const padding = 30
+    const radius = 6;
+    const width = rect.width;
+    const height = rect.height;
 
-        yMax = maxAbs * 1.25;
-        yMin = -yMax;
-    } else {
-        return;
-    }
-
-    rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
-    width = rect.width;
-    height = rect.height;
+    let foundPoint = null;
 
     for (const point of points) {
         const px = point.px;
@@ -955,12 +1078,18 @@ function checkForPointSelectionHover(event, type) {
         const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
         if (distance <= radius) {
             if (type === "calibration") {
-                foundPoint = { px, nm: point.nm };
+                foundPoint = { px: px, nm: point.nm };
+                highlightInputPair(px, point.nm);
             } else {
-                foundPoint = { px, nm: point.realNm };
+                foundPoint = {px: px, nm: point.realNm };
+                highlightInputPair(px, point.realNm);
             }
             break;
         }
+    }
+
+    if (!foundPoint) {
+        removeHighlightInputPair();
     }
 
     const isSamePoint = (
@@ -972,13 +1101,7 @@ function checkForPointSelectionHover(event, type) {
 
     if (!isSamePoint) {
         hoveredCalPoint = foundPoint;
-        drawGridCalibration();
-        drawCalibrationLine();
-        drawCalibrationPoints();
-
-        drawGridDivergence();
-        drawDivergenceLine();
-        drawDivergencePoints();
+        redrawCalibrationGraphs();
     }
 }
 

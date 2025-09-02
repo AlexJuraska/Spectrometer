@@ -251,8 +251,13 @@
           <button class="btn btn-sm btn-secondary flex-fill p-1"
                   id="resetCalibrationPoints"
                   data-translate="reset-button"
-                  data-translate-tooltip="reset-button-tooltip"
+                  data-translate-title="reset-button-tooltip"
                   onclick="resetCalibrationPoints()">Reset</button>
+          <button class="btn btn-sm btn-secondary flex-fill p-1"
+                  id="orderCalibrationPoints"
+                  data-translate="sortCalPoints-button"
+                  data-translate-title="sortCalPoints-button-tooltip"
+                  onclick="sortCalibrationInputPairs()">Sort</button>
         </div>
 
       <div class="pv-1">
@@ -321,8 +326,8 @@
     </div>
 
     <div id="sidebarHoverZoneLeft" class="moved"></div>
-    <div id="sidebarToggleHandleLeft" class="sidebar-handle bg-spectraGreen moved" onclick="changeDisplayScreen('settings')">
-      <span>↩</span>
+    <div id="sidebarToggleHandleLeft" class="sidebar-handle-vertical moved" onclick="changeDisplayScreen('settings')">
+      ◁
     </div>
 
     <div id="mainContent" class="main-content flex-grow-1 bg-mainContent">
@@ -349,8 +354,9 @@
         </div>
       </div>
 
-      <div id="graphSettingsDrawer" class="graph-drawer">
+      <div id="graphSettingsDrawer">
 
+        <div id="graphSettingsDrawerLeft">
           <div class="d-flex flex-wrap gap-2 align-items-center p-2">
             <button class="btn btn-secondary btn-sm"
                     data-translate="reset-zoom"
@@ -390,7 +396,6 @@
             </div>
           </div>
 
-          <!-- Settings grid row -->
           <div class="d-flex flex-row flex-wrap gap-4 px-2">
 
             <!-- Combined/R/G/B stacked -->
@@ -448,12 +453,25 @@
               </div>
             </div>
           </div>
-          <div class="graph-nav position-absolute bottom-0 end-0 m-3 d-flex flex-column gap-2 z-3">
-            <a href="index.html" class="btn btn-secondary btn-md"
-               data-translate="home-button"
-               data-translate-title="home-button-tooltip">Home</a>
-          </div>
+        </div>
+
+        <div id="graphSettingsDrawerRight">
+
+          <div id="drawerCollapseButton" class="sidebar-handle-horizontal"
+               data-translate-title="collapse-button-tooltip"
+               onclick="changeDisplayScreen('drawer')">▽</div>
+
+          <a href="index.html"
+             class="btn btn-secondary btn-md"
+             data-translate="home-button"
+             data-translate-title="home-button-tooltip">home</a>
+        </div>
       </div>
+
+      <div id="drawerHoverZone" class="disabled"></div>
+      <div id="drawerExpandButton"
+           class="sidebar-handle-horizontal disabled"
+           onclick="changeDisplayScreen('drawer')">△</div>
 
     </div>
 
@@ -471,8 +489,8 @@
     </div>
 
     <div id="sidebarHoverZoneRight"></div>
-    <div id="sidebarToggleHandleRight" class="sidebar-handle bg-spectraGreen" onclick="changeDisplayScreen('imgSelect')">
-      <span>↩</span>
+    <div id="sidebarToggleHandleRight" class="sidebar-handle-vertical" onclick="changeDisplayScreen('imgSelect')">
+      ◁
     </div>
 
     <div id="infoPopupBlock"></div>

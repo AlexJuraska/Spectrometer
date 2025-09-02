@@ -47,6 +47,7 @@
 
   "addCalPoints-button": "Add calibration points",
   "reset-button": "Reset",
+  "sortCalPoints-button": "Sort",
   "calibration-export-filename-placeholder" : "Calibration file name",
   "export-button": "Export",
 
@@ -112,6 +113,7 @@
 
   "addCalPoints-button-tooltip": "Adds a pair of inputs to define a calibration point",
   "reset-button-tooltip": "Resets the calibration pairs to the default amount and empties them",
+  "sortCalPoints-button-tooltip": "Sorts the input pairs by the px value in ascending order",
   "calibration-export-filename-tooltip": "Enter the name you want the exported calibration file to have, if none is entered a default name will be given",
   "export-button-tooltip": "Exports the calibration values into a .txt file",
   "import-calibration-file-tooltip": "Lets you select a .txt file with calibration values, which will be input into the application, must have the same format as the exported file above",

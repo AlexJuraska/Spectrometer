@@ -127,6 +127,15 @@ function removeInputPair(inputBoxNumber) {
 
     let currPx = document.getElementById(`point${inputBoxNumber}px`);
     let currNm = document.getElementById(`point${inputBoxNumber}nm`);
+
+    const currPxVal = parseFloat(currPx.value.trim());
+    const currNmVal = parseFloat(currNm.value.trim());
+    if (permanentCalPoint &&
+        permanentCalPoint.px === currPxVal &&
+        permanentCalPoint.nm === currNmVal) {
+        removeHighlightInputPair(true);
+    }
+
     for (let i = inputBoxNumber+1; i <= inputBoxCounter; i++) {
         let nextPx = document.getElementById(`point${i}px`);
         let nextNm = document.getElementById(`point${i}nm`);
@@ -139,6 +148,13 @@ function removeInputPair(inputBoxNumber) {
     }
 
     removeLastInputPair();
+
+    if (permanentCalPoint) {
+        const perPx = permanentCalPoint.px, perNm = permanentCalPoint.nm;
+        removeHighlightInputPair(true);
+        permanentCalPoint = { px: perPx, nm: perNm };
+        highlightInputPair(perPx, perNm, true);
+    }
 }
 
 /**
@@ -412,7 +428,7 @@ function importCalibrationFile() {
         return;
     }
 
-    resetInputBoxes();
+    resetCalibrationPoints();
 
     const reader = new FileReader();
 
@@ -483,6 +499,7 @@ function resetCalibrationPoints() {
     inputBoxCounter = minInputBoxNumber;
     drawGridCalibration();
     drawGridDivergence();
+    removeHighlightInputPair(true);
 }
 
 /**
@@ -1013,8 +1030,6 @@ function highlightInputPair(px, nm, isPermanent = false) {
 }
 
 function removeHighlightInputPair(removePermanent = false) {
-    if (!isCalibrated()) { return; }
-
     const inputPairs = document.querySelectorAll(".input-pair");
     for (const pair of inputPairs) {
         pair.classList.remove('highlight-hover');

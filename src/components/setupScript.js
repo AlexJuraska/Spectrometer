@@ -55,7 +55,8 @@ function changeSettingsScreen(changeTo) {
  */
 function changeDisplayScreen(action) {
     const bottomDrawer = document.getElementById('graphSettingsDrawer');
-    const bottomHandle = document.getElementById('drawerCollapseButton');
+    const drawerDetectionArea = document.getElementById('drawerHoverZone');
+    const drawerHandle = document.getElementById('drawerExpandButton');
 
     const settings = document.getElementById('sidebar-left');
     const leftHandle = document.getElementById('sidebarToggleHandleLeft');
@@ -96,14 +97,16 @@ function changeDisplayScreen(action) {
 
         rightHandle.classList.toggle('moved');
         rightDetectionArea.classList.toggle('moved');
-    } else if (action === "graph" || action === "drawer") {
-        if (action === "drawer") {
-            const isHidden = bottomDrawer.classList.contains('hidden');
-            bottomHandle.innerHTML = isHidden ? '△' : '▽';
-        }
-
+    } else if (action === "drawer") {
         bottomDrawer.classList.toggle('hidden')
         graphCanvas.classList.toggle("withDrawer");
+        drawerDetectionArea.classList.toggle('disabled');
+        drawerHandle.classList.toggle('disabled');
+    } else if (action === "graph") {
+        bottomDrawer.classList.remove('hidden');
+        graphCanvas.classList.add("withDrawer");
+        drawerDetectionArea.classList.add('disabled');
+        drawerHandle.classList.add('disabled');
     }
 
     setTimeout(matchGraphHeightWithDrawer, 100);
@@ -117,14 +120,24 @@ function matchGraphHeightWithDrawer() {
     const canvas = document.getElementById("graphCanvas");
     const drawer = document.getElementById('graphSettingsDrawer');
 
+    const sidebarHoverZoneLeft = document.getElementById('sidebarHoverZoneLeft');
+    const sidebarHoverZoneRight = document.getElementById('sidebarHoverZoneRight');
+
     const fixedOffset = 50 + 16; // pixels (16px ~= 1rem)
+    const fixedHoverOffset = 30; // drawerHoverZone
 
     if (canvas.classList.contains('withDrawer')) {
         const drawerHeight = drawer.getBoundingClientRect().height;
         const adjustedHeight = document.body.getBoundingClientRect().height - drawerHeight - fixedOffset;
         canvas.style.maxHeight = `${adjustedHeight}px`;
+
+        const hoverZoneHeight = document.body.getBoundingClientRect().height - drawerHeight;
+        sidebarHoverZoneLeft.style.maxHeight = `${hoverZoneHeight}px`;
+        sidebarHoverZoneRight.style.maxHeight = `${hoverZoneHeight}px`;
     } else {
         canvas.style.maxHeight = `calc(100vh - ${fixedOffset}px)`;
+        sidebarHoverZoneLeft.style.maxHeight = `calc(100vh - ${fixedHoverOffset}px`;
+        sidebarHoverZoneRight.style.maxHeight = `calc(100vh - ${fixedHoverOffset}px`;
     }
 }
 
@@ -260,6 +273,29 @@ hoverZoneRight.addEventListener('mouseleave', () => {
 handleRight.addEventListener('mouseleave', () => {
     handleRight.style.opacity = '0';
     handleRight.style.pointerEvents = 'none';
+});
+
+const hoverZoneDrawer = document.getElementById("drawerHoverZone");
+const handleDrawer = document.getElementById('drawerExpandButton');
+
+hoverZoneDrawer.addEventListener('mouseenter', () => {
+    handleDrawer.style.opacity = '1';
+    handleDrawer.style.pointerEvents = 'auto';
+});
+
+handleDrawer.addEventListener('mouseenter', () => {
+    handleDrawer.style.opacity = '1';
+    handleDrawer.style.pointerEvents = 'auto';
+});
+
+hoverZoneDrawer.addEventListener('mouseleave', () => {
+    handleDrawer.style.opacity = '0';
+    handleDrawer.style.pointerEvents = 'none';
+});
+
+handleDrawer.addEventListener('mouseleave', () => {
+    handleDrawer.style.opacity = '0';
+    handleDrawer.style.pointerEvents = 'none';
 });
 
 window.addEventListener("resize", () => {

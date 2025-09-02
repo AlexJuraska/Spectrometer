@@ -326,7 +326,7 @@
     </div>
 
     <div id="sidebarHoverZoneLeft" class="moved"></div>
-    <div id="sidebarToggleHandleLeft" class="sidebar-handle bg-spectraGreen moved" onclick="changeDisplayScreen('settings')">
+    <div id="sidebarToggleHandleLeft" class="sidebar-handle-vertical moved" onclick="changeDisplayScreen('settings')">
       ◁
     </div>
 
@@ -457,7 +457,7 @@
 
         <div id="graphSettingsDrawerRight">
 
-          <div id="drawerCollapseButton"
+          <div id="drawerCollapseButton" class="sidebar-handle-horizontal"
                data-translate-title="collapse-button-tooltip"
                onclick="changeDisplayScreen('drawer')">
             ▽
@@ -470,6 +470,10 @@
         </div>
       </div>
 
+      <div id="drawerHoverZone" class="disabled"></div>
+      <div id="drawerExpandButton"
+           class="sidebar-handle-horizontal disabled"
+           onclick="changeDisplayScreen('drawer')">△</div>
 
     </div>
 
@@ -487,7 +491,7 @@
     </div>
 
     <div id="sidebarHoverZoneRight"></div>
-    <div id="sidebarToggleHandleRight" class="sidebar-handle bg-spectraGreen" onclick="changeDisplayScreen('imgSelect')">
+    <div id="sidebarToggleHandleRight" class="sidebar-handle-vertical" onclick="changeDisplayScreen('imgSelect')">
       ◁
     </div>
 

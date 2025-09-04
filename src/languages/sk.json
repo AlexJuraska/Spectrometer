@@ -189,5 +189,8 @@
   "step4choice8": "<strong>\"Prepnúť vrcholy\"</strong> – Zvýrazní najvyššie časti grafu.",
   "step4choice9": "<strong>\"Hladkanie\"</strong> – Umožňuje aplikovať filter na zjemnenie grafu.",
   "step4choice10": "<strong>\"Minimálna hodnota\"</strong> – Nastaví minimálnu hodnotu signálu v grafe.",
-  "step4choice11": "<strong>\"Nastavenie expozície\"</strong> – Umožňuje manuálne nastavenie expozície kamery."
+  "step4choice11": "<strong>\"Nastavenie expozície\"</strong> – Umožňuje manuálne nastavenie expozície kamery.",
+  "redirect-message": "Ste si istý, že chcete opustiť túto stránku? Po stlačení 'OK' budete presmerovaný na domovskú stránku.",
+  "ok-button": "OK",
+  "cancel-button": "Zrušiť"
 }

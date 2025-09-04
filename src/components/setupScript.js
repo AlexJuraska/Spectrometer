@@ -226,7 +226,6 @@ function openRedirectionModal() {
 
     updateTextContent();
 
-    // Add buttons to container
     const buttonContainer = document.getElementById('infoPopupButtonContainer');
     buttonContainer.innerHTML = '';
     buttonContainer.appendChild(okButton);

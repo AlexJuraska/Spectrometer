@@ -199,6 +199,8 @@ function closeInfoPopup(){
 
     const blocker = document.getElementById("infoPopupBlock");
     blocker.classList.remove('show');
+    const buttonContainer = document.getElementById('infoPopupButtonContainer');
+    buttonContainer.innerHTML = '<button id="infoPopupButton" class="btn btn-sm btn-light ms-3" data-translate="" onclick="closeInfoPopup()">Cancel</button>';
 }
 
 function openRedirectionModal() {

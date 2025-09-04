@@ -129,7 +129,6 @@
 
   "reset-zoom-tooltip": "Resets the zoom to the full size of the graph",
   "zoom-step-back-tooltip": "Takes a step back to the previous zoom setting",
-  "zoom-left-border-tooltip": "#################################################",
   "X-px-tooltip": "Switches the X-axis of the graph to be in pixels",
   "X-nm-tooltip": "Switches the X-axis of the graph to be in nanometers",
   "combined-graph-tooltip": "Shows a graph created by showing the maximum value of R/G/B at every horizontal pixel",
@@ -139,7 +138,7 @@
   "fill-graph-tooltip": "Colors the area below the graph with the color corresponding to the graph value at that horizontal position",
   "fill-opacity-tooltip": "Changes how see-through the color under the graph is",
   "toggle-peaks-tooltip": "If checked, shows peaks on the graph",
-  "lower-bound-tooltip": "#################################################",
+  "lower-bound-tooltip": "Minimum prominence a peak must have to be shown",
 
   "image-from-camera-tooltip": "If checked, graph values, peaks and coloring the graph will be based on the camera image",
   "compare-loaded-image-tooltip": "If checked, graph values, peaks and coloring the graph will be based on this loaded image",

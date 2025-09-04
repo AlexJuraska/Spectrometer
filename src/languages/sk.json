@@ -129,7 +129,6 @@
 
   "reset-zoom-tooltip": "Resetuje priblíženie na plnú veľkosť grafu",
   "zoom-step-back-tooltip": "Vráti sa o krok späť na predchádzajúce nastavenie priblíženia",
-  "zoom-left-border-tooltip": "#################################################",
   "X-px-tooltip": "Prepne X-ovú os grafu na pixely",
   "X-nm-tooltip": "Prepne X-ovú os grafu na nanometre",
   "combined-graph-tooltip": "Zobrazí graf vytvorený z maximálnej hodnoty R/G/B na každom horizontálnom pixeli",
@@ -139,7 +138,7 @@
   "fill-graph-tooltip": "Vyfarbí oblasť pod grafom farbou zodpovedajúcou hodnote grafu na danom horizontálnom mieste",
   "fill-opacity-tooltip": "Zmení mieru priehľadnosti farby pod grafom",
   "toggle-peaks-tooltip": "Ak je začiarknuté, zobrazí vrcholy na grafe",
-  "lower-bound-tooltip": "#################################################",
+  "lower-bound-tooltip": "Minimálna výška vrcholu, ktorá sa má zobraziť",
 
   "image-from-camera-tooltip": "Ak je začiarknuté, hodnoty grafu, vrcholy a podfarbenie grafu budú založené na obraze z kamery",
   "compare-loaded-image-tooltip": "Ak je začiarknuté, hodnoty grafu, vrcholy a podfarbenie grafu budú založené na tomto načítanom obrázku",

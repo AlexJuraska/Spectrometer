@@ -286,7 +286,6 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minDistance =
         if (values[x] >= values[x - 1] && values[x] >= values[x + 1] && values[x] >= minValue) {
             let plateauStart = x;
             let plateauEnd = x;
-
             while (plateauEnd + 1 < values.length && values[plateauEnd + 1] === values[x]) {
                 plateauEnd++;
             }
@@ -295,20 +294,30 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minDistance =
             let peakVal = values[plateauStart];
 
             let leftMin = peakVal;
-            for (let j = peakX; j >= 0; j--) {
-                leftMin = Math.min(leftMin, values[j]);
+            let leftDropped = false;
+            for (let j = peakX - 1; j >= 0; j--) {
+                if (values[j] < leftMin) {
+                    leftMin = values[j];
+                    leftDropped = true;
+                }
                 if (values[j] > peakVal) break;
             }
 
             let rightMin = peakVal;
-            for (let j = plateauEnd; j < values.length; j++) {
-                rightMin = Math.min(rightMin, values[j]);
+            let rightDropped = false;
+            for (let j = plateauEnd + 1; j < values.length; j++) {
+                if (values[j] < rightMin) {
+                    rightMin = values[j];
+                    rightDropped = true;
+                }
                 if (values[j] > peakVal) break;
             }
 
-            const prominence = peakVal - Math.min(leftMin, rightMin);
-            if (prominence >= lowerPeakBound) {
-                candidates.push({ x: peakX, value: peakVal, prominence });
+            if (leftDropped && rightDropped) {
+                const prominence = peakVal - Math.min(leftMin, rightMin);
+                if (prominence >= lowerPeakBound) {
+                    candidates.push({ x: peakX, value: peakVal, prominence });
+                }
             }
 
             x = plateauEnd + 1;
@@ -327,6 +336,7 @@ function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minDistance =
 
     return peaks.sort((a, b) => a.x - b.x);
 }
+
 
 function getLowerPeakBound() {
     return parseInt(document.getElementById('peakSizeLower').value, 10);

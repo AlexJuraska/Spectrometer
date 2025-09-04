@@ -201,6 +201,37 @@ function closeInfoPopup(){
     blocker.classList.remove('show');
 }
 
+function openRedirectionModal() {
+    document.activeElement.blur();
+    const messageSpan = document.getElementById('infoPopupMessage');
+    messageSpan.dataset.translate = "redirect-message";
+
+    const popupWindow = document.getElementById("infoPopup");
+    popupWindow.classList.add('show');
+
+    const blocker = document.getElementById("infoPopupBlock");
+    blocker.classList.add('show');
+
+    const okButton = document.createElement("button");
+    okButton.dataset.translate = 'ok-button';
+    okButton.className = 'btn btn-sm btn-light ms-3';
+    okButton.onclick = () => {
+        window.location.href = 'index.html';
+    };
+
+    const closeButton = document.createElement("button");
+    closeButton.dataset.translate = "cancel-button";
+    closeButton.className = 'btn btn-sm btn-light ms-3';
+    closeButton.onclick = closeInfoPopup;
+
+    updateTextContent();
+
+    const buttonContainer = document.getElementById('infoPopupButtonContainer');
+    buttonContainer.innerHTML = '';
+    buttonContainer.appendChild(okButton);
+    buttonContainer.appendChild(closeButton);
+}
+
 document.getElementById("infoPopupBlock").addEventListener("click", () => {
     if (!isRecording) {
         closeInfoPopup();

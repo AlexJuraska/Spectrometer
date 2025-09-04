@@ -271,87 +271,72 @@ function averagePixels(pixels, pixelWidth) {
 /**
  * Finds the peaks of the graph
  */
-function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1) {
+function findPeaks(pixels, pixelWidth, minValue, colorOffset = -1, minDistance = 1) {
     function getValue(x) {
         return colorOffset === -1
             ? calculateMaxColor(pixels, x)
             : pixels[x * 4 + colorOffset];
     }
 
-    function findLeftMin(startX) {
-        let min = getValue(startX);
-        for (let i = startX - 1; i >= 0; i--) {
-            let val = getValue(i);
-            if (val <= min) min = val;
-            else break;
-        }
-        return min;
-    }
+    let values = new Array(pixelWidth).fill(0).map((_, x) => getValue(x));
+    let candidates = [];
 
-    function findRightMin(startX) {
-        let min = getValue(startX);
-        for (let i = startX + 1; i < pixelWidth; i++) {
-            let val = getValue(i);
-            if (val <= min) min = val;
-            else break;
-        }
-        return min;
-    }
-
-    let maxima = [];
-    let start = null;
-
-    for (let x = 1; x < pixelWidth - 1; x++) {
-        let value = getValue(x);
-        let prevValue = getValue(x - 1);
-        let nextValue = getValue(x + 1);
-
-        if (value > minValue && value >= prevValue && value >= nextValue) {
-            if (start === null && prevValue < value) {
-                start = x;
+    let x = 1;
+    while (x < values.length - 1) {
+        if (values[x] >= values[x - 1] && values[x] >= values[x + 1] && values[x] >= minValue) {
+            let plateauStart = x;
+            let plateauEnd = x;
+            while (plateauEnd + 1 < values.length && values[plateauEnd + 1] === values[x]) {
+                plateauEnd++;
             }
-        } else {
-            if (start !== null) {
-                let plateauValue = getValue(start);
-                let nextPlateauValue = getValue(x);
 
-                if (plateauValue > nextPlateauValue) {
-                    const leftMin = findLeftMin(start);
-                    const rightMin = findRightMin(x - 1);
-                    const leftProminence = plateauValue - leftMin;
-                    const rightProminence = plateauValue - rightMin;
-                    const checkedMinValue = Math.min(leftProminence, rightProminence);
-                    if (lowerPeakBound <= checkedMinValue) {
-                        maxima.push({ x: start, value: plateauValue });
-                    }
+            let peakX = plateauStart;
+            let peakVal = values[plateauStart];
+
+            let leftMin = peakVal;
+            let leftDropped = false;
+            for (let j = peakX - 1; j >= 0; j--) {
+                if (values[j] < leftMin) {
+                    leftMin = values[j];
+                    leftDropped = true;
                 }
-                start = null;
+                if (values[j] > peakVal) break;
             }
+
+            let rightMin = peakVal;
+            let rightDropped = false;
+            for (let j = plateauEnd + 1; j < values.length; j++) {
+                if (values[j] < rightMin) {
+                    rightMin = values[j];
+                    rightDropped = true;
+                }
+                if (values[j] > peakVal) break;
+            }
+
+            if (leftDropped && rightDropped) {
+                const prominence = peakVal - Math.min(leftMin, rightMin);
+                if (prominence >= lowerPeakBound) {
+                    candidates.push({ x: peakX, value: peakVal, prominence });
+                }
+            }
+
+            x = plateauEnd + 1;
+        } else {
+            x++;
         }
     }
 
-    const firstValue = getValue(0);
-    if (firstValue > getValue(1) && firstValue > minValue) {
-        const rightMin = findRightMin(1);
-        const rightProminence = firstValue - rightMin;
-
-        if (lowerPeakBound <= rightProminence) {
-            maxima.push({ x: 0, value: firstValue });
+    candidates.sort((a, b) => b.value - a.value);
+    let peaks = [];
+    for (let c of candidates) {
+        if (!peaks.some(p => Math.abs(p.x - c.x) < minDistance)) {
+            peaks.push(c);
         }
     }
 
-    const lastX = pixelWidth - 1;
-    const lastValue = getValue(lastX);
-    if (lastValue > getValue(lastX - 1) && lastValue > minValue) {
-        const leftMin = findLeftMin(lastX - 1);
-        const leftProminence = lastValue - leftMin;
-
-        if (lowerPeakBound <= leftProminence) {
-            maxima.push({ x: lastX, value: lastValue });
-        }
-    }
-    return maxima;
+    return peaks.sort((a, b) => a.x - b.x);
 }
+
 
 function getLowerPeakBound() {
     return parseInt(document.getElementById('peakSizeLower').value, 10);
@@ -870,7 +855,7 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
             const yLower = calculateYPosition(0, height, maxValue);
             const yUpper = calculateYPosition(maxVal, height, maxValue);
 
-            graphCtx.fillStyle = `rgba(${r},${g},${b},${gradientOpacity})`;
+            graphCtx.fillStyle = `rgba(${255*r/maxValue},${255*g/maxValue},${255*b/maxValue},${gradientOpacity})`;
             graphCtx.fillRect(leftX, Math.floor(yUpper), rectWidth, Math.ceil(yLower - yUpper));
         }
         return;
@@ -885,13 +870,13 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
         let maxVal = 0, fillColor = null;
         if (toggleR && r >= g && r >= b) {
             maxVal = r;
-            fillColor = `rgba(${r},0,0,${gradientOpacity})`;
+            fillColor = `rgba(${255*r/maxValue},0,0,${gradientOpacity})`;
         } else if (toggleG && g >= r && g >= b) {
             maxVal = g;
-            fillColor = `rgba(0,${g},0,${gradientOpacity})`;
+            fillColor = `rgba(0,${255*g/maxValue},0,${gradientOpacity})`;
         } else if (toggleB && b >= r && b >= g) {
             maxVal = b;
-            fillColor = `rgba(0,0,${b},${gradientOpacity})`;
+            fillColor = `rgba(0,0,${255*b/maxValue},${gradientOpacity})`;
         }
 
         if (maxVal === 0 || !fillColor) continue;

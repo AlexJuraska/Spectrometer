@@ -870,7 +870,7 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
             const yLower = calculateYPosition(0, height, maxValue);
             const yUpper = calculateYPosition(maxVal, height, maxValue);
 
-            graphCtx.fillStyle = `rgba(${r},${g},${b},${gradientOpacity})`;
+            graphCtx.fillStyle = `rgba(${255*r/maxValue},${255*g/maxValue},${255*b/maxValue},${gradientOpacity})`;
             graphCtx.fillRect(leftX, Math.floor(yUpper), rectWidth, Math.ceil(yLower - yUpper));
         }
         return;
@@ -885,13 +885,13 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
         let maxVal = 0, fillColor = null;
         if (toggleR && r >= g && r >= b) {
             maxVal = r;
-            fillColor = `rgba(${r},0,0,${gradientOpacity})`;
+            fillColor = `rgba(${255*r/maxValue},0,0,${gradientOpacity})`;
         } else if (toggleG && g >= r && g >= b) {
             maxVal = g;
-            fillColor = `rgba(0,${g},0,${gradientOpacity})`;
+            fillColor = `rgba(0,${255*g/maxValue},0,${gradientOpacity})`;
         } else if (toggleB && b >= r && b >= g) {
             maxVal = b;
-            fillColor = `rgba(0,0,${b},${gradientOpacity})`;
+            fillColor = `rgba(0,0,${255*b/maxValue},${gradientOpacity})`;
         }
 
         if (maxVal === 0 || !fillColor) continue;

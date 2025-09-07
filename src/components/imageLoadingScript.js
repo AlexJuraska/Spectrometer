@@ -338,10 +338,3 @@ function getCheckedComparisonImageData() {
 function getCheckedComparisonId() {
     return checkedComparisonId;
 }
-
-//Temporary
-document.addEventListener("keydown", (event) => {
-    if (event.key === "q") {
-        addImageElement()
-    }
-});

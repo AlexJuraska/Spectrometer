@@ -33,10 +33,8 @@ async function startStream(deviceId) {
 
         const videoTrack = stream.getVideoTracks()[0];
         const capabilities = videoTrack.getCapabilities();
-        // console.log(navigator.userAgent);
 
         if ('exposureMode' in capabilities) {
-            // Set the exposure mode to manual
             await videoTrack.applyConstraints({
                 advanced: [{ exposureMode: 'manual' }]
             });
@@ -45,7 +43,6 @@ async function startStream(deviceId) {
                 const { min, max, step } = capabilities.exposureTime;
 
                 updateExposureSlider(min, max, step);
-                // console.log(exposureValues);
 
                 await videoTrack.applyConstraints({
                     advanced: [{ exposureTime: exposureValues[exposureSlider.value] }]
@@ -78,7 +75,6 @@ async function startStream(deviceId) {
             plotRGBLineFromCamera();
         };
     } catch (error) {
-        // console.error('Error accessing camera: ', error);
         callError("cameraNotFoundError");
     }
 }
@@ -101,7 +97,6 @@ async function getCameras() {
             });
         }
 
-        // If there are cameras, start with the first one
         if (videoDevices.length > 0) {
             await startStream(videoDevices[0].deviceId);
             cameraUsed = videoDevices[0].deviceId;
@@ -124,7 +119,6 @@ async function requestCameraAccess() {
             } });
         await getCameras();
     } catch (error) {
-        // console.error('Camera access was denied.', error);
         callError("cameraAccessDeniedError");
     }
 }
@@ -335,33 +329,21 @@ function startCameraCapture(){
     }
 
     let imageIndex = 0;
-/*    let hiddenCanvas;
 
-    if (checkboxGraph.checked) {
-        if (checkboxGraph.checked) {
-            hiddenCanvas = document.createElement('canvas');
-            hiddenCanvas.id = 'hiddenGraphCanvas';
-            hiddenCanvas.width = 1920;
-            hiddenCanvas.height = 1080;
-            hiddenCanvas.style.display = 'none';
-            document.body.appendChild(hiddenCanvas);
-        }
-    }*/
-
-    // Creates one shot during the recording
+    /**
+     * Creates one shot during the recording
+     */
     async function captureGraph() {
         if(!isRecording){
             return;
         }
 
         await videoElement.play();
-        await new Promise(resolve => setTimeout(resolve, 200)); // Čaká 200 ms (upraviť podľa potreby)
+        await new Promise(resolve => setTimeout(resolve, 200));
         await videoElement.pause();
 
-        // Capture video frame
         saveCameraImage();
 
-        // Optionally capture graph if checkbox is checked
         if (checkboxGraph.checked) {
             saveGraphImage();
             saveGraphValues();
@@ -378,9 +360,6 @@ function startCameraCapture(){
             videoElement.play();
             isRecording = false;
             closeCameraRecordingWindow();
-/*            if (checkboxGraph.checked && hiddenCanvas) {
-                hiddenCanvas.remove();
-            }*/
         }
     }
 

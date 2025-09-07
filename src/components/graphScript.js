@@ -26,6 +26,7 @@ let toggleG = false;
 let toggleB = false;
 let fillArea = false;
 let lineCanvas;
+let pixels;
 
 let graphCanvas = document.getElementById('graphCanvas');
 let graphCtx = graphCanvas.getContext('2d', { willReadFrequently: true });
@@ -101,7 +102,7 @@ function drawGraph() {
 
     lineCtx.drawImage(videoElement, 0, startY, pixelWidth, stripeWidth, 0, 0, pixelWidth, stripeWidth);
     let imageData = lineCtx.getImageData(0, 0, pixelWidth, stripeWidth);
-    let pixels = imageData.data;
+    pixels = imageData.data;
 
     if (stripeWidth > 1) {
         pixels = averagePixels(pixels, pixelWidth);
@@ -496,15 +497,51 @@ function setupEventListeners() {
 
     addEventListener(graphCanvas, 'mousemove', (event) => {
         const rect = graphCanvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const padding = 30;
+        const width = rect.width;
+        const height = rect.height;
 
         if (isDragging) {
-            dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.getBoundingClientRect().width - 30));
-
-            if (zoomList.length !== 0) {
-                dragEndX = Math.max(30, Math.min(event.clientX - rect.left, graphCanvas.getBoundingClientRect().width - 30));
-            }
+            dragEndX = Math.max(padding, Math.min(x, width - padding));
+            redrawGraphIfLoadedImage(true);
         }
-        redrawGraphIfLoadedImage(true);
+
+        let displayX = 'N/A';
+        let displayY = 'N/A';
+        if (x >= padding && x <= width - padding && y >= padding && y <= height - padding) {
+            const [zoomStart, zoomEnd] = getZoomRange(getElementWidth(videoElement));
+            const pixelCount = Math.max(1, zoomEnd - zoomStart);
+            const denom = Math.max(1, pixelCount - 1);
+            const usableWidth = width - 2 * padding;
+
+            const pixelCanvasWidth = usableWidth / denom;
+
+            const relX = Math.max(0, Math.min(usableWidth, x - padding));
+
+            const pixelIndexFloat = relX / pixelCanvasWidth;
+
+            const pixelIndex = Math.floor(pixelIndexFloat);
+
+            const graphX = Math.min(zoomEnd - 1, Math.max(zoomStart, zoomStart + pixelIndex));
+
+            const maxValue = calculateMaxValue(pixels);
+            const graphY = Math.round(maxValue * (1 - (y - padding) / (height - 2 * padding)));
+
+            const toggleXLabelsNm = document.getElementById("toggleXLabelsNm");
+            if (toggleXLabelsNm.checked) {
+                displayX = getWaveLengthByPx(graphX).toFixed(1);
+            } else {
+                displayX = graphX;
+            }
+            displayY = graphY;
+        }
+        document.getElementById('mouseCoordinates').textContent = `X: ${displayX}, Y: ${displayY}`;
+    });
+
+    addEventListener(graphCanvas, 'mouseleave', function() {
+        document.getElementById('mouseCoordinates').textContent = 'X: N/A, Y: N/A';
     });
 
     addEventListener(graphCanvas, 'mouseup', () => {
@@ -902,31 +939,6 @@ function drawGradient(graphCtx, pixels, pixelWidth, maxValue) {
  */
 function calculateMaxColor(pixels, x) {
     return Math.max(pixels[x * 4], pixels[x * 4 + 1], pixels[x * 4 + 2]);
-}
-
-/**
- * Calculates and returns the maximum value of a pixel based on the toggled colors
- */
-function calculateGradient(pixels, x) {
-    if (toggleCombined || (toggleR && toggleG && toggleB)) {
-        return Math.max(pixels[x * 4], pixels[x * 4 + 1], pixels[x * 4 + 2]);
-    }
-    if (toggleR) {
-        if (toggleG) {
-            return Math.max(pixels[x * 4], pixels[x * 4 + 1]);
-        }
-        if (toggleB) {
-            return Math.max(pixels[x * 4], pixels[x * 4 + 2]);
-        }
-        return pixels[x * 4];
-    }
-    if (toggleG) {
-        if (toggleB) {
-            return Math.max(pixels[x * 4 + 1], pixels[x * 4 + 2]);
-        }
-        return pixels[x * 4 + 1];
-    }
-    return pixels[x * 4 + 2];
 }
 
 /**

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How To</title>
+  <title>Application User Guide</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="../styles/tutorialStyle.css">
   <link rel="stylesheet" href="../styles/customColorsStyle.css">
@@ -13,9 +13,6 @@
   <script src="../components/tutorialScript.js"></script>
 </head>
 <body>
-
-
-
 <div class="container">
   <div id="sidebar-tutorial" class="p-3">
     <a href="index.html"
@@ -35,244 +32,323 @@
     <button class="btn btn-md btn-secondary btn-block text-white mb-1"
             data-translate=""
             data-translate-title=""
-            onclick="showSection('Section1')">Section 1</button>
+            onclick="showSection('Section1')">Introduction & Navigating the website</button>
 
     <button class="btn btn-md btn-secondary btn-block text-white mb-1"
             data-translate=""
             data-translate-title=""
-            onclick="showSection('Section2')">Section 2</button>
+            onclick="showSection('Section2')">Camera setup</button>
 
     <button class="btn btn-md btn-secondary btn-block text-white mb-1"
             data-translate=""
             data-translate-title=""
-            onclick="showSection('Section3')">Section 3</button>
+            onclick="showSection('Section3')">Calibration</button>
 
     <button class="btn btn-md btn-secondary btn-block text-white mb-1"
             data-translate=""
             data-translate-title=""
-            onclick="showSection('Section4')">Section 4</button>
+            onclick="showSection('Section4')">Stripe Selection</button>
 
     <button class="btn btn-md btn-secondary btn-block text-white mb-1"
             data-translate=""
             data-translate-title=""
-            onclick="showSection('Section5')">Section 5</button>
+            onclick="showSection('Section5')">Graph Analysis</button>
+
+    <button class="btn btn-md btn-secondary btn-block text-white mb-1"
+            data-translate=""
+            data-translate-title=""
+            onclick="showSection('Section6')">Saving & Reference</button>
 
   </div>
 
-<!--  <img src="../tutorialImages/cameraSelection.png" alt="Camera Image" width="600" height="500">-->
-
-<!--  <h3 data-translate="step1">Step 1: Enabling and selecting the camera</h3>-->
-
-<!--  <div class="step">-->
-<!--    <p data-translate="allowingAccessToCam"><span class="highlight">1. Allow camera access</span></p>-->
-<!--    <p data-translate="allowingAccessToCamDesc">When prompted in the browser, click <strong>"Allow"</strong> to enable the website to use the camera. If the prompt does not appear, check the browser settings and manually enable camera access.</p>-->
-<!--  </div>-->
-
-<!--  <div class="step">-->
-<!--    <p data-translate="cameraChoice"><span class="highlight">2. Select the correct camera</span></p>-->
-<!--    <p data-translate="cameraChoiceDesc">Use the dropdown menu to select the camera you want to use. If your camera is not listed, click the <strong>"Refresh"</strong> button to reload the devices.</p>-->
-<!--  </div>-->
-
-<!--  <div class="step">-->
-<!--    <p data-translate="troubleshooting"><span class="highlight">3. Troubleshooting</span></p>-->
-<!--    <p data-translate="troubleshootingDesc">If you see the <em>"Camera not available"</em> icon, it means the camera is blocked or not recognized. Make sure the camera is properly connected and not being used by another application. Refresh the page and try again.</p>-->
-<!--  </div>-->
-
-<!--  <img src="../tutorialImages/calibration.png" alt="Calibration Image" width="600" height="500">-->
-
-<!--  <h3 data-translate="step2">Step 2: Camera calibration</h3>-->
-
-<!--  <div class="step">-->
-<!--    <p data-translate="fillingOutCalibration"><span class="highlight">1. Filling out calibration points</span></p>-->
-<!--    <p data-translate="fillingOutCalibrationDesc">If you're a new user, you need to manually enter the calibration points first. If you already have a file with calibration points, you can upload it using the <strong>"Choose file"</strong> button. Once uploaded, the form will be automatically filled out.</p>-->
-<!--  </div>-->
-
-<!--  <div class="step">-->
-<!--    <p data-translate="afterCalibration"><span class="highlight">2. Calibrating</span></p>-->
-<!--    <p data-translate="afterCalibrationDesc">Once all points are entered, press the <strong>"Calibrate"</strong> button. The system will calculate the calibration line and display it in a graph below the form.</p>-->
-<!--  </div>-->
-
-<!--  <div class="step">-->
-<!--    <p data-translate="savingCalibration"><span class="highlight">3. Saving calibration (OPTIONAL)</span></p>-->
-<!--    <p data-translate="savingCalibrationDesc">To save the calibration points for future use, click the <strong>"Export calibration points"</strong> button. You can save the file to your device and load it later.</p>-->
-
-<!--  <p data-translate="importantButtons"><span class="highlight">Other important buttons and functions</span></p>-->
-
-<!--  <ul>-->
-<!--    <li data-translate="step2choice1">/<strong>"Add calibration points"</strong> – Adds a new pair of calibration points.</li>-->
-<!--    <li data-translate="step2choice2"><strong>"Remove calibration points"</strong> – Removes the last pair of calibration points</li>-->
-<!--    <li data-translate="step2choice3"><strong>"Reset"</strong> – Resets the calibration form</li>-->
-<!--  </ul>-->
-
-<!--  </div>-->
-
-<!--  <img src="../tutorialImages/recording.png" alt="Recording Image" width="600" height="400">-->
-
-<!--  <div class="step">-->
-<!--    <h3 data-translate="step3">3. Setting the stripe width</h3>-->
-<!--    <img src="../tutorialImages/recordingStripe.png" alt="stripe" width="400" height="430">-->
-
-<!--    <p data-translate="step3Desc">The user can adjust the width of the stripe that will be used for image analysis. The stripe indicates the area from which data will be gathered to create the graph.</p>-->
-
-<!--    <p data-translate="changingStripeWidth"><span class="highlight">How to set the stripe width?</span></p>-->
-<!--    <ul>-->
-<!--      <li data-translate="changingStripeWidthChoice1">The stripe width can be changed by sliding the slider left or right.</li>-->
-<!--      <li data-translate="changingStripeWidthChoice2">You can also increase or decrease the stripe width using the <strong>"+"</strong> and <strong>"-"</strong> buttons.</li>-->
-<!--    </ul>-->
-<!--    <p data-translate="changingStripeWidthDesc">After setting the correct stripe width, this area will be used to generate the final graph.</p>-->
-
-<!--    <p data-translate="importantButtons"><span class="highlight">Other important buttons and functions</span></p>-->
-
-<!--    <ul>-->
-<!--      <li data-translate="step3choice1"><strong>"Refresh"</strong> – Refreshes the image from the camera.</li>-->
-<!--      <li data-translate="step3choice2"><strong>"Load image"</strong> – Allows loading an image from the device.</li>-->
-<!--      <li data-translate="step3choice3"><strong>"Camera screenshot"</strong> – Takes a snapshot from the camera.</li>-->
-<!--      <li data-translate="step3choice4"><strong>"Graph screenshot"</strong> – Takes a snapshot from the graph.</li>-->
-<!--      <li data-translate="step3choice5"><strong>"Camera exposure"</strong> – Allows manual adjustment of the camera exposure.</li>-->
-<!--      <li data-translate="step3choice6"><strong>"Reference graph"</strong> – After clicking, two buttons will appear:-->
-<!--        <ul>-->
-<!--          <li data-translate="step3choice7"><strong>"Add reference"</strong> – Adds a reference graph for comparison.</li>-->
-<!--          <li data-translate="step3choice8"><strong>"Reset reference"</strong> – Removes references.</li>-->
-<!--        </ul>-->
-<!--      </li>-->
-<!--    </ul>-->
-
-<!--  </div>-->
-
-<!--  <div class="step">-->
-<!--    <h3 data-translate="step4">4. Graph</h3>-->
-<!--    <img src="../tutorialImages/recordingGraph.png" alt="Recording Graph" width="600" height="400">-->
-
-<!--    <p data-translate="step4Desc">We can zoom into the graph by clicking the mouse and dragging over the part we want to enlarge. The current cursor position in the graph is shown in the top right corner.</p>-->
-
-<!--    <p data-translate="importantButtons"><span class="highlight">Other important buttons</span></p>-->
-
-<!--    <ul>-->
-<!--      <li data-translate="step4choice1"><strong>"Reset zoom"</strong> – Returns the graph to its original state after zooming in.</li>-->
-<!--      <li data-translate="step4choice2"><strong>"X-axis labels (px)"</strong> – Changes the X-axis labels to pixels.</li>-->
-<!--      <li data-translate="step4choice3"><strong>"X-axis labels (nm)"</strong> – Changes the X-axis labels to nanometers.</li>-->
-<!--      <li data-translate="step4choice4"><strong>"Combined"</strong> – Displays RGB components of light together.</li>-->
-<!--        <ul>-->
-<!--          <li data-translate="step4choice5"><strong>"R"</strong> – Displays the red component of light.</li>-->
-<!--          <li data-translate="step4choice6"><strong>"G"</strong> – Displays the green component of light.</li>-->
-<!--          <li data-translate="step4choice7"><strong>"B"</strong> – Displays the blue component of light.</li>-->
-<!--        </ul>-->
-<!--      <li data-translate="step4choice8"><strong>"Toggle Peaks"</strong> – Highlights the highest parts of the graph.</li>-->
-<!--      <li data-translate="step4choice10"><strong>"Minimum value"</strong> – Sets the minimum signal value on the graph.</li>-->
-<!--      <li data-translate="step4choice11"><strong>"Set exposure"</strong> – Allows manual adjustment of the camera exposure.</li>-->
-<!--    </ul>-->
-
-<!--  </div>-->
-
-
+  <!-- Introduction -->
   <div id="Section1" class="section">
-    <div class="image-card">
-      <img src="../tutorialImages/calibration.png" alt="Sample Image">
-      <div class="image-card-description">
-        <h3>Title</h3>
-        <p>Description</p>
-      </div>
-    </div>
-
-    <div class="text-card">
-      <div class="text-card-header">
-        <h3>Title</h3>
-      </div>
-      <div class="text-card-body">
-        <p>
-          Description text
-        </p>
-      </div>
+    <h2>Welcome to the Spectrometer Application</h2>
+    <p>
+      This guide will walk you through the main features of the application, divided into sections to help you get started. Use the sidebar to navigate between sections.
+    </p>
+    <ul>
+      <li><strong>Section 1:</strong> Introduction</li>
+      <li><strong>Section 2:</strong> Camera Setup</li>
+      <li><strong>Section 3:</strong> Calibration</li>
+      <li><strong>Section 4:</strong> Stripe Selection</li>
+      <li><strong>Section 5:</strong> Graph Analysis</li>
+      <li><strong>Section 6:</strong> Saving & Reference</li>
+    </ul>
+    <p>
+      Each section starts with a brief explanation, followed by step-by-step instructions and relevant images.
+    </p>
+    <div class="mb-2">
+      <h3>Section 1: Navigating the website - Recording</h3>
+      <p>
+        After clicking the "Start" button on the homepage, you will be directed to the main application interface. The interface is divided into several key areas, each with a specific purpose:
+      </p>
+      <img src="../tutorialImages/recording-pageOverview.png" alt="Application Layout Overview" style="max-width: 100%; margin-bottom: 1em;">
+      <ol>
+        <li>
+          <strong>Left Panel (Sidebar)</strong>
+<!--          <ul>
+            <li>Provides camera controls (select camera, pause/play, load image, compare images).</li>
+            <li>Contains tools for changing the width and position of the selection stripe</li>
+            <li>Contains navigation buttons to switch between Camera, Calibration, and FLR (Frame Limited Recording) modes.</li>
+            <li>Includes stripe width and placement controls, and exposure adjustment.</li>
+            <li>Calibration controls are shown when in calibration mode (import/export, add/remove/sort points).</li>
+          </ul>-->
+        </li>
+        <li>
+          <strong>Main Content Area</strong>
+<!--          <ul>
+            <li>Displays the live camera feed or loaded image, with a yellow stripe overlay for analysis.</li>
+            <li>Shows the spectrum graph or calibration graphs, depending on the selected mode.</li>
+          </ul>-->
+        </li>
+        <li>
+          <strong>Bottom Panel (Drawer)</strong>
+<!--          <ul>
+            <li>Houses graph controls: zoom, axis label selection (pixels/nanometers), RGB channel toggles, peak detection, color fill, and reference graph options.</li>
+            <li>Displays mouse coordinates and navigation for zooming.</li>
+          </ul>-->
+        </li>
+        <li>
+          <strong>Right Panel (Sidebar)</strong>
+<!--          <ul>
+            <li>Hidden by default, can be expanded to load and compare up to 5 images side-by-side with the camera image.</li>
+            <li>Lets you manage comparison images and select which to analyze.</li>
+          </ul>-->
+        </li>
+      </ol>
+      <p>
+        Every Sidebar and Drawer section can be collapsed or expanded by clicking the arrow icon in the top right corner of each panel. The arrow will be visible when you hover over the panel. The right sidebar is collapsed by default.
+      </p>
     </div>
   </div>
 
+  <!-- Section 2: Camera Setup -->
   <div id="Section2" class="section hidden">
+    <div class="mb-2">
+      <h3>Section 2: Camera/Image Setup</h3>
+      <p>
+        This section helps you connect and configure your camera or image for spectrum analysis. You will learn how to select your camera, adjust exposure, and switch between live video and image mode.
+      </p>
+      <video src="../tutorialImages/CameraControls.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <p>
+        <strong>Camera Controls Overview:</strong><br>
+        The video above demonstrates the camera controls available in the application. Here is how each control works:
+        <ul>
+          <li>
+            <strong>Camera Selection:</strong> Use the dropdown to choose from available cameras. If your camera is not listed, click the "Refresh" button to update the list.
+          </li>
+          <li>
+            <strong>Pause/Play:</strong> The Pause button freezes the live camera feed, allowing you to analyze a still image. The Play button resumes the live feed.
+          </li>
+          <li>
+            <strong>Exposure Time Adjustment:</strong> If your camera supports manual exposure, use the slider to adjust brightness. The value is shown below the slider. If unsupported, the slider will be hidden and a message will appear, informing you that the camera you selected does not support this feature. This feature is also not available on Mozilla Firefox.
+          </li>
+          <li>
+            <strong>Load Image:</strong> Click to load a saved image for analysis instead of the live camera feed. Camera controls are disabled until you return to live mode.
+          </li>
+          <li>
+            <strong>Compare Images:</strong> Use this button to load and compare up to 5 images in the right sidebar. These images will each be displayed in the main section as separate graph lines. The "Stop comparison" button removes all loaded images.
+          </li>
+        </ul>
+      </p>
+      <p>
+        <strong>Selection Stripe Controls:</strong><br>
+        The selection stripe defines the area of the image used for spectrum analysis. You can adjust these controls in the left sidebar:
+        <ul>
+          <li>
+            <strong>Stripe Width:</strong> Use the slider or +/- buttons to set the thickness of the stripe. A wider stripe averages more pixels, reducing noise but lowering resolution.
+          </li>
+          <li>
+            <strong>Stripe Placement:</strong> Use the placement slider or +/- buttons to move the stripe up or down, targeting the region of interest in the image or video.
+          </li>
+          <li>
+            The current stripe position and width are shown below the sliders. You can also click directly on the camera preview to reposition the stripe instantly.
+          </li>
+          <li>
+            The yellow line overlay in the main content area shows the current stripe position and width, updating in real time as you adjust the controls.
+          </li>
+        </ul>
+      </p>
+      <hr>
+      <strong>Tips:</strong>
+      <ul>
+        <li>If you deny camera access, refresh the page and allow it again.</li>
+        <li>If you see a black screen, ensure no other app is using the camera and try reconnecting.</li>
+        <li>All controls are located in the left sidebar for easy access.</li>
+        <li>Adjust the selection stripe before recording or analyzing data to ensure you are capturing the desired part of the spectrum.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Section 3: Calibration -->
+  <div id="Section3" class="section hidden">
+    <div class="mb-2">
+      <h3>Section 2: Calibration</h3>
+      <p>
+        Calibration aligns pixel positions with real-world wavelengths (nm). This section explains how to enter calibration points, import/export calibration files, and interpret calibration graphs.
+      </p>
+    </div>
     <div class="image-card">
-      <img src="../tutorialImages/cameraSelection.png" alt="Sample Image">
+      <img src="" alt="Calibration">
       <div class="image-card-description">
-        <h3>Title</h3>
-        <p>Description</p>
+        <h3>Step 2: Calibration</h3>
+        <p>
+          <ul>
+            <li>Calibration ensures the X-axis of your graph matches real wavelengths (nm). <br>
+                <img src="" alt="Calibration Points" style="max-width:200px;">
+            </li>
+            <li>Enter at least 2 pairs of pixel and nanometer values. More points improve accuracy (up to 15).</li>
+            <li>To import calibration, click <strong>Import</strong> and select a .txt file with pairs in the format <code>pixel;nm</code> per line.</li>
+            <li>After entering or importing points, the calibration curve updates automatically. <br>
+                <img src="" alt="Calibration Graph" style="max-width:200px;">
+            </li>
+            <li>Export your calibration for future use with the <strong>Export</strong> button.</li>
+          </ul>
+        </p>
       </div>
     </div>
-
     <div class="text-card">
       <div class="text-card-header">
-        <h3>Title</h3>
+        <h3>Calibration Features</h3>
       </div>
       <div class="text-card-body">
-        <p>
-          Description text
-        </p>
+        <ul>
+          <li><strong>Add/Remove Points:</strong> Use the [+] and [×] buttons to manage calibration pairs. At least 2 must remain.</li>
+          <li><strong>Reset:</strong> Clears all calibration points and graphs.</li>
+          <li><strong>Graphs:</strong> The top graph shows the calibration fit; the bottom graph shows divergence (error) for each point. <br>
+            <img src="" alt="Divergence Graph" style="max-width:200px;">
+          </li>
+          <li><strong>Tip:</strong> Click or hover points on the graph to highlight their corresponding input fields.</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div id="Section3" class="section">
+  <!-- Section 4: Stripe Selection -->
+  <div id="Section4" class="section hidden">
+    <div class="mb-2">
+      <h3>Section 3: Stripe Selection</h3>
+      <p>
+        The stripe is the area of the image used for analysis. Here you will learn how to adjust its width and position to target the region of interest in your spectrum image or video.
+      </p>
+    </div>
     <div class="image-card">
-      <img src="../tutorialImages/calibration.png" alt="Sample Image">
+      <img src="" alt="Stripe Selection">
       <div class="image-card-description">
-        <h3>Title</h3>
-        <p>Description</p>
+        <h3>Step 3: Stripe Selection</h3>
+        <p>
+          <ul>
+            <li>The <strong>stripe</strong> is a horizontal band used to analyze the spectrum. <br>
+                <img src="" alt="Stripe Overlay" style="max-width:200px;">
+            </li>
+            <li>Adjust the stripe width with the slider or +/- buttons. Wider stripes average more pixels, reducing noise but lowering resolution.</li>
+            <li>Move the stripe up or down to target the area of interest. The position is shown as a range below the slider.</li>
+            <li>Click directly on the preview to reposition the stripe quickly.</li>
+            <li>The yellow line overlay shows the current stripe position and width.</li>
+          </ul>
+        </p>
       </div>
     </div>
-
     <div class="text-card">
       <div class="text-card-header">
-        <h3>Title</h3>
+        <h3>Stripe Controls</h3>
       </div>
       <div class="text-card-body">
-        <p>
-          Description text
-        </p>
+        <ul>
+          <li><strong>Stripe Width:</strong> Controls the thickness of the analysis band.</li>
+          <li><strong>Stripe Position:</strong> Sets the vertical location. Use the slider or click on the preview.</li>
+          <li><strong>Live Preview:</strong> The overlay updates in real time as you adjust settings.</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div id="Section4" class="section">
+  <!-- Section 5: Graph Analysis -->
+  <div id="Section5" class="section hidden">
+    <div class="mb-2">
+      <h3>Section 4: Graph Analysis</h3>
+      <p>
+        This section covers how to interpret the spectrum graph, zoom into regions, switch axis labels, toggle color channels, and highlight peaks. Images show how each control affects the graph.
+      </p>
+    </div>
     <div class="image-card">
-      <img src="../tutorialImages/calibration.png" alt="Sample Image">
+      <img src="" alt="Graph Analysis">
       <div class="image-card-description">
-        <h3>Title</h3>
-        <p>Description</p>
+        <h3>Step 4: Graph Analysis</h3>
+        <p>
+          <ul>
+            <li>The main graph displays the spectrum extracted from the selected stripe. <br>
+                <img src="" alt="Spectrum Graph" style="max-width:200px;">
+            </li>
+            <li>Drag horizontally on the graph to zoom into a region. Use the <strong>Reset Zoom</strong> button to return to full view.</li>
+            <li>Switch X-axis labels between <strong>pixels</strong> and <strong>nanometers</strong> (nm) using the radio buttons. Calibration is required for nm labels.</li>
+            <li>Toggle <strong>Combined</strong>, <strong>Red</strong>, <strong>Green</strong>, and <strong>Blue</strong> channels to analyze specific colors.</li>
+            <li>Enable <strong>Peaks</strong> to highlight maxima. Adjust the <strong>Minimum Value</strong> to filter out weak peaks.</li>
+            <li>Hover over the graph to see X/Y coordinates. Peak positions are labeled directly on the graph.</li>
+          </ul>
+        </p>
       </div>
     </div>
-
     <div class="text-card">
       <div class="text-card-header">
-        <h3>Title</h3>
+        <h3>Graph Controls</h3>
       </div>
       <div class="text-card-body">
-        <p>
-          Description text
-        </p>
+        <ul>
+          <li><strong>Reset Zoom:</strong> Click to restore the full graph view.</li>
+          <li><strong>Combined/R/G/B:</strong> Show all color channels or focus on one.</li>
+          <li><strong>Toggle Peaks:</strong> Highlight and label graph maxima.</li>
+          <li><strong>Minimum Value:</strong> Set the threshold for peak detection. Increase to ignore small peaks.</li>
+          <li><strong>Tip:</strong> Use zoom and channel toggles to isolate and analyze specific features.</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div id="Section5" class="section">
-    <div class="image-card">
-      <img src="../tutorialImages/calibration.png" alt="Sample Image">
-      <div class="image-card-description">
-        <h3>Title</h3>
-        <p>Description</p>
-      </div>
+  <!-- Section 6: Saving & Reference -->
+  <div id="Section6" class="section hidden">
+    <div class="mb-2">
+      <h3>Section 5: Saving & Reference</h3>
+      <p>
+        Learn how to save your results, take snapshots, add reference graphs, and compare multiple images. This section explains exporting data and managing reference/comparison overlays.
+      </p>
     </div>
-
-    <div class="text-card">
-      <div class="text-card-header">
-        <h3>Title</h3>
-      </div>
-      <div class="text-card-body">
+    <div class="image-card">
+      <img src="" alt="Saving and Reference">
+      <div class="image-card-description">
+        <h3>Step 5: Saving & Reference</h3>
         <p>
-          Description text
+          <ul>
+            <li>Save the current graph as a PNG image or export the data as an XLSX spreadsheet for further analysis. <br>
+                <img src="" alt="Save Graph" style="max-width:200px;">
+            </li>
+            <li>Take a snapshot of the camera image for documentation.</li>
+            <li>Add reference graphs to compare multiple measurements. Reference graphs appear as colored overlays.</li>
+            <li>Load up to 5 images for side-by-side comparison. Each loaded image gets its own color and controls.</li>
+            <li>Remove reference or comparison graphs using the sidebar controls.</li>
+            <li>Export all graph values for external processing or archiving.</li>
+          </ul>
         </p>
       </div>
     </div>
+    <div class="text-card">
+      <div class="text-card-header">
+        <h3>Reference & Comparison</h3>
+      </div>
+      <div class="text-card-body">
+        <ul>
+          <li><strong>Add Reference:</strong> Click to capture the current graph as a reference overlay.</li>
+          <li><strong>Reset Reference:</strong> Remove all reference graphs and start fresh.</li>
+          <li><strong>Load Images:</strong> Import up to 5 images for direct comparison with the live graph.</li>
+          <li><strong>Export Data:</strong> Download all graph values (pixels, nm, R, G, B) as an XLSX file.</li>
+          <li><strong>Tip:</strong> Use reference and comparison features to track changes over time or between samples.</li>
+        </ul>
+      </div>
+    </div>
   </div>
-
-
 </div>
-
-
 </body>
 </html>

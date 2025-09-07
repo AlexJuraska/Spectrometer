@@ -5,9 +5,12 @@ import webbrowser
 import os
 import sys
 import time
+import functools
 
 if getattr(sys, 'frozen', False):
-    os.chdir(sys._MEIPASS)
+    base_dir = sys._MEIPASS
+else:
+    base_dir = os.path.abspath(".")
 
 PORT = 8000
 
@@ -15,7 +18,7 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         pass
 
-Handler = QuietHandler
+Handler = functools.partial(QuietHandler, directory=os.path.join(base_dir, "src"))
 
 server_thread = None
 httpd = None
@@ -56,7 +59,7 @@ def clear_screen():
 
 def open_site():
     if httpd is not None:
-        webbrowser.open(f"http://localhost:{PORT}/src/pages/index.html")
+        webbrowser.open(f"http://localhost:{PORT}/pages/index.html")
     else:
         print(f"[!] {language['notRunning']}.")
 

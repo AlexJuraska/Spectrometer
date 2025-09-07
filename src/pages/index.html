@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div class="container-fluid min-vh-100 d-flex flex-column position-relative">
+<div id="indexWrapper" class="container-fluid min-vh-100 d-flex flex-column position-relative">
 
   <div class="position-absolute top-0 end-0 m-3"> <!-- id="languageContainer" -->
     <select id="language" data-translate-title="language-select-tooltip" class="form-select form-select-md w-auto">
@@ -34,6 +34,16 @@
     Spectra Web 1.0 (21-08-25)
   </div>
 
+  <button id="toggleDownload" class="btn-spectraGreen">Downloads</button>
+
 </div>
+
+<div id="downloadWrapper">
+  <a id="offWinButton" data-translate="windows-offline-button" data-translate-title="windows-offline-button-tooltip" class="btn btn-spectraGreen btn-primary btn-sm">Windows</a>
+  <a id="offMacButton" data-translate="macOS-offline-button" data-translate-title="macOS-offline-button-tooltip" class="btn btn-spectraGreen btn-primary btn-sm">MacOS</a>
+  <a id="offLinButton" data-translate="linux-offline-button" data-translate-title="linux-offline-button-tooltip" class="btn btn-spectraGreen btn-primary btn-sm">Linux</a>
+</div>
+
+<script src="../components/offlineVersionScript.js"></script>
 </body>
 </html>

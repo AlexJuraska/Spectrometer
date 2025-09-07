@@ -47,6 +47,40 @@ body, html {
     top: 20px;
     right: 20px;
 }
+
+#downloadWrapper {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateX(100%) translateY(-50%);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: var(--sidebar-grey);
+    border-radius: 0.5rem 0 0 0.5rem;
+    box-shadow: -2px 0 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+
+#downloadWrapper.active {
+    transform: translateX(0) translateY(-50%);
+}
+
+#toggleDownload {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 999;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--spectra-mint-darkgreen);
+    border-radius: 0.3rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
 #version {
     position: fixed;
     bottom: 10px;

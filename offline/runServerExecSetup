@@ -1,0 +1,35 @@
+This guide will enable you to create an offline version of the Spectra Web application
+WARNING: This will only create the executable for the OS you are using the command on
+
+The executables need to be remade every time the codebase is changed, they will ot change automatically
+
+REQUIREMENTS: Python pip installed
+
+1. Clone the repository if not done already
+
+git clone https://github.com/AlexJuraska/Spectrometer.git
+
+2. IMPORTANT: In src\components\offlineVersionScript.js, change the OFFLINE constant to true
+
+3. Open command prompt
+
+4. Install pyinstaller if not done already
+
+pip install pyinstaller
+
+5. Go to the folder containing folders "src" and "offline" (cloned repository)
+
+6. Run one of the following commands based on your current OS
+
+Windows command
+pyinstaller --onefile --name "Spectra Web" --add-data "src;src" offline\runServer.py
+
+Linux/MacOS command
+pyinstaller --onefile --name "Spectra Web" --add-data "src:src" offline/runServer.py
+
+This will create several garbage folders
+Folder "dist" will contain the executable "Spectra Web", which can be moved freely
+You may delete the created folders and repository files at will, it will not affect the executable
+
+NOTE: For the executables to be downloadable on the online version of the Spectra Web application,
+      they need to be placed in the "offline" folder, with their names unchanged

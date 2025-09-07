@@ -2,10 +2,16 @@
   "index-title": "SPECTROMETER",
   "start-button": "Start",
   "tutorial-button": "How To",
+  "windows-offline-button": "Windows",
+  "macOS-offline-button": "MacOS",
+  "linux-offline-button": "Linux",
 
   "language-select-tooltip": "Lets you select a preferred language for the application",
   "start-button-tooltip": "Starts the recording",
   "tutorial-button-tooltip": "Opens a page explaining how to use the application",
+  "windows-offline-button-tooltip": "Downloads an offline version of this application for Windows",
+  "macOS-offline-button-tooltip": "Downloads an offline version of this application for MacOS",
+  "linux-offline-button-tooltip": "Downloads an offline version of this application for Linux",
 
 
 

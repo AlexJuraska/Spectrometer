@@ -2,11 +2,16 @@
   "index-title": "SPEKTROMETER",
   "start-button": "Spustiť",
   "tutorial-button": "Ako na to",
+  "windows-offline-button": "Windows",
+  "macOS-offline-button": "MacOS",
+  "linux-offline-button": "Linux",
 
-  "language-select-tooltip": "",
-  "start-button-tooltip": "",
-  "tutorial-button-tooltip": "",
-
+  "language-select-tooltip": "Vyberte preferovaný jazyk pre túto aplikáciu",
+  "start-button-tooltip": "Začne nahrávanie",
+  "tutorial-button-tooltip": "Otvorí stránku, ktorá popisuje ako používať túto aplikáciu",
+  "windows-offline-button-tooltip": "Stiahne offline verziu tejto aplikácia pre Windows",
+  "macOS-offline-button-tooltip": "Stiahne offline verziu tejto aplikácia pre MacOS",
+  "linux-offline-button-tooltip": "Stiahne offline verziu tejto aplikácia pre Linux",
 
 
   "recording-title": "Nahrávanie",

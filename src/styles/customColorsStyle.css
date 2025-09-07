@@ -23,6 +23,7 @@
 .btn-spectraGreen {
     background-color: var(--spectra-mint-green);
     border-color: var(--spectra-mint-darkgreen);
+    transition: background-color 0.3s ease;
 }
 
 .btn-spectraGreen:hover {

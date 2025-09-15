@@ -18,8 +18,6 @@
   <script src="../components/referenceGraphScript.js"></script>
   <script src="../components/imageLoadingScript.js"></script>
 
-<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>-->
-
 </head>
 <body>
 
@@ -47,7 +45,7 @@
         <div id="cameraSettingsWindow" class="d-flex flex-column h-100">
 
           <div id="cameraImageSourceName" class="p-2 w-100">
-            <select id="cameraSelect" class="form-select form-select-sm" data-translate-title="camera-select-tooltip"></select> <!-- class="cameraWindowControlsOnSetUpButtons cameraButton" -->
+            <select id="cameraSelect" class="form-select form-select-sm" data-translate-title="camera-select-tooltip"></select>
             <div id="loadedImageFilename" data-translate-title="loaded-image-filename-tooltip" style="display: none"></div>
           </div>
 
@@ -56,7 +54,6 @@
 
             <button class="btn btn-sm btn-secondary p-1" onclick="getCameras()" data-translate="refresh-button" data-translate-title="refresh-button-tooltip">Refresh</button>
 
-            <!-- Pause/Play toggle in a fixed-width wrapper -->
             <div style="position: relative; width: 80px; height: 30px;">
               <button id="pauseVideoButton"
                       class="btn btn-sm btn-secondary position-absolute top-0 start-0 w-100 h-100 p-1"

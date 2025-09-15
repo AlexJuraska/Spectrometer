@@ -60,7 +60,6 @@ async function startStream(deviceId) {
             showInfoPopup("exposureUnsupportedBrowser", "acknowledge");
         }
 
-        // Makes sure the graph is drawn into its canvas the moment the stream starts
         videoElement.onloadedmetadata = () => {
             cameraOutputWidth = videoElement.videoWidth;
             cameraOutputHeight = videoElement.videoHeight;
@@ -252,7 +251,6 @@ function getElementWidth(element) {
     } else if (element instanceof HTMLImageElement) {
         return element.naturalWidth;
     } else {
-        // console.log('Unsupported element type');
         throw new Error('Unsupported element type');
     }
 }
@@ -279,7 +277,6 @@ requestCameraAccess();
 //    Camera Exposure
 // #####################
 
-// Flag to track recording state
 let isRecording = false;
 
 

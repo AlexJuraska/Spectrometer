@@ -129,13 +129,13 @@ function matchGraphHeightWithDrawer() {
     if (canvas.classList.contains('withDrawer')) {
         const drawerHeight = drawer.getBoundingClientRect().height;
         const adjustedHeight = document.body.getBoundingClientRect().height - drawerHeight - fixedOffset;
-        canvas.style.maxHeight = `${adjustedHeight}px`;
+        canvas.style.height = `${adjustedHeight}px`;
 
         const hoverZoneHeight = document.body.getBoundingClientRect().height - drawerHeight;
         sidebarHoverZoneLeft.style.maxHeight = `${hoverZoneHeight}px`;
         sidebarHoverZoneRight.style.maxHeight = `${hoverZoneHeight}px`;
     } else {
-        canvas.style.maxHeight = `calc(100vh - ${fixedOffset}px)`;
+        canvas.style.height = `calc(100vh - ${fixedOffset}px)`;
         sidebarHoverZoneLeft.style.maxHeight = `calc(100vh - ${fixedHoverOffset}px`;
         sidebarHoverZoneRight.style.maxHeight = `calc(100vh - ${fixedHoverOffset}px`;
     }

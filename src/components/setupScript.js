@@ -218,7 +218,9 @@ function openRedirectionModal() {
     okButton.dataset.translate = 'ok-button';
     okButton.className = 'btn btn-sm btn-light ms-3';
     okButton.onclick = () => {
-        window.location.href = 'index.html';
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedLang = urlParams.get('lang') || 'en';
+        window.location.href = `index.html?lang=${selectedLang}`;
     };
 
     const closeButton = document.createElement("button");

@@ -68,8 +68,7 @@ function updateTextContent() {
  * @param {string} lang - The selected language code
  */
 function updateButtonLinks(lang) {
-    // const buttons = document.querySelectorAll('.button-container a');
-    const buttons = document.querySelectorAll('a');
+    const buttons = document.querySelectorAll('nav.a');
     buttons.forEach(button => {
         const baseHref = button.getAttribute('href').split('?')[0]; // Strip query params
         button.setAttribute('href', `${baseHref}?lang=${lang}`);

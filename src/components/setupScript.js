@@ -129,13 +129,13 @@ function matchGraphHeightWithDrawer() {
     if (canvas.classList.contains('withDrawer')) {
         const drawerHeight = drawer.getBoundingClientRect().height;
         const adjustedHeight = document.body.getBoundingClientRect().height - drawerHeight - fixedOffset;
-        canvas.style.maxHeight = `${adjustedHeight}px`;
+        canvas.style.height = `${adjustedHeight}px`;
 
         const hoverZoneHeight = document.body.getBoundingClientRect().height - drawerHeight;
         sidebarHoverZoneLeft.style.maxHeight = `${hoverZoneHeight}px`;
         sidebarHoverZoneRight.style.maxHeight = `${hoverZoneHeight}px`;
     } else {
-        canvas.style.maxHeight = `calc(100vh - ${fixedOffset}px)`;
+        canvas.style.height = `calc(100vh - ${fixedOffset}px)`;
         sidebarHoverZoneLeft.style.maxHeight = `calc(100vh - ${fixedHoverOffset}px`;
         sidebarHoverZoneRight.style.maxHeight = `calc(100vh - ${fixedHoverOffset}px`;
     }
@@ -218,7 +218,9 @@ function openRedirectionModal() {
     okButton.dataset.translate = 'ok-button';
     okButton.className = 'btn btn-sm btn-light ms-3';
     okButton.onclick = () => {
-        window.location.href = 'index.html';
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedLang = urlParams.get('lang') || 'en';
+        window.location.href = `index.html?lang=${selectedLang}`;
     };
 
     const closeButton = document.createElement("button");

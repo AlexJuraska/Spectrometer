@@ -176,7 +176,7 @@ function changeStripeLabels(value) {
 }
 
 /**
- * // Draws the yellow selection line knows as Stripe
+ * Draws the yellow selection line knows as Stripe
  */
 function drawSelectionLine() {
     stripeGraphCtx.clearRect(0, 0, stripeGraphCanvas.width, stripeGraphCanvas.height);

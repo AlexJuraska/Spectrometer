@@ -37,16 +37,13 @@ function saveGraphValues() {
     }
 
     const result = [];
-    // result.push([ "px", "nm", "Intensity", "R", "G", "B" ]);
     result.push([ "px", "nm", "R", "G", "B" ]);
     for (let i = 0; i < pixelWidth; i++) {
         const x = i + zoomStart;
         const nm = getWaveLengthByPx(x);
-        const intensity = 0; //TODO Zistit co to ma robit
         const r = pixels[x * 4];
         const g = pixels[x * 4 + 1];
         const b = pixels[x * 4 + 2];
-        // result.push([ x, nm, intensity, r, g, b ]);
         result.push([ x, nm, r, g, b ]);
     }
     const filename = `values_${getTimestamp()}.xlsx`

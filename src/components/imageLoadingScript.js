@@ -13,7 +13,6 @@ function loadImageIntoCamera() {
     input.type = 'file';
     input.accept = 'image/*';
 
-    // Add an event listener to handle the file selection
     input.addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -214,7 +213,6 @@ function checkRadio(radioId) {
     }
     needToRecalculateMaxima = true;
     redrawGraphIfLoadedImage(true);
-    // TODO Functionality for radioId - select the image as videoElement
 }
 
 /**
@@ -299,16 +297,12 @@ function updateLoadedImageStripeCanvases() {
     }
     needToRecalculateMaxima = true;
     redrawGraphIfLoadedImage(true);
-    //TODO The width is not correct, position *should* be correct
 }
 
 /**
  * Updates the RGBA data for a specific loaded image
  */
 function updateLoadedImageStripeData(imageId) {
-    // TODO This function is straight up wrong
-    // There is a problem with the width (as with above), but also the position
-
     const image = document.getElementById(`loadedImage${imageId}`);
 
     const tempCanvas = createLineCanvas();

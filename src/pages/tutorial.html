@@ -78,48 +78,46 @@
     <p>
       Each section starts with a brief explanation, followed by step-by-step instructions and relevant images.
     </p>
+    <hr>
     <div class="mb-2">
-      <h3>Section 1: Navigating the website - Recording</h3>
+      <h3>Section 1.1: Navigating the website - Recording</h3>
       <p>
         After clicking the "Start" button on the homepage, you will be directed to the main application interface. The interface is divided into several key areas, each with a specific purpose:
       </p>
       <img src="../tutorialImages/recording-pageOverview.png" alt="Application Layout Overview" style="max-width: 100%; margin-bottom: 1em;">
       <ol>
         <li>
-          <strong>Left Panel (Sidebar)</strong>
-<!--          <ul>
-            <li>Provides camera controls (select camera, pause/play, load image, compare images).</li>
-            <li>Contains tools for changing the width and position of the selection stripe</li>
-            <li>Contains navigation buttons to switch between Camera, Calibration, and FLR (Frame Limited Recording) modes.</li>
-            <li>Includes stripe width and placement controls, and exposure adjustment.</li>
-            <li>Calibration controls are shown when in calibration mode (import/export, add/remove/sort points).</li>
-          </ul>-->
+          <strong>Left Control Panel (Input controls)</strong>
         </li>
         <li>
           <strong>Main Content Area</strong>
-<!--          <ul>
-            <li>Displays the live camera feed or loaded image, with a yellow stripe overlay for analysis.</li>
-            <li>Shows the spectrum graph or calibration graphs, depending on the selected mode.</li>
-          </ul>-->
         </li>
         <li>
-          <strong>Bottom Panel (Drawer)</strong>
-<!--          <ul>
-            <li>Houses graph controls: zoom, axis label selection (pixels/nanometers), RGB channel toggles, peak detection, color fill, and reference graph options.</li>
-            <li>Displays mouse coordinates and navigation for zooming.</li>
-          </ul>-->
+          <strong>Bottom Control Panel (Graph controls)</strong>
         </li>
         <li>
-          <strong>Right Panel (Sidebar)</strong>
-<!--          <ul>
-            <li>Hidden by default, can be expanded to load and compare up to 5 images side-by-side with the camera image.</li>
-            <li>Lets you manage comparison images and select which to analyze.</li>
-          </ul>-->
+          <strong>Right Control Panel (Image comparisons)</strong>
         </li>
       </ol>
       <p>
         Every Sidebar and Drawer section can be collapsed or expanded by clicking the arrow icon in the top right corner of each panel. The arrow will be visible when you hover over the panel. The right sidebar is collapsed by default.
       </p>
+      <hr>
+      <h3>Section 1.2: Navigating the website - Calibration</h3>
+      <p>
+        After clicking the "Calibrate" button in the left control panel, the layout changes to calibration mode. The interface here is also divided into areas with a specific purpose:
+      </p>
+      <img src="../tutorialImages/calibration.png" alt="Calibration Layout Overview" style="max-width: 100%; margin-bottom: 1em;">
+      <ol>
+        <li>
+          <strong>Left Control Panel (Calibration)</strong>
+        </li>
+        <li>
+          <strong>Calibration Curve</strong>
+        </li>
+        <li>
+          <strong>Calibration divergence</strong>
+      </ol>
     </div>
   </div>
 
@@ -154,6 +152,7 @@
           </li>
         </ul>
       </p>
+      <hr>
       <p>
         <strong>Selection Stripe Controls:</strong><br>
         The selection stripe defines the area of the image used for spectrum analysis. You can adjust these controls in the left sidebar:
@@ -186,167 +185,242 @@
   <!-- Section 3: Calibration -->
   <div id="Section3" class="section hidden">
     <div class="mb-2">
-      <h3>Section 2: Calibration</h3>
+      <h3>Section 3: Calibration</h3>
       <p>
         Calibration aligns pixel positions with real-world wavelengths (nm). This section explains how to enter calibration points, import/export calibration files, and interpret calibration graphs.
       </p>
-    </div>
-    <div class="image-card">
-      <img src="" alt="Calibration">
-      <div class="image-card-description">
-        <h3>Step 2: Calibration</h3>
-        <p>
-          <ul>
-            <li>Calibration ensures the X-axis of your graph matches real wavelengths (nm). <br>
-                <img src="" alt="Calibration Points" style="max-width:200px;">
-            </li>
-            <li>Enter at least 2 pairs of pixel and nanometer values. More points improve accuracy (up to 15).</li>
-            <li>To import calibration, click <strong>Import</strong> and select a .txt file with pairs in the format <code>pixel;nm</code> per line.</li>
-            <li>After entering or importing points, the calibration curve updates automatically. <br>
-                <img src="" alt="Calibration Graph" style="max-width:200px;">
-            </li>
-            <li>Export your calibration for future use with the <strong>Export</strong> button.</li>
-          </ul>
-        </p>
-      </div>
-    </div>
-    <div class="text-card">
-      <div class="text-card-header">
-        <h3>Calibration Features</h3>
-      </div>
-      <div class="text-card-body">
+      <video src="../tutorialImages/CalibrationFlow.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <p>
+        <strong>Calibration Workflow:</strong>
         <ul>
-          <li><strong>Add/Remove Points:</strong> Use the [+] and [×] buttons to manage calibration pairs. At least 2 must remain.</li>
-          <li><strong>Reset:</strong> Clears all calibration points and graphs.</li>
-          <li><strong>Graphs:</strong> The top graph shows the calibration fit; the bottom graph shows divergence (error) for each point. <br>
-            <img src="" alt="Divergence Graph" style="max-width:200px;">
+          <li>
+            <strong>Enter Calibration Points:</strong> Input at least 2 pairs of pixel and nanometer values in the left panel. More points (up to 15) improve accuracy.
           </li>
-          <li><strong>Tip:</strong> Click or hover points on the graph to highlight their corresponding input fields.</li>
+          <li>
+            <strong>Import Calibration:</strong> Click <strong>Import</strong> and select a <code>.txt</code> file with pairs in the format <code>pixel;nm</code> per line.
+          </li>
+          <li>
+            <strong>View Calibration Curve:</strong> The calibration graph updates automatically as you add or import points, showing the fit between pixels and wavelengths.
+          </li>
+          <li>
+            <strong>Export Calibration:</strong> Save your calibration for future use with the <strong>Export</strong> button.
+          </li>
+          <li>
+            <strong>Analyze Divergence:</strong> The divergence graph below shows the error for each calibration point.
+          </li>
         </ul>
-      </div>
+      </p>
+      <hr>
+      <strong>Calibration Features:</strong>
+      <ul>
+        <li><strong>Add/Remove Points:</strong> Use the [+] and [×] buttons to manage calibration pairs. At least 2 must remain.</li>
+        <li><strong>Sort:</strong> Automatically orders calibration points by pixel value.</li>
+        <li><strong>Reset:</strong> Clears all calibration points and graphs.</li>
+        <li><strong>Highlighting:</strong> Click or hover points on the graph to highlight their corresponding input fields.</li>
+      </ul>
+      <hr>
+      <strong>Tips:</strong>
+      <ul>
+        <li>Use known spectral lines (e.g., from the spectrometer you bought) for best results.</li>
+        <li>Export your calibration after setup to reuse it later.</li>
+        <li>Check the divergence graph for large errors and adjust points if needed.</li>
+      </ul>
     </div>
   </div>
 
   <!-- Section 4: Stripe Selection -->
   <div id="Section4" class="section hidden">
     <div class="mb-2">
-      <h3>Section 3: Stripe Selection</h3>
+      <h3>Section 4: Stripe Selection</h3>
       <p>
-        The stripe is the area of the image used for analysis. Here you will learn how to adjust its width and position to target the region of interest in your spectrum image or video.
+        The selection stripe defines the horizontal band of the image or video that is used for spectrum analysis. It is displayed in the camera/image input as a yellow stripe. Adjusting the stripe allows you to focus on the region of interest and optimize your measurement.
       </p>
-    </div>
-    <div class="image-card">
-      <img src="" alt="Stripe Selection">
-      <div class="image-card-description">
-        <h3>Step 3: Stripe Selection</h3>
-        <p>
-          <ul>
-            <li>The <strong>stripe</strong> is a horizontal band used to analyze the spectrum. <br>
-                <img src="" alt="Stripe Overlay" style="max-width:200px;">
-            </li>
-            <li>Adjust the stripe width with the slider or +/- buttons. Wider stripes average more pixels, reducing noise but lowering resolution.</li>
-            <li>Move the stripe up or down to target the area of interest. The position is shown as a range below the slider.</li>
-            <li>Click directly on the preview to reposition the stripe quickly.</li>
-            <li>The yellow line overlay shows the current stripe position and width.</li>
-          </ul>
-        </p>
-      </div>
-    </div>
-    <div class="text-card">
-      <div class="text-card-header">
-        <h3>Stripe Controls</h3>
-      </div>
-      <div class="text-card-body">
+      <video src="../tutorialImages/StripeControls.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <p>
+        <strong>How to Use Stripe Controls:</strong>
         <ul>
-          <li><strong>Stripe Width:</strong> Controls the thickness of the analysis band.</li>
-          <li><strong>Stripe Position:</strong> Sets the vertical location. Use the slider or click on the preview.</li>
-          <li><strong>Live Preview:</strong> The overlay updates in real time as you adjust settings.</li>
+          <li>
+            <strong>Stripe Width:</strong> Use the slider or +/- buttons in the left sidebar to set the thickness of the stripe. A wider stripe averages more pixels, reducing noise but lowering spatial resolution.
+          </li>
+          <li>
+            <strong>Stripe Placement:</strong> Move the stripe up or down using the placement slider or +/- buttons to target the desired region in the image or video. You can also click directly on the camera preview to reposition the stripe instantly.
+          </li>
+          <li>
+            <strong>Live Preview:</strong> The yellow line overlay in the main content area shows the current stripe position and width, updating in real time as you adjust the controls.
+          </li>
+          <li>
+            The current stripe position and width are displayed below the sliders for precise adjustment.
+          </li>
         </ul>
-      </div>
+      </p>
+      <hr>
+      <strong>Tips:</strong>
+      <ul>
+        <li>Choose a stripe width that balances noise reduction and resolution for your sample.</li>
+        <li>Always check the stripe position before recording or analyzing data to ensure you are capturing the correct part of the spectrum.</li>
+        <li>If your spectrum is tilted, use a narrower stripe to avoid mixing different wavelengths.</li>
+      </ul>
     </div>
   </div>
 
   <!-- Section 5: Graph Analysis -->
   <div id="Section5" class="section hidden">
     <div class="mb-2">
-      <h3>Section 4: Graph Analysis</h3>
+      <h3>Section 5: Graph Analysis</h3>
       <p>
-        This section covers how to interpret the spectrum graph, zoom into regions, switch axis labels, toggle color channels, and highlight peaks. Images show how each control affects the graph.
+        This section explains how to analyze the spectrum graph, zoom into regions, switch axis labels, toggle color channels, and highlight peaks. The video below demonstrates the main graph controls and analysis workflow.
       </p>
-    </div>
-    <div class="image-card">
-      <img src="" alt="Graph Analysis">
-      <div class="image-card-description">
-        <h3>Step 4: Graph Analysis</h3>
-        <p>
-          <ul>
-            <li>The main graph displays the spectrum extracted from the selected stripe. <br>
-                <img src="" alt="Spectrum Graph" style="max-width:200px;">
-            </li>
-            <li>Drag horizontally on the graph to zoom into a region. Use the <strong>Reset Zoom</strong> button to return to full view.</li>
-            <li>Switch X-axis labels between <strong>pixels</strong> and <strong>nanometers</strong> (nm) using the radio buttons. Calibration is required for nm labels.</li>
-            <li>Toggle <strong>Combined</strong>, <strong>Red</strong>, <strong>Green</strong>, and <strong>Blue</strong> channels to analyze specific colors.</li>
-            <li>Enable <strong>Peaks</strong> to highlight maxima. Adjust the <strong>Minimum Value</strong> to filter out weak peaks.</li>
-            <li>Hover over the graph to see X/Y coordinates. Peak positions are labeled directly on the graph.</li>
-          </ul>
-        </p>
-      </div>
-    </div>
-    <div class="text-card">
-      <div class="text-card-header">
-        <h3>Graph Controls</h3>
-      </div>
-      <div class="text-card-body">
+      <video src="../tutorialImages/GraphAnalysis.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <p>
+        <strong>Graph Analysis Workflow:</strong>
         <ul>
-          <li><strong>Reset Zoom:</strong> Click to restore the full graph view.</li>
-          <li><strong>Combined/R/G/B:</strong> Show all color channels or focus on one.</li>
-          <li><strong>Toggle Peaks:</strong> Highlight and label graph maxima.</li>
-          <li><strong>Minimum Value:</strong> Set the threshold for peak detection. Increase to ignore small peaks.</li>
-          <li><strong>Tip:</strong> Use zoom and channel toggles to isolate and analyze specific features.</li>
+          <li>
+            <strong>View Spectrum:</strong> The main graph displays the spectrum extracted from the selected stripe.
+          </li>
+          <li>
+            <strong>Zoom:</strong> Drag your mouse horizontally on the graph to zoom into a region. Use the <strong>Reset Zoom</strong> button to return to the full view. The <strong>Step Back</strong> button lets you undo the last zoom.
+          </li>
+          <li>
+            <strong>X-Axis Labels:</strong> Switch between <strong>pixels</strong> and <strong>nanometers (nm)</strong> using the radio buttons. Calibration is required for nm labels.
+          </li>
+          <li>
+            <strong>Color Channels:</strong> Toggle <strong>Combined</strong>, <strong>Red</strong>, <strong>Green</strong>, and <strong>Blue</strong> channels to analyze specific colors.
+          </li>
+          <li>
+            <strong>Peaks:</strong> Enable <strong>Peaks</strong> to highlight maxima. Adjust the <strong>Lower Bound</strong> value to filter out weak peaks.
+          </li>
+          <li>
+            <strong>Color Fill:</strong> Enable <strong>Color the Graph</strong> to fill the area under the curve with a color. Adjust opacity as needed. If Combined channel is selected, the color will be taken from the image of the input camera/image. If more than one channel is selected, each pixel is colored with the color with the maximum value for the pixel.
+          </li>
+          <li>
+            <strong>Mouse Coordinates:</strong> Hover over the graph to see X/Y coordinates. Peak positions are labeled directly on the graph.
+          </li>
         </ul>
-      </div>
+      </p>
+      <hr>
+      <strong>Graph Controls:</strong>
+      <ul>
+        <li><strong>Reset Zoom:</strong> Restore the full graph view.</li>
+        <li><strong>Step Back:</strong> Undo the last zoom step.</li>
+        <li><strong>Combined/R/G/B:</strong> Show all color channels or focus on one.</li>
+        <li><strong>Toggle Peaks:</strong> Highlight and label graph maxima.</li>
+        <li><strong>Lower Bound:</strong> Set the threshold for peak detection. Increase to ignore small peaks.</li>
+        <li><strong>Color the Graph:</strong> Fill the area under the curve with a color gradient.</li>
+        <li><strong>Tip:</strong> Use zoom and channel toggles to isolate and analyze specific features.</li>
+      </ul>
+      <hr>
+      <strong>Tips:</strong>
+      <ul>
+        <li>Use the zoom feature to focus on regions of interest in your spectrum.</li>
+        <li>Switch to nm labels after calibration for real-world wavelength analysis.</li>
+        <li>Highlight peaks to quickly identify spectral features.</li>
+        <li>Combine color channels or analyze them separately for detailed insights.</li>
+      </ul>
+      <hr>
+
+      <!-- Subsection 5.2: Reference Graph -->
+      <h4>Section 5.2: Reference Graph</h4>
+      <p>
+        The reference graph feature allows you to overlay previous measurements or imported data for direct comparison with your current spectrum. This is useful for tracking changes over time or comparing different samples.
+      </p>
+      <video src="../tutorialImages/reference-graph-example.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <ul>
+        <li>
+          <strong>Enable Reference Graph:</strong> Check the <strong>Reference Graph</strong> box in the left sidebar to activate reference mode.
+        </li>
+        <li>
+          <strong>Add Reference:</strong> Click <strong>Add Reference</strong> to capture the current graph as a colored overlay. You can add multiple references, each with a different color.
+        </li>
+        <li>
+          <strong>Add Reference from File:</strong> Import a reference graph from an <code>.xlsx</code> file using the <strong>Add Reference from File</strong> button.
+        </li>
+        <li>
+          <strong>Reset References:</strong> Remove all reference overlays with the <strong>Reset References</strong> button.
+        </li>
+        <li>
+          Reference graphs appear as colored lines on the main graph, allowing you to visually compare spectra.
+        </li>
+      </ul>
+      <hr>
+
+      <!-- Subsection 5.3: Comparing Multiple Images -->
+      <h4>Section 5.3: Comparing Multiple Images</h4>
+      <p>
+        You can upload and compare up to 5 images side-by-side. Each loaded image is shown as a separate line on the graph, with its own color and controls.
+      </p>
+      <video src="../tutorialImages/multi-image-comparison.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <ul>
+        <li>
+          <strong>Compare Images:</strong> Click <strong>Compare images</strong> in the left sidebar to upload multiple images. Each image will appear in the right sidebar and as a colored line on the graph.
+        </li>
+        <li>
+          <strong>Select for Analysis:</strong> Use the radio buttons in the right sidebar to select which image's spectrum is analyzed and shown with peak labels, coloring, etc.
+        </li>
+        <li>
+          <strong>Remove Images:</strong> Click the <strong>Stop comparison</strong> button to remove all loaded images and return to single-image mode.
+        </li>
+        <li>
+          Each image is assigned a unique color for easy identification in the graph.
+        </li>
+      </ul>
+      <hr>
     </div>
   </div>
 
-  <!-- Section 6: Saving & Reference -->
+  <!-- Section 6: Frame Limited Recording -->
   <div id="Section6" class="section hidden">
     <div class="mb-2">
-      <h3>Section 5: Saving & Reference</h3>
+      <h3>Section 6: Frame Limited Recording (FLR)</h3>
       <p>
-        Learn how to save your results, take snapshots, add reference graphs, and compare multiple images. This section explains exporting data and managing reference/comparison overlays.
+        The Frame Limited Recording (FLR) feature allows you to automatically capture a series of images and/or spectrum graphs at set intervals. This is useful for time-based experiments, monitoring changes, or collecting data for averaging.
       </p>
-    </div>
-    <div class="image-card">
-      <img src="" alt="Saving and Reference">
-      <div class="image-card-description">
-        <h3>Step 5: Saving & Reference</h3>
-        <p>
-          <ul>
-            <li>Save the current graph as a PNG image or export the data as an XLSX spreadsheet for further analysis. <br>
-                <img src="" alt="Save Graph" style="max-width:200px;">
-            </li>
-            <li>Take a snapshot of the camera image for documentation.</li>
-            <li>Add reference graphs to compare multiple measurements. Reference graphs appear as colored overlays.</li>
-            <li>Load up to 5 images for side-by-side comparison. Each loaded image gets its own color and controls.</li>
-            <li>Remove reference or comparison graphs using the sidebar controls.</li>
-            <li>Export all graph values for external processing or archiving.</li>
-          </ul>
-        </p>
-      </div>
-    </div>
-    <div class="text-card">
-      <div class="text-card-header">
-        <h3>Reference & Comparison</h3>
-      </div>
-      <div class="text-card-body">
+      <video src="../tutorialImages/FrameLimitedRecording.mp4" controls style="max-width:100%; margin-bottom:1em;">
+        Your browser does not support the video tag.
+      </video>
+      <p>
+        <strong>How to Use Frame Limited Recording:</strong>
         <ul>
-          <li><strong>Add Reference:</strong> Click to capture the current graph as a reference overlay.</li>
-          <li><strong>Reset Reference:</strong> Remove all reference graphs and start fresh.</li>
-          <li><strong>Load Images:</strong> Import up to 5 images for direct comparison with the live graph.</li>
-          <li><strong>Export Data:</strong> Download all graph values (pixels, nm, R, G, B) as an XLSX file.</li>
-          <li><strong>Tip:</strong> Use reference and comparison features to track changes over time or between samples.</li>
+          <li>
+            <strong>Open FLR:</strong> Click the <strong>Frame Limited Recording</strong> button in the left sidebar to change the view of the left sidebar.
+          </li>
+          <li>
+            <strong>Set Number of Captures:</strong> Enter how many images/graphs you want to record in the <strong>Number of Captures</strong> field.
+          </li>
+          <li>
+            <strong>Set Pause Duration:</strong> Specify the pause (in milliseconds) between each capture in the <strong>Pause in between captures</strong> field. The minimum is 200 ms.
+          </li>
+          <li>
+            <strong>Screenshot Graph:</strong> Enable this option to save the spectrum graph along with each camera image.
+          </li>
+          <li>
+            <strong>Start Recording:</strong> Click <strong>Capture</strong> to begin. The application will pause the video, capture the image (and graph if selected), and repeat until the set number of captures is reached.
+          </li>
+          <li>
+            <strong>Cancel Recording:</strong> Click <strong>Cancel</strong> in the recording popup to stop the process at any time.
+          </li>
+          <li>
+            All captured files are automatically downloaded to your computer.
+          </li>
         </ul>
-      </div>
+      </p>
+      <hr>
+      <strong>Tips:</strong>
+      <ul>
+        <li>Use FLR for experiments where you need to monitor changes over time or collect multiple samples quickly.</li>
+        <li>Ensure the selection stripe is correctly positioned before starting FLR.</li>
+        <li>Use the <strong>Screenshot Graph</strong> option to save both the raw image and the analyzed spectrum for each capture.</li>
+        <li>Increase the pause duration if your computer or camera needs more time between captures.</li>
+      </ul>
     </div>
   </div>
 </div>

@@ -33,5 +33,6 @@ if (OFFLINE) {
     const offLinButton = document.getElementById('offLinButton');
 
     attachDownload(offWinButton, "../../offline/Spectra Web.exe", "Spectra Web.exe");
+    attachDownload(offMacButton, "../../offline/Spectra Web.zip", "Spectra Web.zip");
 }
 
